@@ -1,4 +1,24 @@
 /*LIST*/
+
+#search-button {
+    background: #4fa327;
+    padding: 5px 20px;
+    margin-left: 700px;
+}
+
+#reset-button {
+    padding: 5px 20px;
+    display: block;
+}
+
+
+#form-search {
+
+    border: #4fa327 solid 2px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
 #header-wp{ background: #4fa327;}
 #main-menu li{ float: left;}
 #main-menu li a{

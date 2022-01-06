@@ -3,7 +3,7 @@
 <?php
 require_once('controllers/baseController.php');
 require_once('assets/libraries/validation.php');
-require_once('models/admin.php');
+require_once('models/Admin.php');
 require_once('assets/helper/url.php');
 require_once('assets/helper/layout.php');
 class AdminController extends BaseController
@@ -16,6 +16,8 @@ class AdminController extends BaseController
     public function index(){
 
         $this->render('index');
+
+
 //        $admins = Admin::all();
 //        $data = array('admins' => $admins);
 //        $this->render('index', $data);
@@ -31,7 +33,6 @@ class AdminController extends BaseController
             if (empty($_POST['email'])) {
                 $error['email'] = 'Email can not be blank';
             } else {
-//                $pattern = "/^[A-Za-z0-9_.]{6,32}@([a-zA-Z0-9]{2,12})(.[a-zA-Z]{2,12})+$/";
                 if (!is_email($email)) {
                     $error['email'] = "Wrong email format, try again";
                 } else {
@@ -42,19 +43,19 @@ class AdminController extends BaseController
             if (empty($_POST['password'])) {
                 $error['password'] = 'Password can not be blank';
             } else {
-//                $partten = "/^([A-Z]){1}([\w_\.!@#$%^&*()]+){5,31}$/";
                 if (!is_password($password)) {
                     $error['password'] = "Wrong password format, try again";
                 } else {
-                    $password = $_POST['password'];
-//                $password = md5($_POST['password']);
+                    $password = md5($_POST['password']);
                 }
             }
             # Conclude
             if (empty($error)) {
                 if (Admin::check_login($email, $password)) {
+                    $admin_id = Admin::get_id_current_admin($email, $password)->id;
                     $_SESSION['is_login'] = true;
                     $_SESSION['user_login'] = $email;
+                    $_SESSION['admin_id'] = $admin_id;
                     redirect_to("?controller=admin&action=index");
                 } else {
                     $error['account'] = "Incorrect email or password";
@@ -73,9 +74,10 @@ class AdminController extends BaseController
 
     public function create(){
 
-        global $email, $password;
+        global $name, $email, $error, $success;
         if (isset($_POST['btn-add-admin'])) {
-            print_r($_POST);
+
+            $success = array();
             $error = array();
             if (empty($_POST['name'])) {
                 $error['name'] = 'Name can not be blank';
@@ -119,6 +121,14 @@ class AdminController extends BaseController
                 }
             }
 
+            // check avatar
+
+            if(!empty($_FILES['files']['name'][0])){
+                $upload_dir = 'assets/images/';
+                $avatar = $upload_dir . $_FILES['files']['name'][0];
+            } else {
+                $error['avatar'] = "Please upload your avatar";
+            }
 
             // check role
             if (empty($_POST['role'])) {
@@ -127,23 +137,29 @@ class AdminController extends BaseController
                 $role = $_POST['role'];
             }
 
+            // get insertor id ( current admin id )
+
+            $ins_id = $_SESSION['admin_id'];
+
+
             // check not error
             if (empty($error)) {
                 $data = array(
-                    'fullname' => $name,
+                    'name' => $name,
+                    'password' => $password,
                     'email' => $email,
-                    'password' => md5($password),
-                    'password_verify' => $password_verify,
-                    'created_at' => date('d/m/yy'),
-                    'role' => $role,
+                    'avatar' => $avatar,
+                    'role_type' => $role,
+                    'ins_id' => $ins_id,
+                    'ins_datetime' => date('d/m/yy'),
                 );
+                if(Admin::add($data)){
+                    $success['admin'] = "Thêm ADMIN mới thành công" . "<br>" . "<a href='?controller=admin&controller=index'>Trở về danh sách ADMIN</a>";
+                } else {
+                    die('lỗi');
+                }
 
-                Admin::insert($data);
-                die('oke nhe');
-                $error['admin'] = "Thêm ADMIN mới thành công" . "<br>" . "<a href='?mod=users&controller=team&action=index'>Trở về danh sách ADMIN</a>";
             }
-            print_r($error);
-            die('not oke');
         }
         $this->render('create');
     }

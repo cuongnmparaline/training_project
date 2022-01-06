@@ -1,6 +1,6 @@
 <?php
 require_once('controllers/base_controller.php');
-require_once('models/post.php');
+require_once('models/Post.php');
 
 class PostsController extends BaseController
 {

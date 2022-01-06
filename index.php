@@ -1,6 +1,6 @@
 
 <?php
-require_once('connection.php');
+require_once('database.php');
 require_once('assets/helper/url.php');
 
 if (isset($_GET['controller'])) {

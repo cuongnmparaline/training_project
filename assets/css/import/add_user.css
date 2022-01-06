@@ -1,5 +1,13 @@
 /*ADD ADMIN*/
 
+#main-menu {
+    margin-left: 400px;
+}
+
+#btn-submit {
+    margin-left: 222px;
+    margin-top: 50px !important;
+}
 
 #detail-add-admin .section-detail label {
     display: block;
@@ -42,13 +50,14 @@
 }
 
 #detail-add-admin .section-detail button {
-    display: block;
+    display: inline-block;
     border: none;
     outline: none;
     background: #4fa327;
     color: #fff;
     padding: 8px 20px;
     margin-bottom: 50px;
+    margin-top: 20px;
 }
 
 #detail-add-admin .section-detail button:hover {
