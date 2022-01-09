@@ -2,7 +2,7 @@
 
 abstract class BaseModel{
 
-    abstract public function get();
+    abstract public function get($condition);
 
     abstract public function add($data);
 

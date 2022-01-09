@@ -2,11 +2,12 @@
 <?php
 session_start();
 ob_start();
+
 $controllers = array(
+    'admin' => ['index', 'login', 'logout', 'create', 'add_avatar', 'search', 'edit'],
     'pages' => ['home', 'error'],
-    'posts' => ['index'],
     'users' => ['index', 'login'],
-    'admin' => ['index', 'login', 'logout', 'create', 'add_avatar']
+    'posts' => ['index']
 ); // Các controllers trong hệ thống và các action có thể gọi ra từ controller đó.
 
 // Nếu các tham số nhận được từ URL không hợp lệ (không thuộc list controller và action có thể gọi
@@ -23,7 +24,6 @@ if(!isset($_SESSION['is_login']) && $action != 'login'){
 
 // Nhúng file định nghĩa controller vào để có thể dùng được class định nghĩa trong file đó
 include_once('controllers/' . $controller . 'Controller.php');
-// Tạo ra tên controller class từ các giá trị lấy được từ URL sau đó gọi ra để hiển thị trả về cho người dùng.
 $klass = str_replace('_', '', ucwords($controller, '_')) . 'Controller';
 $controller = new $klass;
 $controller->$action();

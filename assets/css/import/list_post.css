@@ -1,5 +1,8 @@
 /*LIST*/
 
+#admin-avatar{
+    max-width: 40px;
+}
 #search-button {
     background: #4fa327;
     padding: 5px 20px;
@@ -97,11 +100,11 @@
     font-weight: normal;
 }
 .list-operation li{ float: left;}
-.list-operation li a{
-    display: block;
-    padding: 0px 5px;
-    color: #ddd;
-}
+/*.list-operation li a{*/
+/*    display: block;*/
+/*    padding: 0px 5px;*/
+/*    color: #ddd;*/
+/*}*/
 .list-table-wp tbody tr td:hover a{ color: #777;}
 .tb-title{ 
     width: 75%;
@@ -115,7 +118,8 @@
     max-height: 100%;
     overflow: hidden;
 }
-.list-operation{ width: 25%;}
+.list-operation{
+    width: 25%; display: flex;}
 #paging-wp #desc{
     font-size: 13px;
     color: #b5b5b5;

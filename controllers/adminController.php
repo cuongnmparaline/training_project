@@ -6,6 +6,7 @@ require_once('assets/libraries/validation.php');
 require_once('models/Admin.php');
 require_once('assets/helper/url.php');
 require_once('assets/helper/layout.php');
+require_once('assets/helper/user.php');
 class AdminController extends BaseController
 {
     function __construct()
@@ -15,12 +16,47 @@ class AdminController extends BaseController
 
     public function index(){
 
-        $this->render('index');
+        if(isset($_GET['btn-search'])) {
+            $name = $_GET['name'];
+            $email = $_GET['email'];
+        } else {
+            $name = "";
+            $email = "";
+        }
 
+        // Get all admin account
 
-//        $admins = Admin::all();
-//        $data = array('admins' => $admins);
-//        $this->render('index', $data);
+        // Pagging
+        $condition = "WHERE email LIKE '%{$email}%' OR name LIKE '%{$name}%' AND del_flag != 1";
+        $total_row = Admin::get($condition);
+        $num_per_page = 3;
+        $total_num_row = count($total_row);
+        $num_page = ceil($total_num_row / $num_per_page);
+        $page_num = (int) !empty($_GET['page_id']) ? $_GET['page_id'] : 1;
+        $start = ($page_num - 1) * $num_per_page;
+        $condition = "WHERE email LIKE '%{$email}%' OR name LIKE '%{$name}%' AND del_flag != 1 LIMIT {$start}, {$num_per_page}";
+        $admins = Admin::get($condition);
+
+        // String pagging
+        $page_prev = $page_num - 1;
+        $str_pagging = "<ul class='pagination'>";
+        $str_pagging .= "<li class='page-item'><a class='page-link' href = '?controller=admin&action=index&page_id={$page_prev}'>Previous</a></li>";
+        for($i = 1; $i <= $num_page; $i++){
+            $active = "";
+            if($page_num == $i){
+                $active = "class = 'active-num-page'";
+            }
+            $str_pagging .= "<li class='page-item' {$active}><a class='page-link' href = '?controller=admin&action=index&page_id={$i}'>$i</a></li>";
+        }
+        $page_next = $page_num + 1;
+        $str_pagging .= "<li class='page-item'><a class='page-link' href = '?controller=admin&action=index&page_id={$page_next}'>Next</a></li>";
+
+        $data = [
+            'admins' => $admins,
+            'str_pagging' => $str_pagging
+        ];
+        $this->render('index', $data);
+
 
     }
 
@@ -162,6 +198,15 @@ class AdminController extends BaseController
             }
         }
         $this->render('create');
+    }
+
+    public function edit(){
+        if(isset($_GET['id'])){
+            $id = (int)$_GET['id'];
+            $admin = Admin::getAdminById($id);
+            $data = ['admin' => $admin];
+            $this->render('edit', $data);
+        }
     }
 
     function add_avatar()

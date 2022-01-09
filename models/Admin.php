@@ -15,8 +15,13 @@ class Admin extends BaseModel
         $this->password = $password;
     }
 
-    public function get(){
+    public function get($condition){
 
+        $db = DB::getInstance();
+        $sth = $db->prepare("SELECT *
+        FROM admins {$condition}");
+        $sth->execute();
+        return $sth->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function add($data){
@@ -90,5 +95,22 @@ class Admin extends BaseModel
         if($check > 0)
             return true;
         return false;
+    }
+
+    function getAdminbyId($id){
+        $db = DB::getInstance();
+        $sth = $db->prepare(
+            'SELECT *
+            FROM admins
+            WHERE id = :id'
+        );
+        $sth->bindValue('id', $id);
+        if($sth->execute()){
+            return $sth->fetch(PDO::FETCH_ASSOC);
+        } else {
+            return false;
+        }
+
+
     }
 }

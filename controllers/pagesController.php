@@ -1,7 +1,7 @@
 
 
 <?php
-require_once('controllers/base_controller.php');
+require_once('controllers/baseController.php');
 
 class PagesController extends BaseController
 {

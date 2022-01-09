@@ -7,65 +7,63 @@ require_once('views/layouts/header.php');
     <div class="wrap clearfix">
         <div id="content" class="fl-right">
             <div class="form-search" id="form-search">
-                <form action="?controller=admin&action=search" method="POST">
-                    <label for="name">Name*</label>
-                    <input type="text" name="name" id="name" value=""> <br> <br>
+                <form action="?controller=admin&action=index" method="GET">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name" value="">
                     <?php echo form_error('name')?>
-                    <label for="email">Email*</label>
-                    <input type="email" name="email" id="email" value=""> <br> <br>
-
+                    <label for="email">Email</label>
+                    <input type="text" name="email" id="email" value=""> <br> <br>
                     <a href="?controller=admin&action=index" class="btn btn-primary">Reset</a>
-                    <button type="submit" id="search-button" class="btn btn-secondary">Search</button>
+                    <input type="submit" id="search-button" name="btn-search" class="btn btn-success" value="Search" />
                 </form>
                 <br> <br>
             </div>
             <div class="section" id="detail-page">
                 <div class="section-detail">
-
                     <div class="table-responsive">
-                        <table class="table list-table-wp">
+                        <nav aria-label="Page navigation example">
+                            <?= $str_pagging ?>
+                        </nav>
+                        <table class="table">
                             <thead>
                             <tr>
-                                <td><input type="checkbox" name="checkAll" id="checkAll"></td>
-                                <td><span class="thead-text">STT</span></td>
-                                <td><span class="thead-text">Tên đăng nhập</span></td>
-                                <td><span class="thead-text">Họ và tên</span></td>
-                                <td><span class="thead-text">Email</span></td>
-                                <td><span class="thead-text">Số điện thoại</span></td>
-                                <td><span class="thead-text">Địa chỉ</span></td>
-                                <td><span class="thead-text">Phân quyền</span></td>
+                                <th scope="col">ID</th>
+                                <th scope="col">Avatar</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Action</th>
                             </tr>
                             </thead>
+                            <tbody>
+                            <?php
+                            if(!empty($admins)){
+                            foreach ($admins as $admin){
+                            ?>
+                            <tr>
+                                <th scope="row"><?= $admin['id']?></th>
+                                <td><a href="$controlle=admin&action=edit"><img src="<?= $admin['avatar'] ?>" alt="" id="admin-avatar"></a></td>
+                                <td><?= $admin['name']?></td>
+                                <td><?= $admin['email']?></td>
+                                <td><?= check_role($admin['role_type']) ?></td>
+                                <td>
+                                        <a href="?controller=admin&action=edit&id=<?=$admin['id']?>">Edit</a> ||
+                                        <a href="?controller=admin&action=delete&id=<?=$admin['id']?>" id="delete-admin">Delete</a>
+                                </td>
+                            </tr>
+                                <?php
+                                }
+                            } else {
+                                ?>
                                 <tr>
-                                    <td><input type="checkbox" name="checkItem" class="checkItem" value=""></td>
-                                    <td><span class="tbody-text"></span></td>
-                                    <td class="clearfix">
-                                        <div class="tb-title fl-left">
-                                            <a href="?mod=users&action=update&" title=""></a>
-                                        </div>
-                                        <ul class="list-operation fl-right">
-                                            <li><a href="" title="Sửa" class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></a></li>
-                                            <li><a href="" title="Xóa" class="delete"><i class="fa fa-trash" aria-hidden="true"></i></a></li>
-                                        </ul>
-                                    </td>
-                                    <td><span class="tbody-text"></span></td>
-                                    <td><span class="tbody-text"></span></td>
-                                    <td><span class="tbody-text"></span></td>
-                                    <td><span class="tbody-text"></span></td>
-                                    <td><span class="thead-text"></span></td>
-
+                                    <th scope="row">No results found!</th>
                                 </tr>
+                            <?php
+                            }
+                            ?>
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-            <div class="section" id="paging-wp">
-                <div class="section-detail clearfix">
-                    <p id="desc" class="fl-left">Chọn vào checkbox để lựa chọn tất cả</p>
-                    <ul id="list-paging-pages" class="fl-right">
-
-                    </ul>
                 </div>
             </div>
         </div>
