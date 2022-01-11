@@ -20,6 +20,10 @@
     display: inline;
 }
 
+#detail-add-admin .section-detail label.status  {
+    display: inline;
+}
+
 
 #detail-add-admin .section-detail input[type="text"],
 #detail-add-admin .section-detail input[type="tel"],
@@ -65,5 +69,9 @@
 }
 
 .role label {
+    display: inline;
+}
+
+.status label {
     display: inline;
 }

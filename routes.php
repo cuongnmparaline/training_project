@@ -3,8 +3,10 @@
 session_start();
 ob_start();
 
+date_default_timezone_set("Asia/Ho_Chi_Minh");
 $controllers = array(
-    'admin' => ['index', 'login', 'logout', 'create', 'add_avatar', 'search', 'edit'],
+    'admin' => ['search', 'login', 'logout', 'create', 'add_avatar',
+        'search', 'edit', 'delete', 'create_user', 'search_user'],
     'pages' => ['home', 'error'],
     'users' => ['index', 'login'],
     'posts' => ['index']

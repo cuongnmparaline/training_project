@@ -4,9 +4,10 @@
 require_once('controllers/baseController.php');
 require_once('assets/libraries/validation.php');
 require_once('models/Admin.php');
+require_once('models/User.php');
 require_once('assets/helper/url.php');
 require_once('assets/helper/layout.php');
-require_once('assets/helper/user.php');
+require_once('assets/helper/account.php');
 class AdminController extends BaseController
 {
     function __construct()
@@ -14,7 +15,9 @@ class AdminController extends BaseController
         $this->folder = 'admin';
     }
 
-    public function index(){
+    // Admin Action
+
+    public function search(){
 
         if(isset($_GET['btn-search'])) {
             $name = $_GET['name'];
@@ -27,29 +30,29 @@ class AdminController extends BaseController
         // Get all admin account
 
         // Pagging
-        $condition = "WHERE email LIKE '%{$email}%' OR name LIKE '%{$name}%' AND del_flag != 1";
+        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";
         $total_row = Admin::get($condition);
         $num_per_page = 3;
         $total_num_row = count($total_row);
         $num_page = ceil($total_num_row / $num_per_page);
         $page_num = (int) !empty($_GET['page_id']) ? $_GET['page_id'] : 1;
         $start = ($page_num - 1) * $num_per_page;
-        $condition = "WHERE email LIKE '%{$email}%' OR name LIKE '%{$name}%' AND del_flag != 1 LIMIT {$start}, {$num_per_page}";
+        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1 LIMIT {$start}, {$num_per_page}";
         $admins = Admin::get($condition);
 
         // String pagging
         $page_prev = $page_num - 1;
         $str_pagging = "<ul class='pagination'>";
-        $str_pagging .= "<li class='page-item'><a class='page-link' href = '?controller=admin&action=index&page_id={$page_prev}'>Previous</a></li>";
+        $str_pagging .= "<li class='page-item'><a class='page-link' href = '?controller=admin&action=search&page_id={$page_prev}'>Previous</a></li>";
         for($i = 1; $i <= $num_page; $i++){
             $active = "";
             if($page_num == $i){
                 $active = "class = 'active-num-page'";
             }
-            $str_pagging .= "<li class='page-item' {$active}><a class='page-link' href = '?controller=admin&action=index&page_id={$i}'>$i</a></li>";
+            $str_pagging .= "<li class='page-item' {$active}><a class='page-link' href = '?controller=admin&action=search&page_id={$i}'>$i</a></li>";
         }
         $page_next = $page_num + 1;
-        $str_pagging .= "<li class='page-item'><a class='page-link' href = '?controller=admin&action=index&page_id={$page_next}'>Next</a></li>";
+        $str_pagging .= "<li class='page-item'><a class='page-link' href = '?controller=admin&action=search&page_id={$page_next}'>Next</a></li>";
 
         $data = [
             'admins' => $admins,
@@ -92,7 +95,7 @@ class AdminController extends BaseController
                     $_SESSION['is_login'] = true;
                     $_SESSION['user_login'] = $email;
                     $_SESSION['admin_id'] = $admin_id;
-                    redirect_to("?controller=admin&action=index");
+                    redirect_to("?controller=admin&action=search");
                 } else {
                     $error['account'] = "Incorrect email or password";
                 }
@@ -110,10 +113,9 @@ class AdminController extends BaseController
 
     public function create(){
 
-        global $name, $email, $error, $success;
+        global $name, $email, $error, $role;
         if (isset($_POST['btn-add-admin'])) {
 
-            $success = array();
             $error = array();
             if (empty($_POST['name'])) {
                 $error['name'] = 'Name can not be blank';
@@ -190,23 +192,285 @@ class AdminController extends BaseController
                     'ins_datetime' => date('d/m/yy'),
                 );
                 if(Admin::add($data)){
-                    $success['admin'] = "Thêm ADMIN mới thành công" . "<br>" . "<a href='?controller=admin&controller=index'>Trở về danh sách ADMIN</a>";
-                } else {
-                    die('lỗi');
-                }
 
+                    flash('admin_message', "Add new ADMIN success!" . "<br>" . "<a href='?controller=admin&action=search'>Return to list ADMIN</a>");
+//                    flash('') = "Add new ADMIN success!" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>";
+                }
+            } else {
+                flash ('admin_message', 'Something wrong happened!');
             }
         }
         $this->render('create');
     }
 
     public function edit(){
-        if(isset($_GET['id'])){
-            $id = (int)$_GET['id'];
+        if(isset($_POST['btn-update-admin'])){
+            global $email, $name, $error, $success;
+            if(isset($_GET['id'])){
+                $id = $_GET['id'];
+                $admin = Admin::getAdminById($id);
+            }
+            $error = [];
+            $success = [];
+            if (empty($_POST['name'])) {
+                $error['name'] = 'Name can not be blank';
+            } else {
+                if (!(strlen($_POST['name']) >= 0 && strlen($_POST['name']) <= 128)) {
+                    $error['name'] = 'Name must be 0 to 128 characters';
+                } else {
+                    $name = $_POST['name'];
+                }
+            }
+
+            if(empty($_POST['password'])){
+                $password = $admin['password'];
+            } else {
+                if (!is_password($_POST['password'])) {
+                    $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
+                } else {
+                    if(empty($_POST['password_verify'])){
+                        $error['password_verify'] = "Please enter your password verify";
+                    } else {
+                        if (!is_password($_POST['password'])) {
+                            $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
+                        } else {
+                            if($_POST['password'] == $_POST['password_verify']){
+                                $password = md5($_POST['password']);
+                            } else {
+                                $error['password_verify'] = "Password verify is not match";
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (!empty($_POST['password'])) {
+                if (!is_password($_POST['password'])) {
+                    $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
+                } else {
+                    $password = md5($_POST['password']);
+                }
+            } else {
+
+
+                $password = $admin['password'];
+            }
+
+            if (!empty($_POST['password_verify'])) {
+                if (!is_password($_POST['password'])) {
+                    $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
+                } else {
+                    if($_POST['password'] == $_POST['password_verify']){
+                        $password_verify = md5($_POST['password_verify']);
+                    } else {
+                        $error['password_verify'] = "Password verify is not match";
+                    }
+                }
+            }
+            if (empty($_POST['email'])) {
+                $error['email'] = 'email can not be blank';
+            } else {
+                $email = $_POST['email'];
+            }
+
+            // check avatar
+
+            if(!empty($_FILES['files']['name'][0])){
+                $upload_dir = 'assets/images/';
+                $avatar = $upload_dir . $_FILES['files']['name'][0];
+            } else {
+                $avatar = $admin['avatar'];
+            }
+            // check role
+            if (empty($_POST['role'])) {
+                $error['role'] = 'You have to choose admin role';
+            } else {
+                $role = $_POST['role'];
+            }
+
+            // get update id ( current admin id )
+            $upd_id = $_SESSION['admin_id'];
+            if(empty($error)){
+                $data = array(
+                    'id' => $id,
+                    'name' => $name,
+                    'password' => $password,
+                    'email' => $email,
+                    'avatar' => $avatar,
+                    'role_type' => $role,
+                    'upd_id' => $upd_id,
+                    'upd_datetime' => date('d/m/y'),
+                );
+                if(Admin::update($data)){
+                    flash('admin_message', "Update ADMIN success!" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>");
+//                    $success['admin'] = "Update ADMIN success" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>";
+                } else {
+                    flash('admin_message', 'Something wrong happened!');
+                }
+            }
             $admin = Admin::getAdminById($id);
             $data = ['admin' => $admin];
             $this->render('edit', $data);
+        } else {
+            if(isset($_GET['id'])){
+                $id = (int)$_GET['id'];
+                $admin = Admin::getAdminById($id);
+                $data = ['admin' => $admin];
+                $this->render('edit', $data);
+            }
         }
+
+    }
+
+    public function delete(){
+        global $error, $success;
+        if(isset($_GET['id'])){
+            $id = $_GET['id'];
+            if(Admin::delete($id)){
+                flash('admin_message', 'Admin Removed');
+                redirect_to('?controller=admin&action=search');
+            } else {
+                return $error['admin'] = "Something wrong happened!";
+            }
+        } else {
+            redirect_to('?controller=user&action=index');
+        }
+    }
+
+    // User Action
+
+    public function search_user(){
+        if(isset($_GET['btn-search-user'])) {
+            $name = $_GET['name'];
+            $email = $_GET['email'];
+        } else {
+            $name = "";
+            $email = "";
+        }
+
+        // Get all admin account
+
+        // Pagging
+        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";
+        $total_row = User::get($condition);
+        $num_per_page = 3;
+        $total_num_row = count($total_row);
+        $num_page = ceil($total_num_row / $num_per_page);
+        $page_num = (int) !empty($_GET['page_id']) ? $_GET['page_id'] : 1;
+        $start = ($page_num - 1) * $num_per_page;
+        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1 LIMIT {$start}, {$num_per_page}";
+        $users = User::get($condition);
+
+        // String pagging
+        $page_prev = $page_num - 1;
+        $str_pagging = "<ul class='pagination'>";
+        $str_pagging .= "<li class='page-item'><a class='page-link' href = '?controller=admin&action=search_user&page_id={$page_prev}'>Previous</a></li>";
+        for($i = 1; $i <= $num_page; $i++){
+            $active = "";
+            if($page_num == $i){
+                $active = "class = 'active-num-page'";
+            }
+            $str_pagging .= "<li class='page-item' {$active}><a class='page-link' href = '?controller=admin&action=search_user&page_id={$i}'>$i</a></li>";
+        }
+        $page_next = $page_num + 1;
+        $str_pagging .= "<li class='page-item'><a class='page-link' href = '?controller=admin&action=search_user&page_id={$page_next}'>Next</a></li>";
+
+        $data = [
+            'users' => $users,
+            'str_pagging' => $str_pagging
+        ];
+        $this->render('search_user', $data);
+
+    }
+
+    public function create_user(){
+
+        global $name, $email, $error;
+        if (isset($_POST['btn-add-user'])) {
+            $error = array();
+            if (empty($_POST['name'])) {
+                $error['name'] = 'Name can not be blank';
+            } else {
+                if (!(strlen($_POST['name']) >= 0 && strlen($_POST['name']) <= 128)) {
+                    $error['name'] = 'Name must be 0 to 128 characters';
+                } else {
+                    $name = $_POST['name'];
+                }
+            }
+            if (empty($_POST['password'])) {
+                $error['password'] = 'Password can be blank';
+            } else {
+                if (!is_password($_POST['password'])) {
+                    $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
+                } else {
+                    $password = md5($_POST['password']);
+                }
+            }
+
+            if (empty($_POST['password_verify'])) {
+                $error['password_verify'] = 'Please verify your password';
+            } else {
+                if (!is_password($_POST['password'])) {
+                    $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
+                } else {
+                    if($_POST['password'] == $_POST['password_verify']){
+                        $password_verify = md5($_POST['password_verify']);
+                    } else {
+                        $error['password_verify'] = "Password verify is not match";
+                    }
+                }
+            }
+            if (empty($_POST['email'])) {
+                $error['email'] = 'email can not be blank';
+            } else {
+                if(User::check_mail_existed($_POST['email'])){
+                    $error['email'] = "Email is existed";
+                } else {
+                    $email = $_POST['email'];
+                }
+            }
+
+            // check avatar
+
+            if(!empty($_FILES['files']['name'][0])){
+                $upload_dir = 'assets/images/';
+                $avatar = $upload_dir . $_FILES['files']['name'][0];
+            } else {
+                $error['avatar'] = "Please upload your avatar";
+            }
+
+            // check role
+            if (empty($_POST['status'])) {
+                $error['status'] = 'You have to choose admin role';
+            } else {
+                $status = $_POST['status'];
+            }
+
+            // get insertor id ( current admin id )
+
+            $ins_id = $_SESSION['admin_id'];
+
+            // check not error
+            if (empty($error)) {
+                $data = array(
+                    'name' => $name,
+                    'password' => $password,
+                    'email' => $email,
+                    'avatar' => $avatar,
+                    'status' => $status,
+                    'ins_id' => $ins_id,
+                    'ins_datetime' => date('d/m/yy'),
+                );
+                if(User::add($data)){
+                    flash('user_message', "Add new USER success!" . "<br>" . "<a href='?controller=admin&action=search_user'>Return to list ADMIN</a>");
+//                    flash('') = "Add new ADMIN success!" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>";
+                }
+            } else {
+                flash ('user_message', 'Something wrong happened!');
+            }
+        }
+        $this->render('create_user');
     }
 
     function add_avatar()

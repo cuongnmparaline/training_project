@@ -12,8 +12,9 @@ require_once ('views/layouts/header.php');
             <div class="section" id="detail-add-admin">
                 <div class="section-detail">
                     <form method="POST"  enctype="multipart/form-data">
-
-                        <?php echo form_success('admin') ?>
+                        <?= flash('admin_message') ?>
+<!--                        --><?php //echo form_success('admin') ?>
+                        <p>ID: <?= $admin['id']?></p>
                         <label>Avatar*</label>
                         <input type="file" id='files' name="files[]" multiple>
                         <div id="preview">
@@ -36,12 +37,12 @@ require_once ('views/layouts/header.php');
                         <label for="role">Role*</label> <br>
                         <input <?php if($admin['role_type'] == 1) echo "checked";?> type="radio" id="super_admin" name="role" value="1">
                         <label for="super_admin" class="role">Super Admin</label>
-                        <input <?php if($admin['role_type'] == 2) echo "checked";?>type="radio" class="role" id="admin" name="role" value="2">
+                        <input <?php if($admin['role_type'] == 2) echo "checked";?> type="radio" class="role" id="admin" name="role" value="2">
                         <label for="admin" class="role">Admin</label>
                         <?php echo form_error('role')?>
                         <br> <br>
-                        <a href="?controller=admin&action=create" class="btn btn-primary">Reset</a>
-                        <button type="submit" name="btn-add-admin" id="btn-submit" class="btn btn-secondary">Save</button>
+                        <a href="?controller=admin&action=edit&id=<?=$admin['id']?>" class="btn btn-primary">Reset</a>
+                        <button type="submit" name="btn-update-admin" id="btn-submit" class="btn btn-secondary">Save</button>
                     </form>
                 </div>
             </div>

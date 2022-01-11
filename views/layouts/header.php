@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="assets/css/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link href="assets/css/bootstrap/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
     <link href="assets/reset.css" rel="stylesheet" type="text/css"/>
@@ -28,10 +29,10 @@
                 <a href="?" title="" id="logo" class="fl-left">ACCOUNT MANAGEMENT</a>
                 <ul id="main-menu" class="fl-left">
                     <li>
-                        <a href="?controller=admin" title="">Admin Management</a>
+                        <a href="?controller=admin&action=search" title="">Admin Management</a>
                         <ul class="sub-menu">
                             <li>
-                                <a href="?controller=admin&action=index" title="">Search</a>
+                                <a href="?controller=admin&action=search" title="">Search</a>
                             </li>
                             <li>
                                 <a href="?controller=admin&action=create" title="">Create</a>
@@ -39,13 +40,13 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="?controller=admin" title="">User Management</a>
+                        <a href="?controller=admin&action=search_user" title="">User Management</a>
                         <ul class="sub-menu">
                             <li>
-                                <a href="?mod=users&action=search" title="">Search</a>
+                                <a href="?controller=admin&action=search_user" title="">Search</a>
                             </li>
                             <li>
-                                <a href="?mod=users&action=add" title="">Create</a>
+                                <a href="?controller=admin&action=create_user" title="">Create</a>
                             </li>
                         </ul>
                     </li>

@@ -6,7 +6,7 @@ abstract class BaseModel{
 
     abstract public function add($data);
 
-    abstract public function delete();
+    abstract public function delete($id);
 
-    abstract public function update();
+    abstract public function update($data);
 }

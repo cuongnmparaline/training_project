@@ -12,6 +12,7 @@ if (isset($_GET['controller'])) {
     }
 } else {
     $controller = 'admin';
-    $action = 'index';
+    $action = 'search';
 }
+
 require_once('routes.php');

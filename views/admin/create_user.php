@@ -6,14 +6,14 @@ require_once ('views/layouts/header.php');
         <div id="content" class="fl-right">
             <div class="section" id="title-admin">
                 <div class="clearfix">
-                    <h3 id="index" class="fl-left">Create Admin</h3>
+                    <h3 id="index" class="fl-left">Create User</h3>
                 </div>
             </div>
             <div class="section" id="detail-add-admin">
                 <div class="section-detail">
                     <form method="POST"  enctype="multipart/form-data">
-                        <?= flash('admin_message') ?>
-<!--                        --><?php //echo form_success('admin') ?>
+                        <?= flash('user_message') ?>
+                        <!--                        --><?php //echo form_success('admin') ?>
                         <label>Avatar*</label>
                         <input type="file" id='files' name="files[]" multiple><br> <br>
                         <div id="preview">
@@ -32,15 +32,15 @@ require_once ('views/layouts/header.php');
                         <label for="password">Password Verify*</label>
                         <input type="password" name="password_verify" id="password_verify">
                         <?php echo form_error('password_verify')?>
-                        <label for="role">Role*</label> <br>
-                        <input type="radio" id="super_admin" name="role" value="1">
-                        <label for="super_admin" class="role">Super Admin</label>
-                        <input type="radio" class="role" id="admin" name="role" value="2">
-                        <label for="admin" class="role">Admin</label>
-                        <?php echo form_error('role')?>
+                        <label for="role">Status*</label> <br>
+                        <input type="radio" id="active" name="status" value="1">
+                        <label for="active" class="status">Active</label>
+                        <input type="radio" class="status" id="banned" name="status" value="2">
+                        <label for="banned" class="status">Banned</label>
+                        <?php echo form_error('status')?>
                         <br> <br>
-                        <a href="?controller=admin&action=create" class="btn btn-primary">Reset</a>
-                        <button type="submit" name="btn-add-admin" id="btn-submit" class="btn btn-secondary">Save</button>
+                        <a href="?controller=admin&action=create_user" class="btn btn-primary">Reset</a>
+                        <button type="submit" name="btn-add-user" id="btn-submit" class="btn btn-secondary">Save</button>
                     </form>
                 </div>
             </div>

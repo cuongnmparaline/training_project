@@ -4,15 +4,10 @@ require_once "BaseModel.php";
 
 class Admin extends BaseModel
 {
-    public $id;
-    public $email;
-    public $password;
-
-    function __construct($id, $email, $password)
+    private $db;
+    function __construct()
     {
-        $this->id = $id;
-        $this->email = $email;
-        $this->password = $password;
+        $this->db =DB::getInstance();
     }
 
     public function get($condition){
@@ -44,13 +39,37 @@ class Admin extends BaseModel
         }
     }
 
-    public function delete(){
-
+    public function delete($id){
+        $db = DB::getInstance();
+        $sth = $db->prepare('UPDATE admins SET del_flag = 1 WHERE id = :id');
+        $sth->bindValue(':id', $id);
+        if($sth->execute()){
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public function update()
+    public function update($data)
     {
-        // TODO: Implement update() method.
+        $db = DB::getInstance();
+        $sth = $db->prepare('UPDATE admins SET name = :name, email = :email, avatar = :avatar,
+                                   password = :password, role_type = :role_type, upd_id = :upd_id,
+                                   upd_datetime = :upd_datetime WHERE id = :id');
+        $sth->bindValue(':id', $data['id']);
+        $sth->bindValue(':name', $data['name']);
+        $sth->bindValue(':password', $data['password']);
+        $sth->bindValue(':email', $data['email']);
+        $sth->bindValue(':avatar', $data['avatar']);
+        $sth->bindValue(':role_type', $data['role_type']);
+        $sth->bindValue(':upd_id', $data['upd_id']);
+        $sth->bindValue(':upd_datetime', $data['upd_datetime']);
+        if($sth->execute()){
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     function check_login($email, $password){
