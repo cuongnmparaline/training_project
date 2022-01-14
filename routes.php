@@ -6,10 +6,10 @@ ob_start();
 date_default_timezone_set("Asia/Ho_Chi_Minh");
 $controllers = array(
     'admin' => ['search', 'login', 'logout', 'create', 'add_avatar',
-        'search', 'edit', 'delete', 'create_user', 'search_user'],
+        'search', 'edit', 'delete', 'create_user', 'search_user',
+        'edit_user', 'delete_user'],
     'pages' => ['home', 'error'],
-    'users' => ['index', 'login'],
-    'posts' => ['index']
+    'user' => ['index', 'login', 'logout', 'profile']
 ); // Các controllers trong hệ thống và các action có thể gọi ra từ controller đó.
 
 // Nếu các tham số nhận được từ URL không hợp lệ (không thuộc list controller và action có thể gọi
@@ -18,10 +18,16 @@ if (!array_key_exists($controller, $controllers) || !in_array($action, $controll
     $controller = 'pages';
     $action = 'error';
 }
+if($controller == 'admin'){
+    if(!isset($_SESSION['is_admin_login']) && $action != 'login'){
+        redirect_to('?controller=admin&action=login');
+    }
+}
 
-
-if(!isset($_SESSION['is_login']) && $action != 'login'){
-    redirect_to('?controller=admin&action=login');
+if($controller == 'user'){
+    if(!isset($_SESSION['is_user_login']) && $action != 'login'){
+        redirect_to('?controller=user&action=login');
+    }
 }
 
 // Nhúng file định nghĩa controller vào để có thể dùng được class định nghĩa trong file đó
@@ -29,3 +35,7 @@ include_once('controllers/' . $controller . 'Controller.php');
 $klass = str_replace('_', '', ucwords($controller, '_')) . 'Controller';
 $controller = new $klass;
 $controller->$action();
+
+
+
+

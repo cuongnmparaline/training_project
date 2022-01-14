@@ -88,7 +88,7 @@ class Admin extends BaseModel
 
     function get_id_current_admin($email, $password){
         $db = DB::getInstance();
-        $sth = $db->prepare('SELECT id
+        $sth = $db->prepare('SELECT id, role_type
         FROM admins
         WHERE email = :email AND password = :password');
         $sth->bindValue('email', $email);

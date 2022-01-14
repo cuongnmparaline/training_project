@@ -56,8 +56,8 @@ require_once('views/layouts/header.php');
                                         <td><?= $user['email']?></td>
                                         <td><?= set_status($user['status']) ?></td>
                                         <td>
-                                            <a href="?controller=admin&action=edit&id=<?=$user['id']?>">Edit</a> ||
-                                            <a href="?controller=admin&action=delete&id=<?=$user['id']?>" onclick="return confirm('Are you sure?');">Delete</a>
+                                            <a href="?controller=admin&action=edit_user&id=<?=$user['id']?>">Edit</a> ||
+                                            <a href="?controller=admin&action=delete_user&id=<?=$user['id']?>" onclick="return confirm('Are you sure?');">Delete</a>
                                         </td>
                                     </tr>
                                     <?php

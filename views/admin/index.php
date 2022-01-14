@@ -27,19 +27,23 @@ require_once('views/layouts/header.php');
                         <nav aria-label="Page navigation example">
                             <?php if(!empty($str_pagging)) echo $str_pagging ?>
                         </nav>
-                        <table class="table">
+                        <?php $sort_option['sort'] == 'DESC' ? $sort_option['sort'] = 'ASC' : $sort_option['sort'] = 'DESC'; ?>
+                        <table class="table" id="admin-table">
                             <thead>
                             <tr>
                                 <th>
-                                    <b>ID</b>
-<!--                                    <span class="glyphicon glyphicon-triangle-bottom"></span>-->
-<!--                                    <span class="glyphicon glyphicon-triangle-top"></span>-->
-<!--                                    <i class="fa fa-fw fa-sort"></i>-->
+                                    <a class="column-sort" id="id" data-order="desc" href="?controller=admin&action=search&order=id&sort=<?=$sort_option['sort']?>">ID <i class="fa fa-fw fa-sort"></i><a/>
                                 </th>
                                 <th scope="col">Avatar</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Role</th>
+                                <th scope="col">
+                                    <a class="column-sort" id="id" data-order="desc" href="?controller=admin&action=search&order=name&sort=<?=$sort_option['sort']?>">Name <i class="fa fa-fw fa-sort"></i><a/>
+                                </th>
+                                <th scope="col">
+                                    <a class="column-sort" id="id" data-order="desc" href="?controller=admin&action=search&order=email&sort=<?=$sort_option['sort']?>">Email <i class="fa fa-fw fa-sort"></i><a/>
+                                </th>
+                                <th scope="col">
+                                    <a class="column-sort" id="id" data-order="desc" href="?controller=admin&action=search&order=role_type&sort=<?=$sort_option['sort']?>">Role <i class="fa fa-fw fa-sort"></i><a/>
+                                </th>
                                 <th scope="col">Action</th>
                             </tr>
                             </thead>
