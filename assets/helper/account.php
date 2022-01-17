@@ -29,3 +29,12 @@ function set_status($status){
         }
     }
 }
+
+function check_role($role){
+    if($_SESSION['role_type'] == 2){
+        redirect_to('/management/search-user');
+        flash('user_message', 'Only Super Admin could access Admin Management! You are in User Management');
+        return false;
+    }
+    return true;
+}

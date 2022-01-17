@@ -10,19 +10,340 @@ require_once('assets/helper/layout.php');
 require_once('assets/helper/account.php');
 class AdminController extends BaseController
 {
+    private $adminModel;
+    private $userModel;
     function __construct()
     {
         $this->folder = 'admin';
+        $this->adminModel = new Admin();
+        $this->userModel = new User();
     }
 
     // Admin Action
 
-    public function search(){
-        if($_SESSION['role_type'] == 2){
-            redirect_to('management/search-user');
-            flash('user_message', 'Only Super Admin could access Admin Management! You are in User Management');
+    public function search()
+    {
+        check_role($_SESSION['role_type']);
+        if (isset($_GET['btn-search'])) {
+            $name = $_GET['name'];
+            $email = $_GET['email'];
+        } else {
+            $name = "";
+            $email = "";
         }
-        if(isset($_GET['btn-search'])) {
+        // Get all admin account
+
+        // Pagging
+        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";
+        $total_row = $this->adminModel->get($condition);
+        $num_per_page = 3;
+        $total_num_row = count($total_row);
+        $num_page = ceil($total_num_row / $num_per_page);
+        $page_num = (int)!empty($_GET['page_id']) ? $_GET['page_id'] : 1;
+        $start = ($page_num - 1) * $num_per_page;
+
+        // Sort
+        if (isset($_GET['order'])) {
+            $order = $_GET['order'];
+        } else {
+            $order = 'id';
+        }
+        if (isset($_GET['sort'])) {
+            $sort = $_GET['sort'];
+        } else {
+            $sort = 'DESC';
+        }
+        $sort_option = [
+            'order' => $order,
+            'sort' => $sort
+        ];
+        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1 ORDER BY {$order} {$sort} LIMIT {$start}, {$num_per_page}";
+        $admins = $this->adminModel->get($condition);
+
+        // String pagging
+        $page_prev = $page_num - 1;
+
+        $str_pagging = "<ul class='pagination'>";
+        if ($page_num > 1) {
+            $page_prev = $page_num - 1;
+            $str_pagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$page_prev}'>Previous</a></li>";
+        }
+        for ($i = 1; $i <= $num_page; $i++) {
+            $active = "";
+            if ($page_num == $i) {
+                $active = "class = 'active-num-page'";
+            }
+            $str_pagging .= "<li class='page-item' {$active}><a class='page-link' href = 'management/search/{$i}'>$i</a></li>";
+        }
+        $page_next = $page_num + 1;
+        if ($page_num < $num_page) {
+            $page_next = $page_num + 1;
+            $str_pagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$page_next}'>Next</a></li>";
+        }
+        $str_pagging .= "</ul>";
+        $data = [
+            'sort_option' => $sort_option,
+            'admins' => $admins,
+            'str_pagging' => $str_pagging
+        ];
+        $this->render('index', $data);
+
+    }
+
+    public function login()
+    {
+        global $email, $password, $error;
+        if (isset($_POST['btn_login'])) {
+            $error = array();
+            # Check email
+            if (empty($_POST['email'])) {
+                $error['email'] = EMAIL_BLANK;
+            }
+            if (!is_email($_POST['email'])) {
+                $error['email'] = EMAIL_VALIDATE;
+            } else {
+                $email = $_POST['email'];
+            }
+
+            # Check password
+            if (empty($_POST['password'])) {
+                $error['password'] = PASS_BLANK;
+            }
+            if (!is_password($_POST['password'])) {
+                $error['password'] = PASS_VALIDATE;
+            } else {
+                $password = md5($_POST['password']);
+            }
+
+            # Conclude
+            if (empty($error)) {
+                if ($this->adminModel->check_login($email, $password)) {
+                    $admin = $this->adminModel->get_id_current_admin($email, $password);
+                    $_SESSION['is_admin_login'] = true;
+                    $_SESSION['admin_login'] = $email;
+                    $_SESSION['admin_id'] = $admin->id;
+                    $_SESSION['role_type'] = $admin->role_type;
+                    redirect_to("search");
+                } else {
+                    $error['account'] = ACCOUNT_INCORRECT;
+                }
+            }
+        }
+        $this->render('login');
+    }
+
+    public function logout(){
+        unset($_SESSION['is_admin_login']);
+        unset($_SESSION['admin_login']);
+        redirect_to('management/login');
+    }
+
+    public function create()
+    {
+        check_role($_SESSION['role_type']);
+        global $name, $email, $error, $role;
+        if (isset($_POST['btn-add-admin'])) {
+            $error = array();
+
+            // Check name
+            if (empty($_POST['name'])) {
+                $error['name'] = NAME_BLANK;
+            }
+            if (!(strlen($_POST['name']) >= 0 && strlen($_POST['name']) <= 128)) {
+                $error['name'] = NAME_VALIDATE;
+            } else {
+                $name = $_POST['name'];
+            }
+
+            // Check password
+            if (empty($_POST['password'])) {
+                $error['password'] = PASS_BLANK;
+            }
+            if (!is_password($_POST['password'])) {
+                $error['password'] = PASS_VALIDATE;
+            } else {
+                $password = md5($_POST['password']);
+            }
+
+            // Check password verify
+            if (empty($_POST['password_verify'])) {
+                $error['password_verify'] = PASS_VERIFY_BLANK;
+            }
+            if (!is_password($_POST['password'])) {
+                $error['password'] = PASS_VALIDATE;
+            }
+            if ($_POST['password'] != $_POST['password_verify']) {
+                $error['password_verify'] = VERIFY_INCORRECT;
+            }
+
+            // Check email
+            if (empty($_POST['email'])) {
+                $error['email'] = EMAIL_BLANK;
+            }
+            if (!is_email($_POST['email'])) {
+                $error['email'] = EMAIL_VALIDATE;
+            }
+            if ($this->adminModel->check_mail_existed($_POST['email'])) {
+                $error['email'] = EMAIL_EXISTED;
+            } else {
+                $email = $_POST['email'];
+            }
+
+
+            // check avatar
+
+            if (!empty($_FILES['files']['name'][0])) {
+                $upload_dir = 'assets/images/';
+                $avatar = $upload_dir . $_FILES['files']['name'][0];
+            } else {
+                $error['avatar'] = AVATAR_BLANK;
+            }
+
+            // check role
+            if (empty($_POST['role'])) {
+                $error['role'] = ROLE_BLANK;
+            } else {
+                $role = $_POST['role'];
+            }
+
+            // get insertor id ( current admin id )
+
+            $ins_id = $_SESSION['admin_id'];
+
+            // check not error
+            if (empty($error)) {
+                $data = array(
+                    'name' => $name,
+                    'password' => $password,
+                    'email' => $email,
+                    'avatar' => $avatar,
+                    'role_type' => $role,
+                    'ins_id' => $ins_id,
+                    'ins_datetime' => date('d/m/yy'),
+                );
+                if ($this->adminModel->add($data)) {
+                    flash('admin_message', ADMIN_CREATED . "<br>" . "<a href='management/search'>Return to list ADMIN</a>");
+                }
+            }
+        }
+        $this->render('create');
+    }
+
+    public function edit()
+    {
+        check_role($_SESSION['role_type']);
+        if (isset($_POST['btn-update-admin'])) {
+            global $email, $name, $error, $success;
+            if (isset($_GET['id'])) {
+                $id = $_GET['id'];
+                $admin = $this->adminModel->getById($id);
+            }
+            $error = [];
+            $success = [];
+
+            // Check name
+            if (empty($_POST['name'])) {
+                $error['name'] = NAME_BLANK;
+            }
+            if (!(strlen($_POST['name']) >= 0 && strlen($_POST['name']) <= 128)) {
+                $error['name'] = NAME_VALIDATE;
+            } else {
+                $name = $_POST['name'];
+            }
+
+            // Check password
+            if (empty($_POST['password'])) {
+                $password = $admin['password'];
+            } else {
+                if (!is_password($_POST['password'])) {
+                    $error['password'] = PASS_VALIDATE;
+                } else {
+                    $password = md5($_POST['password']);
+                }
+            }
+            // Check verify password
+            if (!empty($_POST['password_verify'])) {
+                if (!is_password($_POST['password'])) {
+                    $error['password'] = PASS_VALIDATE;
+                }
+                if ($_POST['password'] != $_POST['password_verify']) {
+                    $error['password_verify'] = VERIFY_INCORRECT;
+                }
+            }
+
+            // Check email
+            if (empty($_POST['email'])) {
+                $error['email'] = EMAIL_BLANK;
+            }
+            if (!is_email($_POST['email'])) {
+                $error['email'] = EMAIL_VALIDATE;
+            } else {
+                $email = $_POST['email'];
+            }
+
+            // check avatar
+
+            if (!empty($_FILES['files']['name'][0])) {
+                $upload_dir = 'assets/images/';
+                $avatar = $upload_dir . $_FILES['files']['name'][0];
+            } else {
+                $avatar = $admin['avatar'];
+            }
+            // check role
+            if (empty($_POST['role'])) {
+                $error['role'] = ROLE_BLANK;
+            } else {
+                $role = $_POST['role'];
+            }
+
+            // get update id ( current admin id )
+            $upd_id = $_SESSION['admin_id'];
+            if (empty($error)) {
+                $data = array(
+                    'name' => $name,
+                    'password' => $password,
+                    'email' => $email,
+                    'avatar' => $avatar,
+                    'role_type' => $role,
+                    'upd_id' => $upd_id,
+                    'upd_datetime' => date('d/m/y'),
+                );
+                if ($this->adminModel->update($data, $id)) {
+                    flash('admin_message', ADMIN_UPDATED . "<br>" . "<a href='management/search'>Return to list ADMIN</a>");
+                } else {
+                    flash('admin_message', ST_WRONG);
+                }
+            }
+            $admin = $this->adminModel->getById($id);
+            $data = ['admin' => $admin];
+            $this->render('edit', $data);
+        }
+        if (isset($_GET['id'])) {
+            $id = (int)$_GET['id'];
+            $admin = $this->adminModel->getById($id);
+            $data = ['admin' => $admin];
+            $this->render('edit', $data);
+        }
+    }
+
+    public function delete()
+    {
+       check_role($_SESSION['role_type']);
+        if (!isset($_GET['id'])) {
+            flash('admin_message', ST_WRONG);
+            return false;
+        }
+        $id = $_GET['id'];
+        if ($this->adminModel->delete($id)) {
+            flash('admin_message', ADMIN_REMOVED);
+            redirect_to('/management/search');
+        }
+    }
+
+    // User Action
+
+    public function search_user(){
+        if (isset($_GET['btn-search-user'])) {
             $name = $_GET['name'];
             $email = $_GET['email'];
         } else {
@@ -34,7 +355,7 @@ class AdminController extends BaseController
 
         // Pagging
         $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";
-        $total_row = Admin::get($condition);
+        $total_row = $this->userModel->get($condition);
         $num_per_page = 3;
         $total_num_row = count($total_row);
         $num_page = ceil($total_num_row / $num_per_page);
@@ -56,341 +377,9 @@ class AdminController extends BaseController
             'order' => $order,
             'sort' => $sort
         ];
+
         $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1 ORDER BY {$order} {$sort} LIMIT {$start}, {$num_per_page}";
-        $admins = Admin::get($condition);
-
-        // String pagging
-        $page_prev = $page_num - 1;
-
-        $str_pagging = "<ul class='pagination'>";
-        if($page_num > 1){
-            $page_prev = $page_num-1;
-            $str_pagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$page_prev}'>Previous</a></li>";
-        }
-        for($i = 1; $i <= $num_page; $i++){
-            $active = "";
-            if($page_num == $i){
-                $active = "class = 'active-num-page'";
-            }
-            $str_pagging .= "<li class='page-item' {$active}><a class='page-link' href = 'management/search/{$i}'>$i</a></li>";
-        }
-        $page_next = $page_num + 1;
-        if($page_num < $num_page){
-            $page_next = $page_num+1;
-            $str_pagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$page_next}'>Next</a></li>";
-        }
-        $str_pagging .= "</ul>";
-        $data = [
-            'sort_option' => $sort_option,
-            'admins' => $admins,
-            'str_pagging' => $str_pagging
-        ];
-        $this->render('index', $data);
-
-
-    }
-
-    public function login()
-    {
-        global $email, $password, $error;
-        if (isset($_POST['btn_login'])) {
-            $error = array();
-            # Check email
-            if (empty($_POST['email'])) {
-                $error['email'] = 'Email can not be blank';
-            } else {
-                if (!is_email($_POST['email'])) {
-                    $error['email'] = "Wrong email format, try again";
-                } else {
-                    $email = $_POST['email'];
-                }
-            }
-            # Check password
-            if (empty($_POST['password'])) {
-                $error['password'] = 'Password can not be blank';
-            } else {
-                if (!is_password($_POST['password'])) {
-                    $error['password'] = "Wrong password format, try again";
-                } else {
-                    $password = md5($_POST['password']);
-                }
-            }
-            # Conclude
-            if (empty($error)) {
-                if (Admin::check_login($email, $password)) {
-                    $admin = Admin::get_id_current_admin($email, $password);
-                    $_SESSION['is_admin_login'] = true;
-                    $_SESSION['admin_login'] = $email;
-                    $_SESSION['admin_id'] = $admin->id;
-                    $_SESSION['role_type'] = $admin->role_type;
-                    redirect_to("search");
-                } else {
-                    $error['account'] = "Incorrect email or password";
-                }
-            }
-
-        }
-        $this->render('login');
-    }
-
-    public function logout(){
-        unset($_SESSION['is_admin_login']);
-        unset($_SESSION['admin_login']);
-        redirect_to('management/login');
-    }
-
-    public function create(){
-        if($_SESSION['role_type'] == 2){
-            redirect_to('/management/create-user');
-            flash('user_message', 'Only Super Admin could access Admin Management! You are in User Management');
-        }
-        global $name, $email, $error, $role;
-        if (isset($_POST['btn-add-admin'])) {
-
-            $error = array();
-            if (empty($_POST['name'])) {
-                $error['name'] = 'Name can not be blank';
-            } else {
-                if (!(strlen($_POST['name']) >= 0 && strlen($_POST['name']) <= 128)) {
-                    $error['name'] = 'Name must be 0 to 128 characters';
-                } else {
-                    $name = $_POST['name'];
-                }
-            }
-            if (empty($_POST['password'])) {
-                $error['password'] = 'Password can be blank';
-            } else {
-                    if (!is_password($_POST['password'])) {
-                        $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
-                    } else {
-                        $password = md5($_POST['password']);
-                    }
-            }
-
-            if (empty($_POST['password_verify'])) {
-                $error['password_verify'] = 'Please verify your password';
-            } else {
-                if (!is_password($_POST['password'])) {
-                    $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
-                } else {
-                    if($_POST['password'] == $_POST['password_verify']){
-                        $password_verify = md5($_POST['password_verify']);
-                    } else {
-                        $error['password_verify'] = "Password verify is not match";
-                    }
-                }
-            }
-            if (empty($_POST['email'])) {
-                $error['email'] = 'email can not be blank';
-            } else {
-                if(Admin::check_mail_existed($_POST['email'])){
-                    $error['email'] = "Email is existed";
-                } else {
-                    $email = $_POST['email'];
-                }
-            }
-
-            // check avatar
-
-            if(!empty($_FILES['files']['name'][0])){
-                $upload_dir = 'assets/images/';
-                $avatar = $upload_dir . $_FILES['files']['name'][0];
-            } else {
-                $error['avatar'] = "Please upload your avatar";
-            }
-
-            // check role
-            if (empty($_POST['role'])) {
-                $error['role'] = 'You have to choose admin role';
-            } else {
-                $role = $_POST['role'];
-            }
-
-            // get insertor id ( current admin id )
-
-            $ins_id = $_SESSION['admin_id'];
-
-
-            // check not error
-            if (empty($error)) {
-                $data = array(
-                    'name' => $name,
-                    'password' => $password,
-                    'email' => $email,
-                    'avatar' => $avatar,
-                    'role_type' => $role,
-                    'ins_id' => $ins_id,
-                    'ins_datetime' => date('d/m/yy'),
-                );
-                if(Admin::add($data)){
-
-                    flash('admin_message', "Add new ADMIN success!" . "<br>" . "<a href='management/search'>Return to list ADMIN</a>");
-//                    flash('') = "Add new ADMIN success!" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>";
-                }
-            } else {
-                flash ('admin_message', 'Something wrong happened!');
-            }
-        }
-        $this->render('create');
-    }
-
-    public function edit(){
-        if(isset($_POST['btn-update-admin'])){
-            global $email, $name, $error, $success;
-            if(isset($_GET['id'])){
-                $id = $_GET['id'];
-                $admin = Admin::getAdminById($id);
-            }
-            $error = [];
-            $success = [];
-            if (empty($_POST['name'])) {
-                $error['name'] = 'Name can not be blank';
-            } else {
-                if (!(strlen($_POST['name']) >= 0 && strlen($_POST['name']) <= 128)) {
-                    $error['name'] = 'Name must be 0 to 128 characters';
-                } else {
-                    $name = $_POST['name'];
-                }
-            }
-
-            if(empty($_POST['password'])){
-                $password = $admin['password'];
-            } else {
-                if (!is_password($_POST['password'])) {
-                    $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
-                } else {
-                    if(empty($_POST['password_verify'])){
-                        $error['password_verify'] = "Please enter your password verify";
-                    } else {
-                        if (!is_password($_POST['password'])) {
-                            $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
-                        } else {
-                            if($_POST['password'] == $_POST['password_verify']){
-                                $password = md5($_POST['password']);
-                            } else {
-                                $error['password_verify'] = "Password verify is not match";
-                            }
-                        }
-                    }
-                }
-            }
-
-
-            if (!empty($_POST['password'])) {
-                if (!is_password($_POST['password'])) {
-                    $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
-                } else {
-                    $password = md5($_POST['password']);
-                }
-            } else {
-
-
-                $password = $admin['password'];
-            }
-
-            if (!empty($_POST['password_verify'])) {
-                if (!is_password($_POST['password'])) {
-                    $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
-                } else {
-                    if($_POST['password'] == $_POST['password_verify']){
-                        $password_verify = md5($_POST['password_verify']);
-                    } else {
-                        $error['password_verify'] = "Password verify is not match";
-                    }
-                }
-            }
-            if (empty($_POST['email'])) {
-                $error['email'] = 'email can not be blank';
-            } else {
-                $email = $_POST['email'];
-            }
-
-            // check avatar
-
-            if(!empty($_FILES['files']['name'][0])){
-                $upload_dir = 'assets/images/';
-                $avatar = $upload_dir . $_FILES['files']['name'][0];
-            } else {
-                $avatar = $admin['avatar'];
-            }
-            // check role
-            if (empty($_POST['role'])) {
-                $error['role'] = 'You have to choose admin role';
-            } else {
-                $role = $_POST['role'];
-            }
-
-            // get update id ( current admin id )
-            $upd_id = $_SESSION['admin_id'];
-            if(empty($error)){
-                $data = array(
-                    'id' => $id,
-                    'name' => $name,
-                    'password' => $password,
-                    'email' => $email,
-                    'avatar' => $avatar,
-                    'role_type' => $role,
-                    'upd_id' => $upd_id,
-                    'upd_datetime' => date('d/m/y'),
-                );
-                if(Admin::update($data)){
-                    flash('admin_message', "Update ADMIN success!" . "<br>" . "<a href='management/search'>Return to list ADMIN</a>");
-//                    $success['admin'] = "Update ADMIN success" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>";
-                } else {
-                    flash('admin_message', 'Something wrong happened!');
-                }
-            }
-            $admin = Admin::getAdminById($id);
-            $data = ['admin' => $admin];
-            $this->render('edit', $data);
-        } else {
-            if(isset($_GET['id'])){
-                $id = (int)$_GET['id'];
-                $admin = Admin::getAdminById($id);
-                $data = ['admin' => $admin];
-                $this->render('edit', $data);
-            }
-        }
-
-    }
-
-    public function delete(){
-        if(isset($_GET['id'])){
-            $id = $_GET['id'];
-            if(Admin::delete($id)){
-                flash('admin_message', 'Admin Removed');
-                redirect_to('/management/search');
-            } else {
-                flash('admin_message', 'Something Wrong Happened!');
-            }
-        } else {
-            redirect_to('/management/search');
-        }
-    }
-
-    // User Action
-
-    public function search_user(){
-        if(isset($_GET['btn-search-user'])) {
-            $name = $_GET['name'];
-            $email = $_GET['email'];
-        } else {
-            $name = "";
-            $email = "";
-        }
-
-        // Get all admin account
-
-        // Pagging
-        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";
-        $total_row = User::get($condition);
-        $num_per_page = 3;
-        $total_num_row = count($total_row);
-        $num_page = ceil($total_num_row / $num_per_page);
-        $page_num = (int) !empty($_GET['page_id']) ? $_GET['page_id'] : 1;
-        $start = ($page_num - 1) * $num_per_page;
-        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1 LIMIT {$start}, {$num_per_page}";
-        $users = User::get($condition);
+        $users = $this->userModel->get($condition);
 
         // String pagging
         $page_prev = $page_num - 1;
@@ -409,12 +398,13 @@ class AdminController extends BaseController
         $page_next = $page_num + 1;
         if($page_num < $num_page){
             $page_next = $page_num+1;
-            $str_pagging .= "<li class='page-item'><a class='page-link' href = 'management/search-user/$page_next}'>Next</a></li>";
+            $str_pagging .= "<li class='page-item'><a class='page-link' href = 'management/search-user/{$page_next}'>Next</a></li>";
         }
         $str_pagging .= "</ul>";
         $data = [
             'users' => $users,
-            'str_pagging' => $str_pagging
+            'str_pagging' => $str_pagging,
+            'sort_option' => $sort_option
         ];
         $this->render('search_user', $data);
 
@@ -424,47 +414,46 @@ class AdminController extends BaseController
 
         global $name, $email, $error;
         if (isset($_POST['btn-add-user'])) {
-            $error = array();
+            $error = [];
+            // Check name
             if (empty($_POST['name'])) {
-                $error['name'] = 'Name can not be blank';
-            } else {
-                if (!(strlen($_POST['name']) >= 0 && strlen($_POST['name']) <= 128)) {
-                    $error['name'] = 'Name must be 0 to 128 characters';
-                } else {
-                    $name = $_POST['name'];
-                }
+                $error['name'] = NAME_BLANK;
             }
-            if (empty($_POST['password'])) {
-                $error['password'] = 'Password can be blank';
+            if (!(strlen($_POST['name']) >= 0 && strlen($_POST['name']) <= 128)) {
+                $error['name'] = NAME_VALIDATE;
             } else {
-                if (!is_password($_POST['password'])) {
-                    $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
-                } else {
-                    $password = md5($_POST['password']);
-                }
+                $name = $_POST['name'];
             }
 
-            if (empty($_POST['password_verify'])) {
-                $error['password_verify'] = 'Please verify your password';
-            } else {
-                if (!is_password($_POST['password'])) {
-                    $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
-                } else {
-                    if($_POST['password'] == $_POST['password_verify']){
-                        $password_verify = md5($_POST['password_verify']);
-                    } else {
-                        $error['password_verify'] = "Password verify is not match";
-                    }
-                }
+            // Check password
+            if (empty($_POST['password'])) {
+                $error['password'] = PASS_BLANK;
             }
-            if (empty($_POST['email'])) {
-                $error['email'] = 'email can not be blank';
+            if (!is_password($_POST['password'])) {
+                $error['password'] = PASS_VALIDATE;
             } else {
-                if(User::check_mail_existed($_POST['email'])){
-                    $error['email'] = "Email is existed";
-                } else {
-                    $email = $_POST['email'];
-                }
+                $password = md5($_POST['password']);
+            }
+
+            // Check password verfiy
+            if (empty($_POST['password_verify'])) {
+                $error['password_verify'] = PASS_VERIFY_BLANK;
+            }
+            if (!is_password($_POST['password'])) {
+                $error['password'] = PASS_VALIDATE;
+            }
+            if($_POST['password'] != $_POST['password_verify']){
+                $error['password_verify'] = VERIFY_INCORRECT;
+            }
+
+            // Check email
+            if (empty($_POST['email'])) {
+                $error['email'] = EMAIL_BLANK;
+            }
+            if($this->userModel->check_mail_existed($_POST['email'])){
+                $error['email'] = EMAIL_EXISTED;
+            } else {
+                $email = $_POST['email'];
             }
 
             // check avatar
@@ -473,12 +462,12 @@ class AdminController extends BaseController
                 $upload_dir = 'assets/images/';
                 $avatar = $upload_dir . $_FILES['files']['name'][0];
             } else {
-                $error['avatar'] = "Please upload your avatar";
+                $error['avatar'] = AVATAR_BLANK;
             }
 
             // check role
             if (empty($_POST['status'])) {
-                $error['status'] = 'You have to choose admin role';
+                $error['status'] = STATUS_BLANK;
             } else {
                 $status = $_POST['status'];
             }
@@ -498,12 +487,11 @@ class AdminController extends BaseController
                     'ins_id' => $ins_id,
                     'ins_datetime' => date('d/m/yy'),
                 );
-                if(User::add($data)){
-                    flash('user_message', "Add new USER success!" . "<br>" . "<a href='management/search-user'>Return to list ADMIN</a>");
-//                    flash('') = "Add new ADMIN success!" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>";
+                if($this->userModel->add($data)){
+                    flash('user_message', USER_CREATED . "<br>" . "<a href='management/search-user'>Return to list ADMIN</a>");
                 }
             } else {
-                flash ('user_message', 'Something wrong happened!');
+                flash ('user_message', ST_WRONG);
             }
         }
         $this->render('create_user');
@@ -515,68 +503,57 @@ class AdminController extends BaseController
             global $email, $name, $error, $success;
             if(isset($_GET['id'])){
                 $id = $_GET['id'];
-                $admin = User::getUserById($id);
+                $admin = $this->userModel->getById($id);
             }
             $error = [];
             $success = [];
+
+            // Check name
             if (empty($_POST['name'])) {
-                $error['name'] = 'Name can not be blank';
+                $error['name'] = NAME_BLANK;
+            }
+            if (!(strlen($_POST['name']) >= 0 && strlen($_POST['name']) <= 128)) {
+                $error['name'] = NAME_VALIDATE;
             } else {
-                if (!(strlen($_POST['name']) >= 0 && strlen($_POST['name']) <= 128)) {
-                    $error['name'] = 'Name must be 0 to 128 characters';
-                } else {
-                    $name = $_POST['name'];
-                }
+                $name = $_POST['name'];
             }
 
+            // Check password
             if(empty($_POST['password'])){
                 $password = $admin['password'];
             } else {
                 if (!is_password($_POST['password'])) {
-                    $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
-                } else {
-                    if(empty($_POST['password_verify'])){
-                        $error['password_verify'] = "Please enter your password verify";
-                    } else {
-                        if (!is_password($_POST['password'])) {
-                            $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
-                        } else {
-                            if($_POST['password'] == $_POST['password_verify']){
-                                $password = md5($_POST['password']);
-                            } else {
-                                $error['password_verify'] = "Password verify is not match";
-                            }
-                        }
-                    }
+                    $error['password'] = PASS_VALIDATE;
                 }
-            }
-
-
-            if (!empty($_POST['password'])) {
+                if(empty($_POST['password_verify'])){
+                    $error['password_verify'] = PASS_VERIFY_BLANK;
+                }
                 if (!is_password($_POST['password'])) {
-                    $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
-                } else {
-                    $password = md5($_POST['password']);
+                    $error['password'] = PASS_VALIDATE;
                 }
-            } else {
-
-
-                $password = $admin['password'];
+                if($_POST['password'] == $_POST['password_verify']){
+                    $password = md5($_POST['password']);
+                } else {
+                    $error['password_verify'] = VERIFY_INCORRECT;
+                }
             }
 
+            // Check password verify
             if (!empty($_POST['password_verify'])) {
                 if (!is_password($_POST['password'])) {
-                    $error['password'] = 'Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter';
-                } else {
-                    if($_POST['password'] == $_POST['password_verify']){
-                        $password_verify = md5($_POST['password_verify']);
-                    } else {
-                        $error['password_verify'] = "Password verify is not match";
-                    }
+                    $error['password'] = PASS_VALIDATE;
+                }
+                if($_POST['password'] != $_POST['password_verify']){
+                    $error['password_verify'] = VERIFY_INCORRECT;
                 }
             }
+
+            // Check mail
             if (empty($_POST['email'])) {
-                $error['email'] = 'email can not be blank';
+                $error['email'] = EMAIL_BLANK;
+            }
+            if (!is_email($_POST['email'])) {
+                $error['email'] = EMAIL_VALIDATE;
             } else {
                 $email = $_POST['email'];
             }
@@ -591,7 +568,7 @@ class AdminController extends BaseController
             }
             // check role
             if (empty($_POST['status'])) {
-                $error['status'] = 'You have to choose user status';
+                $error['status'] = STATUS_BLANK;
             } else {
                 $status = $_POST['status'];
             }
@@ -600,7 +577,6 @@ class AdminController extends BaseController
             $upd_id = $_SESSION['admin_id'];
             if(empty($error)){
                 $data = array(
-                    'id' => $id,
                     'name' => $name,
                     'password' => $password,
                     'email' => $email,
@@ -609,20 +585,20 @@ class AdminController extends BaseController
                     'upd_id' => $upd_id,
                     'upd_datetime' => date('d/m/y'),
                 );
-                if(User::update($data)){
-                    flash('user_message', "Update USER success!" . "<br>" . "<a href='management/search-user'>Return to list USER</a>");
+                if($this->userModel->update($data, $id)){
+                    flash('user_message', USER_UPDATED . "<br>" . "<a href='management/search-user'>Return to list USER</a>");
 //                    $success['admin'] = "Update ADMIN success" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>";
                 } else {
-                    flash('user_message', 'Something wrong happened!');
+                    flash('user_message', ST_WRONG);
                 }
             }
-            $user = User::getUserById($id);
+            $user = $this->userModel->getById($id);
             $data = ['user' => $user];
             $this->render('edit_user', $data);
         } else {
             if(isset($_GET['id'])){
                 $id = (int)$_GET['id'];
-                $user = User::getUserById($id);
+                $user = $this->userModel->getById($id);
                 $data = ['user' => $user];
                 $this->render('edit_user', $data);
             }
@@ -633,11 +609,11 @@ class AdminController extends BaseController
     public function delete_user(){
         if(isset($_GET['id'])){
             $id = $_GET['id'];
-            if(User::delete($id)){
+            if($this->userModel->delete($id)){
                 flash('user_message', 'User Removed');
                 redirect_to('/management/search-user');
             } else {
-                flash('user_message', 'Something Wrong Happened!');
+                flash('user_message', ST_WRONG);
                 redirect_to('/management/search-user');
             }
         } else {

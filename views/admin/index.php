@@ -8,8 +8,6 @@ require_once('views/layouts/header.php');
         <div id="content" class="fl-right">
             <div class="form-search" id="form-search">
                 <form action="management/search" method="GET" enctype="multipart/form-data">
-                    <input type="hidden" id="controller" name="controller" value="admin">
-                    <input type="hidden" id="action" name="action" value="search">
                     <label for="name">Name</label>
                     <input type="text" name="name" id="name" value=""> <br> <br>
                     <?php echo form_error('name')?>
@@ -32,17 +30,17 @@ require_once('views/layouts/header.php');
                             <thead>
                             <tr>
                                 <th>
-                                    <a class="column-sort" id="id" data-order="desc" href="?controller=admin&action=search&order=id&sort=<?=$sort_option['sort']?>">ID <i class="fa fa-fw fa-sort"></i><a/>
+                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=id&sort=<?=$sort_option['sort']?>">ID <i class="fa fa-fw fa-sort"></i><a/>
                                 </th>
                                 <th scope="col">Avatar</th>
                                 <th scope="col">
-                                    <a class="column-sort" id="id" data-order="desc" href="?controller=admin&action=search&order=name&sort=<?=$sort_option['sort']?>">Name <i class="fa fa-fw fa-sort"></i><a/>
+                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=name&sort=<?=$sort_option['sort']?>">Name <i class="fa fa-fw fa-sort"></i><a/>
                                 </th>
                                 <th scope="col">
-                                    <a class="column-sort" id="id" data-order="desc" href="?controller=admin&action=search&order=email&sort=<?=$sort_option['sort']?>">Email <i class="fa fa-fw fa-sort"></i><a/>
+                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=email&sort=<?=$sort_option['sort']?>">Email <i class="fa fa-fw fa-sort"></i><a/>
                                 </th>
                                 <th scope="col">
-                                    <a class="column-sort" id="id" data-order="desc" href="?controller=admin&action=search&order=role_type&sort=<?=$sort_option['sort']?>">Role <i class="fa fa-fw fa-sort"></i><a/>
+                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=role_type&sort=<?=$sort_option['sort']?>">Role <i class="fa fa-fw fa-sort"></i><a/>
                                 </th>
                                 <th scope="col">Action</th>
                             </tr>

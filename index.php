@@ -2,6 +2,8 @@
 <?php
 require_once('database.php');
 require_once('assets/helper/url.php');
+require_once('assets/libraries/notific.php');
+require_once('assets/libraries/config.php');
 
 
 if (isset($_GET['controller'])) {

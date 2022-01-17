@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <base href="https://paralinetraining.com">
+    <base href="<?=BASE_URL?>">
     <title>Trang đăng nhập</title>
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/import/login.css">

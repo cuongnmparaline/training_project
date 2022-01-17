@@ -30,28 +30,3 @@ $(document).ready(function () {
 });
 
 
-
-$(document).ready(function (){
-    $('.column-sort').onclick(function (){
-        var column_name = $(this).attr("id");
-        var order = $(this).data("order");
-        // glyphicon glyphicon-arrow-down
-        // glyphicon glyphicon-arrow-up
-        var arrow = '';
-        if(order == 'desc'){
-            arrow = '&nbsp;<span class="glyphicon glyphicon-arrow-down"></span>';
-        } else {
-            arrow = '&nbsp;<span class="glyphicon glyphicon-arrow-up"></span>';
-        }
-
-        $.ajax({
-            url: "?controller=admin&action=sort",
-            method: "POST",
-            data: {column_name: column_name, order: order},
-            success:function (data){
-                $('#admin-table').html(data);
-                $('#'+column_name+'').append(arrow);
-            }
-        })
-    });
-});

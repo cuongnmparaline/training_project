@@ -9,8 +9,6 @@ require_once('views/layouts/header.php');
         <div id="content" class="fl-right">
             <div class="form-search" id="form-search">
                 <form action="management/search-user" method="GET">
-<!--                    <input type="hidden" id="controller" name="controller" value="admin">-->
-<!--                    <input type="hidden" id="action" name="action" value="search_user">-->
                     <label for="name">Name</label>
                     <input type="text" name="name" id="name" value=""> <br> <br>
                     <?php echo form_error('name')?>
@@ -28,19 +26,23 @@ require_once('views/layouts/header.php');
                         <nav aria-label="Page navigation example">
                             <?php if(!empty($str_pagging)) echo $str_pagging ?>
                         </nav>
+                        <?php $sort_option['sort'] == 'DESC' ? $sort_option['sort'] = 'ASC' : $sort_option['sort'] = 'DESC'; ?>
                         <table class="table">
                             <thead>
                             <tr>
                                 <th>
-                                    <b>ID</b>
-                                    <!--                                    <span class="glyphicon glyphicon-triangle-bottom"></span>-->
-                                    <!--                                    <span class="glyphicon glyphicon-triangle-top"></span>-->
-                                    <!--                                    <i class="fa fa-fw fa-sort"></i>-->
+                                    <a class="column-sort" id="id" data-order="desc" href="management/search-user?order=id&sort=<?=$sort_option['sort']?>">ID <i class="fa fa-fw fa-sort"></i><a/>
                                 </th>
                                 <th scope="col">Avatar</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Status</th>
+                                <th scope="col">
+                                    <a class="column-sort" id="id" data-order="desc" href="management/search-user?order=name&sort=<?=$sort_option['sort']?>">Name <i class="fa fa-fw fa-sort"></i><a/>
+                                </th>
+                                <th scope="col">
+                                    <a class="column-sort" id="id" data-order="desc" href="management/search-user?order=email&sort=<?=$sort_option['sort']?>">Email <i class="fa fa-fw fa-sort"></i><a/>
+                                </th>
+                                <th scope="col">
+                                    <a class="column-sort" id="id" data-order="desc" href="management/search-user?order=status&sort=<?=$sort_option['sort']?>">Status <i class="fa fa-fw fa-sort"></i><a/>
+                                </th>
                                 <th scope="col">Action</th>
                             </tr>
                             </thead>

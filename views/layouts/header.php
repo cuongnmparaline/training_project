@@ -4,7 +4,7 @@
     <title>Account manager</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <base href="https://paralinetraining.com">
+    <base href="<?=BASE_URL?>">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="assets/css/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css"/>

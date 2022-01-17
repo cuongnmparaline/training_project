@@ -6,16 +6,18 @@ require_once('assets/libraries/validation.php');
 
 class UserController extends BaseController
 {
+    private $userModel;
     function __construct()
     {
         $this->folder = 'user';
+        $this->userModel = new User();
     }
 
     public function profile()
     {
         if(isset($_SESSION['facebook_id'])){
             $facebook_id = $_SESSION['facebook_id'];
-            $user = User::getUserByFbId($facebook_id);
+            $user = $this->userModel->getUserByFbId($facebook_id);
             $data = [
                 'user' => $user
             ];
@@ -37,41 +39,41 @@ class UserController extends BaseController
             $error = array();
             # Check email
             if (empty($_POST['email'])) {
-                $error['email'] = 'Email can not be blank';
+                $error['email'] = EMAIL_BLANK;
             } else {
                 if (!is_email($_POST['email'])) {
-                    $error['email'] = "Wrong email format, try again";
+                    $error['email'] = EMAIL_VALIDATE;
                 } else {
                     $email = $_POST['email'];
                 }
             }
             # Check password
             if (empty($_POST['password'])) {
-                $error['password'] = 'Password can not be blank';
+                $error['password'] = PASS_BLANK;
             } else {
                 if (!is_password($_POST['password'])) {
-                    $error['password'] = "Wrong password format, try again";
+                    $error['password'] = PASS_VALIDATE;
                 } else {
                     $password = md5($_POST['password']);
                 }
             }
             # Conclude
             if (empty($error)) {
-                if (User::check_login($email, $password)) {
+                if ($this->userModel->check_login($email, $password)) {
                     $_SESSION['is_user_login'] = true;
                     $_SESSION['user_login'] = $email;
 //                    $_SESSION['user_id'] = $admin->id;
                     redirect_to("/profile");
                 } else {
-                    $error['account'] = "Incorrect email or password";
+                    $error['account'] = ACCOUNT_INCORRECT;
                 }
             }
 
         }
 
         $fb = new \Facebook\Facebook([
-            'app_id' => '465482708377639',
-            'app_secret' => '2c68a5f3c1882b39c5b713e184891817',
+            'app_id' => API_ID,
+            'app_secret' => APP_SECRET,
             'default_graph_version' => 'v12.0'
         ]);
 
@@ -118,7 +120,7 @@ class UserController extends BaseController
                         $_SESSION['facebook_id'] = $facebook_id;
                         redirect_to('/profile');
                     } else {
-                        flash('user_message', 'Something wrong happened');
+                        flash('user_messager', ST_WRONG);
                     }
                 }
             }catch (Exception $exc){

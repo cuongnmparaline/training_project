@@ -24,4 +24,11 @@ class BaseController
             header('Location: index.php?controller=pages&action=error');
         }
     }
+
+    function model($model){
+        // Require model file
+        require_once '../app/models/' . $model . '.php';
+        // Instantiate model
+        return new $model();
+    }
 }
