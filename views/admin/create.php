@@ -39,7 +39,7 @@ require_once ('views/layouts/header.php');
                         <label for="admin" class="role">Admin</label>
                         <?php echo form_error('role')?>
                         <br> <br>
-                        <a href="?controller=admin&action=create" class="btn btn-primary">Reset</a>
+                        <a href="management/create" class="btn btn-primary">Reset</a>
                         <button type="submit" name="btn-add-admin" id="btn-submit" class="btn btn-secondary">Save</button>
                     </form>
                 </div>

@@ -39,7 +39,7 @@ require_once ('views/layouts/header.php');
                         <label for="banned" class="status">Banned</label>
                         <?php echo form_error('status')?>
                         <br> <br>
-                        <a href="?controller=admin&action=create_user" class="btn btn-primary">Reset</a>
+                        <a href="management/create-user" class="btn btn-primary">Reset</a>
                         <button type="submit" name="btn-add-user" id="btn-submit" class="btn btn-secondary">Save</button>
                     </form>
                 </div>

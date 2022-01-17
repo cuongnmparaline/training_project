@@ -4,6 +4,7 @@
     <title>Account manager</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="https://paralinetraining.com">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="assets/css/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css"/>
@@ -26,27 +27,27 @@
     <div id="container">
         <div id="header-wp">
             <div class="wp-inner clearfix">
-                <a href="?" title="" id="logo" class="fl-left">ACCOUNT MANAGEMENT</a>
+                <a href="/management" title="" id="logo" class="fl-left">ACCOUNT MANAGEMENT</a>
                 <ul id="main-menu" class="fl-left">
                     <li>
-                        <a href="?controller=admin&action=search" title="">Admin Management</a>
+                        <a href="management/search" title="">Admin Management</a>
                         <ul class="sub-menu">
                             <li>
-                                <a href="?controller=admin&action=search" title="">Search</a>
+                                <a href="management/search" title="">Search</a>
                             </li>
                             <li>
-                                <a href="?controller=admin&action=create" title="">Create</a>
+                                <a href="management/create" title="">Create</a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <a href="?controller=admin&action=search_user" title="">User Management</a>
+                        <a href="management/search-user" title="">User Management</a>
                         <ul class="sub-menu">
                             <li>
-                                <a href="?controller=admin&action=search_user" title="">Search</a>
+                                <a href="management/search-user" title="">Search</a>
                             </li>
                             <li>
-                                <a href="?controller=admin&action=create_user" title="">Create</a>
+                                <a href="management/create-user" title="">Create</a>
                             </li>
                         </ul>
                     </li>

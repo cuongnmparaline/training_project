@@ -13,7 +13,7 @@ class User extends BaseModel{
         return $sth->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function add($data)
+    public function addFbAccount($data)
     {
         $db = DB::getInstance();
         $sth = $db->prepare('INSERT INTO users (name, facebook_id, email, avatar, 
@@ -21,6 +21,25 @@ class User extends BaseModel{
                     VALUES (:name,:facebook_id,:email,:avatar,:status,:ins_id,:ins_datetime)');
         $sth->bindValue(':name', $data['name']);
         $sth->bindValue(':facebook_id', $data['facebook_id']);
+        $sth->bindValue(':email', $data['email']);
+        $sth->bindValue(':avatar', $data['avatar']);
+        $sth->bindValue(':status', $data['status']);
+        $sth->bindValue(':ins_id', $data['ins_id']);
+        $sth->bindValue(':ins_datetime', $data['ins_datetime']);
+        if($sth->execute()){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function add($data)
+    {
+        $db = DB::getInstance();
+        $sth = $db->prepare('INSERT INTO users (name, password, email, avatar, 
+                    status, ins_id, ins_datetime) 
+                    VALUES (:name,:password,:email,:avatar,:status,:ins_id,:ins_datetime)');
+        $sth->bindValue(':name', $data['name']);
+        $sth->bindValue(':password', $data['password']);
         $sth->bindValue(':email', $data['email']);
         $sth->bindValue(':avatar', $data['avatar']);
         $sth->bindValue(':status', $data['status']);

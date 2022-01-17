@@ -5,6 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <base href="https://paralinetraining.com">
     <title>User Profile</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

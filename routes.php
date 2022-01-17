@@ -20,13 +20,13 @@ if (!array_key_exists($controller, $controllers) || !in_array($action, $controll
 }
 if($controller == 'admin'){
     if(!isset($_SESSION['is_admin_login']) && $action != 'login'){
-        redirect_to('?controller=admin&action=login');
+        redirect_to('/management/login');
     }
 }
 
 if($controller == 'user'){
     if(!isset($_SESSION['is_user_login']) && $action != 'login'){
-        redirect_to('?controller=user&action=login');
+        redirect_to('/login');
     }
 }
 

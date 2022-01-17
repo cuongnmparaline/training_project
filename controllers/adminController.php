@@ -19,7 +19,7 @@ class AdminController extends BaseController
 
     public function search(){
         if($_SESSION['role_type'] == 2){
-            redirect_to('?controller=admin&action=search_user');
+            redirect_to('management/search-user');
             flash('user_message', 'Only Super Admin could access Admin Management! You are in User Management');
         }
         if(isset($_GET['btn-search'])) {
@@ -65,19 +65,19 @@ class AdminController extends BaseController
         $str_pagging = "<ul class='pagination'>";
         if($page_num > 1){
             $page_prev = $page_num-1;
-            $str_pagging .= "<li class='page-item'><a class='page-link' href = '?controller=admin&action=search&page_id={$page_prev}'>Previous</a></li>";
+            $str_pagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$page_prev}'>Previous</a></li>";
         }
         for($i = 1; $i <= $num_page; $i++){
             $active = "";
             if($page_num == $i){
                 $active = "class = 'active-num-page'";
             }
-            $str_pagging .= "<li class='page-item' {$active}><a class='page-link' href = '?controller=admin&action=search&page_id={$i}'>$i</a></li>";
+            $str_pagging .= "<li class='page-item' {$active}><a class='page-link' href = 'management/search/{$i}'>$i</a></li>";
         }
         $page_next = $page_num + 1;
         if($page_num < $num_page){
             $page_next = $page_num+1;
-            $str_pagging .= "<li class='page-item'><a class='page-link' href = '?controller=admin&action=search&page_id={$page_next}'>Next</a></li>";
+            $str_pagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$page_next}'>Next</a></li>";
         }
         $str_pagging .= "</ul>";
         $data = [
@@ -123,7 +123,7 @@ class AdminController extends BaseController
                     $_SESSION['admin_login'] = $email;
                     $_SESSION['admin_id'] = $admin->id;
                     $_SESSION['role_type'] = $admin->role_type;
-                    redirect_to("?controller=admin&action=search");
+                    redirect_to("search");
                 } else {
                     $error['account'] = "Incorrect email or password";
                 }
@@ -136,12 +136,12 @@ class AdminController extends BaseController
     public function logout(){
         unset($_SESSION['is_admin_login']);
         unset($_SESSION['admin_login']);
-        redirect_to('?controller=admin&action=login');
+        redirect_to('management/login');
     }
 
     public function create(){
         if($_SESSION['role_type'] == 2){
-            redirect_to('?controller=admin&action=create_user');
+            redirect_to('/management/create-user');
             flash('user_message', 'Only Super Admin could access Admin Management! You are in User Management');
         }
         global $name, $email, $error, $role;
@@ -224,7 +224,7 @@ class AdminController extends BaseController
                 );
                 if(Admin::add($data)){
 
-                    flash('admin_message', "Add new ADMIN success!" . "<br>" . "<a href='?controller=admin&action=search'>Return to list ADMIN</a>");
+                    flash('admin_message', "Add new ADMIN success!" . "<br>" . "<a href='management/search'>Return to list ADMIN</a>");
 //                    flash('') = "Add new ADMIN success!" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>";
                 }
             } else {
@@ -334,7 +334,7 @@ class AdminController extends BaseController
                     'upd_datetime' => date('d/m/y'),
                 );
                 if(Admin::update($data)){
-                    flash('admin_message', "Update ADMIN success!" . "<br>" . "<a href='?controller=admin&action=search'>Return to list ADMIN</a>");
+                    flash('admin_message', "Update ADMIN success!" . "<br>" . "<a href='management/search'>Return to list ADMIN</a>");
 //                    $success['admin'] = "Update ADMIN success" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>";
                 } else {
                     flash('admin_message', 'Something wrong happened!');
@@ -359,12 +359,12 @@ class AdminController extends BaseController
             $id = $_GET['id'];
             if(Admin::delete($id)){
                 flash('admin_message', 'Admin Removed');
-                redirect_to('?controller=admin&action=search');
+                redirect_to('/management/search');
             } else {
-                flash('user_message', 'Something Wrong Happened!');
+                flash('admin_message', 'Something Wrong Happened!');
             }
         } else {
-            redirect_to('?controller=admin&action=search');
+            redirect_to('/management/search');
         }
     }
 
@@ -397,19 +397,19 @@ class AdminController extends BaseController
         $str_pagging = "<ul class='pagination'>";
         if($page_num > 1){
             $page_prev = $page_num-1;
-            $str_pagging .= "<li class='page-item'><a class='page-link' href = '?controller=admin&action=search_user&page_id={$page_prev}'>Previous</a></li>";
+            $str_pagging .= "<li class='page-item'><a class='page-link' href = 'management/search-user/{$page_prev}'>Previous</a></li>";
         }
         for($i = 1; $i <= $num_page; $i++){
             $active = "";
             if($page_num == $i){
                 $active = "class = 'active-num-page'";
             }
-            $str_pagging .= "<li class='page-item' {$active}><a class='page-link' href = '?controller=admin&action=search_user&page_id={$i}'>$i</a></li>";
+            $str_pagging .= "<li class='page-item' {$active}><a class='page-link' href = 'management/search-user/{$i}'>$i</a></li>";
         }
         $page_next = $page_num + 1;
         if($page_num < $num_page){
             $page_next = $page_num+1;
-            $str_pagging .= "<li class='page-item'><a class='page-link' href = '?controller=admin&action=search_user&page_id={$page_next}'>Next</a></li>";
+            $str_pagging .= "<li class='page-item'><a class='page-link' href = 'management/search-user/$page_next}'>Next</a></li>";
         }
         $str_pagging .= "</ul>";
         $data = [
@@ -499,7 +499,7 @@ class AdminController extends BaseController
                     'ins_datetime' => date('d/m/yy'),
                 );
                 if(User::add($data)){
-                    flash('user_message', "Add new USER success!" . "<br>" . "<a href='?controller=admin&action=search_user'>Return to list ADMIN</a>");
+                    flash('user_message', "Add new USER success!" . "<br>" . "<a href='management/search-user'>Return to list ADMIN</a>");
 //                    flash('') = "Add new ADMIN success!" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>";
                 }
             } else {
@@ -610,7 +610,7 @@ class AdminController extends BaseController
                     'upd_datetime' => date('d/m/y'),
                 );
                 if(User::update($data)){
-                    flash('user_message', "Update USER success!" . "<br>" . "<a href='?controller=admin&action=search_user'>Return to list USER</a>");
+                    flash('user_message', "Update USER success!" . "<br>" . "<a href='management/search-user'>Return to list USER</a>");
 //                    $success['admin'] = "Update ADMIN success" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>";
                 } else {
                     flash('user_message', 'Something wrong happened!');
@@ -635,13 +635,13 @@ class AdminController extends BaseController
             $id = $_GET['id'];
             if(User::delete($id)){
                 flash('user_message', 'User Removed');
-                redirect_to('?controller=admin&action=search_user');
+                redirect_to('/management/search-user');
             } else {
                 flash('user_message', 'Something Wrong Happened!');
-                redirect_to('?controller=admin&action=search_user');
+                redirect_to('/management/search-user');
             }
         } else {
-            redirect_to('?controller=admin&action=search_user');
+            redirect_to('/management/search-user');
         }
     }
     function add_avatar()

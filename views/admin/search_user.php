@@ -8,15 +8,15 @@ require_once('views/layouts/header.php');
     <div class="wrap clearfix">
         <div id="content" class="fl-right">
             <div class="form-search" id="form-search">
-                <form action="?controller" method="GET">
-                    <input type="hidden" id="controller" name="controller" value="admin">
-                    <input type="hidden" id="action" name="action" value="search_user">
+                <form action="management/search-user" method="GET">
+<!--                    <input type="hidden" id="controller" name="controller" value="admin">-->
+<!--                    <input type="hidden" id="action" name="action" value="search_user">-->
                     <label for="name">Name</label>
                     <input type="text" name="name" id="name" value=""> <br> <br>
                     <?php echo form_error('name')?>
                     <label for="email">Email</label>
                     <input type="text" name="email" id="email" value=""> <br> <br>
-                    <a href="?controller=admin&action=search_user" class="btn btn-primary">Reset</a>
+                    <a href="management/search-user" class="btn btn-primary">Reset</a>
                     <input type="submit" id="search-button" name="btn-search-user" class="btn btn-success" value="Search" />
                 </form>
                 <br> <br>
@@ -56,8 +56,8 @@ require_once('views/layouts/header.php');
                                         <td><?= $user['email']?></td>
                                         <td><?= set_status($user['status']) ?></td>
                                         <td>
-                                            <a href="?controller=admin&action=edit_user&id=<?=$user['id']?>">Edit</a> ||
-                                            <a href="?controller=admin&action=delete_user&id=<?=$user['id']?>" onclick="return confirm('Are you sure?');">Delete</a>
+                                            <a href="management/edit-user/<?=$user['id']?>">Edit</a> ||
+                                            <a href="management/delete-user/<?=$user['id']?>" onclick="return confirm('Are you sure?');">Delete</a>
                                         </td>
                                     </tr>
                                     <?php

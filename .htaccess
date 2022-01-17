@@ -1,0 +1,44 @@
+RewriteEngine On
+
+#### Module Admin
+
+# Search admin
+rewriteRule ^management$ ?controller=admin&action=search
+rewriteRule ^management/search/([0-9]+)$ ?controller=admin&action=search&page_id=$1
+rewriteRule ^management/search$ index.php?controller=admin&action=search [QSA,L]
+
+# Create admin
+rewriteRule ^management/create$ ?controller=admin&action=create
+
+# Edit admin
+rewriteRule ^management/edit/([0-9]+)$ ?controller=admin&action=edit&id=$1
+
+
+# Delete admin
+rewriteRule ^management/delete/([0-9]+)$ ?controller=admin&action=delete&id=$1
+
+# Search user
+rewriteRule ^management/search-user/([0-9]+)$ ?controller=admin&action=search_user&page_id=$1
+rewriteRule ^management/search-user$ index.php?controller=admin&action=search_user [QSA,L]
+
+# Create user
+rewriteRule ^management/create-user$ ?controller=admin&action=create_user
+
+# Edit user
+rewriteRule ^management/edit-user/([0-9]+)$ ?controller=admin&action=edit_user&id=$1
+
+# Delete user
+rewriteRule ^management/delete-user/([0-9]+)$ ?controller=admin&action=delete_user&id=$1
+
+
+# Dang nhap
+rewriteRule ^management/login$ ?controller=admin&action=login
+
+#Dang xuat
+rewriteRule ^management/logout$ ?controller=admin&action=logout
+
+
+#### Module User
+rewriteRule  ^login$ ?controller=user&action=login
+rewriteRule  ^logout$ ?controller=user&action=logout
+rewriteRule  ^profile$ ?controller=user&action=profile

@@ -41,7 +41,7 @@ require_once ('views/layouts/header.php');
                         <label for="banned" class="status">Banned</label>
                         <?php echo form_error('status')?>
                         <br> <br>
-                        <a href="?controller=admin&action=edit&id=<?=$user['id']?>" class="btn btn-primary">Reset</a>
+                        <a href="management/edit-user/<?=$user['id']?>" class="btn btn-primary">Reset</a>
                         <button type="submit" name="btn-update-admin" id="btn-submit" class="btn btn-secondary">Save</button>
                     </form>
                 </div>

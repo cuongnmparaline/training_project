@@ -61,7 +61,7 @@ class UserController extends BaseController
                     $_SESSION['is_user_login'] = true;
                     $_SESSION['user_login'] = $email;
 //                    $_SESSION['user_id'] = $admin->id;
-                    redirect_to("?controller=user&action=profile");
+                    redirect_to("/profile");
                 } else {
                     $error['account'] = "Incorrect email or password";
                 }
@@ -82,7 +82,7 @@ class UserController extends BaseController
             $accessToken = $helper->getAccessToken();
             if(isset($accessToken)){
                 $_SESSION['access_token'] = (string)$accessToken;
-                redirect_to('index.php?controller=user&action=login');
+                redirect_to('/login');
             }
         }catch (Exception $exc){
             echo $exc->getMessage();
@@ -102,7 +102,7 @@ class UserController extends BaseController
                 if(User::checkFbIdExisted($facebook_id)){
                     $_SESSION['is_user_login'] = 'true';
                     $_SESSION['facebook_id'] = $facebook_id;
-                    redirect_to('?controller=user&action=profile');
+                    redirect_to('/profile');
                 } else {
                     $data_insert = [
                         'name' => $name,
@@ -113,10 +113,10 @@ class UserController extends BaseController
                         'ins_id' => 0,
                         'ins_datetime' => date('d/m/yy')
                     ];
-                    if(User::add($data_insert)){
+                    if(User::addFbAccount($data_insert)){
                         $_SESSION['user_login'] = 'true';
                         $_SESSION['facebook_id'] = $facebook_id;
-                        redirect_to('?controller=user&action=profile');
+                        redirect_to('/profile');
                     } else {
                         flash('user_message', 'Something wrong happened');
                     }
@@ -132,8 +132,9 @@ class UserController extends BaseController
     }
 
     public function logout(){
-        session_start();
-        session_destroy();
-        redirect_to("index.php?controller=user&action=login");
+        unset($_SESSION['is_user_login']);
+        unset($_SESSION['access_token']);
+        unset($_SESSION['user_login']);
+        redirect_to("/login");
     }
 }

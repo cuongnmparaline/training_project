@@ -7,7 +7,7 @@ require_once('views/layouts/header.php');
     <div class="wrap clearfix">
         <div id="content" class="fl-right">
             <div class="form-search" id="form-search">
-                <form action="index.php?" method="GET" enctype="multipart/form-data">
+                <form action="management/search" method="GET" enctype="multipart/form-data">
                     <input type="hidden" id="controller" name="controller" value="admin">
                     <input type="hidden" id="action" name="action" value="search">
                     <label for="name">Name</label>
@@ -15,7 +15,7 @@ require_once('views/layouts/header.php');
                     <?php echo form_error('name')?>
                     <label for="email">Email</label>
                     <input type="text" name="email" id="email" value=""> <br> <br>
-                    <a href="?controller=admin&action=search" class="btn btn-primary">Reset</a>
+                    <a href="management/search" class="btn btn-primary">Reset</a>
                     <input type="submit" id="search-button" name="btn-search" class="btn btn-success" value="Search" />
                 </form>
                 <br> <br>
@@ -59,8 +59,8 @@ require_once('views/layouts/header.php');
                                 <td><?= $admin['email']?></td>
                                 <td><?= set_role($admin['role_type']) ?></td>
                                 <td>
-                                        <a href="?controller=admin&action=edit&id=<?=$admin['id']?>">Edit</a> ||
-                                        <a href="?controller=admin&action=delete&id=<?=$admin['id']?>" onclick="return confirm('Are you sure?');">Delete</a>
+                                        <a href="management/edit/<?=$admin['id']?>">Edit</a> ||
+                                        <a href="management/delete/<?=$admin['id']?>" onclick="return confirm('Are you sure?');">Delete</a>
                                 </td>
                             </tr>
                                 <?php

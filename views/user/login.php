@@ -20,7 +20,7 @@ if(isset($_SESSION['access_token'])) {
 <div id="wp-form-login">
     <?php flash('user_message'); ?>
     <!--    <h1 class="page_title">Đăng nhập</h1>-->
-    <form action="index.php?controller=user&action=login" method="POST" id="form-login">
+    <form action="/login" method="POST" id="form-login">
         <input type="text" name="email" id="email" placeholder="Email" value="">
         <?php echo form_error('email'); ?>
         <input type="password" name="password" id="password" placeholder="Password">
