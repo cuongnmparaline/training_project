@@ -14,9 +14,9 @@ class Admin extends BaseModel
 
     function get_id_current_admin($email, $password){
         $db = DB::getInstance();
-        $sth = $db->prepare('SELECT id, role_type
-        FROM admins
-        WHERE email = :email AND password = :password');
+        $sth = $db->prepare("SELECT id, role_type
+        FROM $this->table
+        WHERE email = :email AND password = :password");
         $sth->bindValue('email', $email);
         $sth->bindValue('password', $password);
         if($sth->execute()){
@@ -31,9 +31,9 @@ class Admin extends BaseModel
     function check_mail_existed($email){
         $db = DB::getInstance();
         $sth = $db->prepare(
-            'SELECT email
-            FROM admins
-            WHERE email = :email');
+            "SELECT email
+            FROM $this->table
+            WHERE email = :email");
         $sth->bindParam('email', $email);
         $sth->execute();
         $check = $sth->rowCount();

@@ -33,13 +33,13 @@ class BaseModel implements ModelInterface {
     public function update($data, $id)
     {
         $key = array_keys($data);
-        $dsn = "";
+        $setValue = "";
         foreach ($key as $field){
-            $dsn = $dsn."$field = :$field, ";
+            $setValue = $setValue."$field = :$field, ";
         }
-        $dsn = substr($dsn, 0, -2);
+        $setValue = substr($setValue, 0, -2);
         $db = DB::getInstance();
-        $sth = $db->prepare("UPDATE $this->table SET {$dsn} WHERE id = :id");
+        $sth = $db->prepare("UPDATE $this->table SET {$setValue} WHERE id = :id");
         $sth->bindValue(':id', $id);
         foreach ($data as $field => $value){
             $sth->bindValue(":$field", $value);

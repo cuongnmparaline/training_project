@@ -12,9 +12,9 @@ class User extends BaseModel{
     public function addFbAccount($data)
     {
         $db = DB::getInstance();
-        $sth = $db->prepare('INSERT INTO users (name, facebook_id, email, avatar, 
+        $sth = $db->prepare("INSERT INTO $this->table (name, facebook_id, email, avatar, 
                     status, ins_id, ins_datetime) 
-                    VALUES (:name,:facebook_id,:email,:avatar,:status,:ins_id,:ins_datetime)');
+                    VALUES (:name,:facebook_id,:email,:avatar,:status,:ins_id,:ins_datetime)");
         $sth->bindValue(':name', $data['name']);
         $sth->bindValue(':facebook_id', $data['facebook_id']);
         $sth->bindValue(':email', $data['email']);
@@ -33,9 +33,9 @@ class User extends BaseModel{
     public function check_mail_existed($email){
         $db = DB::getInstance();
         $sth = $db->prepare(
-            'SELECT email
-            FROM users
-            WHERE email = :email');
+            "SELECT email
+            FROM $this->table
+            WHERE email = :email");
         $sth->bindParam('email', $email);
         $sth->execute();
         $check = $sth->rowCount();
@@ -47,9 +47,9 @@ class User extends BaseModel{
     public function getUserByEmail($email){
         $db = DB::getInstance();
         $sth = $db->prepare(
-            'SELECT *
-            FROM users
-            WHERE email = :email'
+            "SELECT *
+            FROM $this->table
+            WHERE email = :email"
         );
         $sth->bindValue('email', $email);
         if($sth->execute()){
@@ -61,9 +61,9 @@ class User extends BaseModel{
     public function checkFbIdExisted($facebook_id){
         $db = DB::getInstance();
         $sth = $db->prepare(
-            'SELECT facebook_id
-            FROM users
-            WHERE facebook_id = :facebook_id'
+            "SELECT facebook_id
+            FROM $this->table
+            WHERE facebook_id = :facebook_id"
         );
         $sth->bindValue('facebook_id', $facebook_id);
         $sth->execute();
@@ -76,9 +76,9 @@ class User extends BaseModel{
     public function getUserByFbId($facebook_id){
         $db = DB::getInstance();
         $sth = $db->prepare(
-            'SELECT *
-            FROM users
-            WHERE facebook_id = :facebook_id'
+            "SELECT *
+            FROM $this->table
+            WHERE facebook_id = :facebook_id"
         );
         $sth->bindValue('facebook_id', $facebook_id);
         if($sth->execute()){

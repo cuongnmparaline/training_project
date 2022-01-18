@@ -16,3 +16,12 @@ define("DB_NAME", "account_manager");
 ### BASE URL
 
 define("BASE_URL", "https://paralinetraining.com");
+
+## Validate
+
+define("MAX_LENGHT", 128);
+define("MIN_LENGHT", 0);
+
+## Pagging
+
+define("NUM_PER_PAGE", 3);

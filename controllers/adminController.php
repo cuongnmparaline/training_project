@@ -34,13 +34,13 @@ class AdminController extends BaseController
         // Get all admin account
 
         // Pagging
-        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";
-        $total_row = $this->adminModel->get($condition);
-        $num_per_page = 3;
-        $total_num_row = count($total_row);
-        $num_page = ceil($total_num_row / $num_per_page);
-        $page_num = (int)!empty($_GET['page_id']) ? $_GET['page_id'] : 1;
-        $start = ($page_num - 1) * $num_per_page;
+        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";  $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";
+        $totalRow = $this->adminModel->get($condition);
+        $numPerPage = NUM_PER_PAGE;
+        $totalNumRow = count($totalRow);
+        $numPage = ceil($totalNumRow / $numPerPage);
+        $pageNum = (int)!empty($_GET['page_id']) ? $_GET['page_id'] : 1;
+        $start = ($pageNum - 1) * $numPerPage;
 
         // Sort
         if (isset($_GET['order'])) {
@@ -57,34 +57,35 @@ class AdminController extends BaseController
             'order' => $order,
             'sort' => $sort
         ];
-        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1 ORDER BY {$order} {$sort} LIMIT {$start}, {$num_per_page}";
+        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1 ORDER BY {$order} {$sort} LIMIT {$start}, {$numPerPage}";
         $admins = $this->adminModel->get($condition);
 
         // String pagging
-        $page_prev = $page_num - 1;
 
-        $str_pagging = "<ul class='pagination'>";
-        if ($page_num > 1) {
-            $page_prev = $page_num - 1;
-            $str_pagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$page_prev}'>Previous</a></li>";
+        $pagePrev = $pageNum - 1;
+        $strPagging = "<ul class='pagination'>";
+        if ($pageNum > 1) {
+            $pagePrev = $pageNum - 1;
+            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$pagePrev}'>Previous</a></li>";
         }
-        for ($i = 1; $i <= $num_page; $i++) {
+        for ($i = 1; $i <= $numPage; $i++) {
             $active = "";
-            if ($page_num == $i) {
+            if ($pageNum == $i) {
                 $active = "class = 'active-num-page'";
             }
-            $str_pagging .= "<li class='page-item' {$active}><a class='page-link' href = 'management/search/{$i}'>$i</a></li>";
+            $strPagging .= "<li class='page-item' {$active}><a class='page-link' href = 'management/search/{$i}'>$i</a></li>";
         }
-        $page_next = $page_num + 1;
-        if ($page_num < $num_page) {
-            $page_next = $page_num + 1;
-            $str_pagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$page_next}'>Next</a></li>";
+        $pageNext = $pageNum + 1;
+        if ($pageNum < $numPage) {
+            $pageNext = $pageNum + 1;
+            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$pageNext}'>Next</a></li>";
         }
-        $str_pagging .= "</ul>";
+        $strPagging .= "</ul>";
+
         $data = [
             'sort_option' => $sort_option,
             'admins' => $admins,
-            'str_pagging' => $str_pagging
+            'str_pagging' => $strPagging
         ];
         $this->render('index', $data);
 
@@ -149,7 +150,7 @@ class AdminController extends BaseController
             if (empty($_POST['name'])) {
                 $error['name'] = NAME_BLANK;
             }
-            if (!(strlen($_POST['name']) >= 0 && strlen($_POST['name']) <= 128)) {
+            if (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
                 $error['name'] = NAME_VALIDATE;
             } else {
                 $name = $_POST['name'];
@@ -245,7 +246,7 @@ class AdminController extends BaseController
             if (empty($_POST['name'])) {
                 $error['name'] = NAME_BLANK;
             }
-            if (!(strlen($_POST['name']) >= 0 && strlen($_POST['name']) <= 128)) {
+            if (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
                 $error['name'] = NAME_VALIDATE;
             } else {
                 $name = $_POST['name'];
@@ -297,7 +298,7 @@ class AdminController extends BaseController
             }
 
             // get update id ( current admin id )
-            $upd_id = $_SESSION['admin_id'];
+            $updId = $_SESSION['admin_id'];
             if (empty($error)) {
                 $data = array(
                     'name' => $name,
@@ -305,7 +306,7 @@ class AdminController extends BaseController
                     'email' => $email,
                     'avatar' => $avatar,
                     'role_type' => $role,
-                    'upd_id' => $upd_id,
+                    'upd_id' => $updId,
                     'upd_datetime' => date('d/m/y'),
                 );
                 if ($this->adminModel->update($data, $id)) {
@@ -355,12 +356,12 @@ class AdminController extends BaseController
 
         // Pagging
         $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";
-        $total_row = $this->userModel->get($condition);
-        $num_per_page = 3;
-        $total_num_row = count($total_row);
-        $num_page = ceil($total_num_row / $num_per_page);
-        $page_num = (int) !empty($_GET['page_id']) ? $_GET['page_id'] : 1;
-        $start = ($page_num - 1) * $num_per_page;
+        $totalRow = $this->userModel->get($condition);
+        $numPerPage = NUM_PER_PAGE;
+        $totalNumRow = count($totalRow);
+        $numPage = ceil($totalNumRow / $numPerPage);
+        $pageNum = (int)!empty($_GET['page_id']) ? $_GET['page_id'] : 1;
+        $start = ($pageNum - 1) * $numPerPage;
 
         // Sort
         if(isset($_GET['order'])){
@@ -378,32 +379,33 @@ class AdminController extends BaseController
             'sort' => $sort
         ];
 
-        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1 ORDER BY {$order} {$sort} LIMIT {$start}, {$num_per_page}";
+        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1 ORDER BY {$order} {$sort} LIMIT {$start}, {$numPerPage}";
         $users = $this->userModel->get($condition);
 
         // String pagging
-        $page_prev = $page_num - 1;
-        $str_pagging = "<ul class='pagination'>";
-        if($page_num > 1){
-            $page_prev = $page_num-1;
-            $str_pagging .= "<li class='page-item'><a class='page-link' href = 'management/search-user/{$page_prev}'>Previous</a></li>";
+        $pagePrev = $pageNum - 1;
+
+        $strPagging = "<ul class='pagination'>";
+        if ($pageNum > 1) {
+            $pagePrev = $pageNum - 1;
+            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search-user/{$pagePrev}'>Previous</a></li>";
         }
-        for($i = 1; $i <= $num_page; $i++){
+        for ($i = 1; $i <= $numPage; $i++) {
             $active = "";
-            if($page_num == $i){
+            if ($pageNum == $i) {
                 $active = "class = 'active-num-page'";
             }
-            $str_pagging .= "<li class='page-item' {$active}><a class='page-link' href = 'management/search-user/{$i}'>$i</a></li>";
+            $strPagging .= "<li class='page-item' {$active}><a class='page-link' href = 'management/search-user/{$i}'>$i</a></li>";
         }
-        $page_next = $page_num + 1;
-        if($page_num < $num_page){
-            $page_next = $page_num+1;
-            $str_pagging .= "<li class='page-item'><a class='page-link' href = 'management/search-user/{$page_next}'>Next</a></li>";
+        $pageNext = $pageNum + 1;
+        if ($pageNum < $numPage) {
+            $pageNext = $pageNum + 1;
+            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search-user/{$pageNext}'>Next</a></li>";
         }
-        $str_pagging .= "</ul>";
+        $strPagging .= "</ul>";
         $data = [
             'users' => $users,
-            'str_pagging' => $str_pagging,
+            'str_pagging' => $strPagging,
             'sort_option' => $sort_option
         ];
         $this->render('search_user', $data);
@@ -419,7 +421,7 @@ class AdminController extends BaseController
             if (empty($_POST['name'])) {
                 $error['name'] = NAME_BLANK;
             }
-            if (!(strlen($_POST['name']) >= 0 && strlen($_POST['name']) <= 128)) {
+            if (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
                 $error['name'] = NAME_VALIDATE;
             } else {
                 $name = $_POST['name'];
@@ -512,7 +514,7 @@ class AdminController extends BaseController
             if (empty($_POST['name'])) {
                 $error['name'] = NAME_BLANK;
             }
-            if (!(strlen($_POST['name']) >= 0 && strlen($_POST['name']) <= 128)) {
+            if (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
                 $error['name'] = NAME_VALIDATE;
             } else {
                 $name = $_POST['name'];
@@ -610,7 +612,7 @@ class AdminController extends BaseController
         if(isset($_GET['id'])){
             $id = $_GET['id'];
             if($this->userModel->delete($id)){
-                flash('user_message', 'User Removed');
+                flash('user_message', USER_REMOVED);
                 redirect_to('/management/search-user');
             } else {
                 flash('user_message', ST_WRONG);
@@ -633,7 +635,6 @@ class AdminController extends BaseController
         $files_arr = array();
         // Loop all files
         for ($index = 0; $index < $countfiles; $index++) {
-
             if (isset($_FILES['files']['name'][$index]) && $_FILES['files']['name'][$index] != '') {
                 // File name
                 $filename = $_FILES['files']['name'][$index];
@@ -656,7 +657,6 @@ class AdminController extends BaseController
                 }
             }
         }
-
         echo json_encode($files_arr);
     }
 

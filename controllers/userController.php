@@ -24,7 +24,7 @@ class UserController extends BaseController
         }
         if(isset($_SESSION['user_login'])){
             $email = $_SESSION['user_login'];
-            $user = User::getUserByEmail($email);
+            $user = $this->userModel->getUserByEmail($email);
             $data = [
                 'user' => $user
             ];
@@ -40,23 +40,23 @@ class UserController extends BaseController
             # Check email
             if (empty($_POST['email'])) {
                 $error['email'] = EMAIL_BLANK;
-            } else {
-                if (!is_email($_POST['email'])) {
-                    $error['email'] = EMAIL_VALIDATE;
-                } else {
-                    $email = $_POST['email'];
-                }
             }
+            if (!is_email($_POST['email'])) {
+                $error['email'] = EMAIL_VALIDATE;
+            } else {
+                $email = $_POST['email'];
+            }
+
             # Check password
             if (empty($_POST['password'])) {
                 $error['password'] = PASS_BLANK;
-            } else {
-                if (!is_password($_POST['password'])) {
-                    $error['password'] = PASS_VALIDATE;
-                } else {
-                    $password = md5($_POST['password']);
-                }
             }
+            if (!is_password($_POST['password'])) {
+                $error['password'] = PASS_VALIDATE;
+            } else {
+                $password = md5($_POST['password']);
+            }
+
             # Conclude
             if (empty($error)) {
                 if ($this->userModel->check_login($email, $password)) {
@@ -101,7 +101,7 @@ class UserController extends BaseController
                 $email = $user['email'];
                 $facebook_id = $user['id'];
 
-                if(User::checkFbIdExisted($facebook_id)){
+                if($this->userModel->checkFbIdExisted($facebook_id)){
                     $_SESSION['is_user_login'] = 'true';
                     $_SESSION['facebook_id'] = $facebook_id;
                     redirect_to('/profile');
@@ -115,7 +115,7 @@ class UserController extends BaseController
                         'ins_id' => 0,
                         'ins_datetime' => date('d/m/yy')
                     ];
-                    if(User::addFbAccount($data_insert)){
+                    if($this->userModel->addFbAccount($data_insert)){
                         $_SESSION['user_login'] = 'true';
                         $_SESSION['facebook_id'] = $facebook_id;
                         redirect_to('/profile');
