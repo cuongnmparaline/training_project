@@ -2,7 +2,6 @@
 <?php
 require_once('views/layouts/header.php');
 ?>
-
 <div id="main-content-wp" class="list-product-page">
     <div class="wrap clearfix">
         <div id="content" class="fl-right">

@@ -10,9 +10,7 @@ class Admin extends BaseModel
         $this->table = 'admins';
     }
 
-
-
-    function get_id_current_admin($email, $password){
+    function getCurrentAdmin($email, $password){
         $db = DB::getInstance();
         $sth = $db->prepare("SELECT id, role_type
         FROM $this->table
@@ -24,22 +22,6 @@ class Admin extends BaseModel
         } else {
             return false;
         }
-
-
-    }
-
-    function check_mail_existed($email){
-        $db = DB::getInstance();
-        $sth = $db->prepare(
-            "SELECT email
-            FROM $this->table
-            WHERE email = :email");
-        $sth->bindParam('email', $email);
-        $sth->execute();
-        $check = $sth->rowCount();
-        if($check > 0)
-            return true;
-        return false;
     }
 
 }

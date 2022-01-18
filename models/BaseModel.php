@@ -79,13 +79,27 @@ class BaseModel implements ModelInterface {
         }
     }
 
-    public function check_login($email, $password){
+    public function checkLogin($email, $password){
         $db = DB::getInstance();
         $sth = $db->prepare("SELECT id
         FROM $this->table
         WHERE email = :email AND password = :password");
         $sth->bindValue('email', $email);
         $sth->bindValue(':password', $password);
+        $sth->execute();
+        $check = $sth->rowCount();
+        if($check > 0)
+            return true;
+        return false;
+    }
+
+    function checkMailExisted($email){
+        $db = DB::getInstance();
+        $sth = $db->prepare(
+            "SELECT email
+            FROM $this->table
+            WHERE email = :email");
+        $sth->bindParam('email', $email);
         $sth->execute();
         $check = $sth->rowCount();
         if($check > 0)

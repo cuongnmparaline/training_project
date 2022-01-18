@@ -13,7 +13,6 @@ require_once ('views/layouts/header.php');
                 <div class="section-detail">
                     <form method="POST"  enctype="multipart/form-data">
                         <?= flash('user_message') ?>
-                        <!--                        --><?php //echo form_success('admin') ?>
                         <p>ID: <?= $user['id']?></p>
                         <label>Avatar*</label>
                         <input type="file" id='files' name="files[]" multiple>

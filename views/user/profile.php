@@ -33,7 +33,7 @@
             <div class="wp-inner clearfix" id="header">
                 <ul id="main-menu" class="fl-right">
                     <li>
-                        <a href="?controller=user&action=logout" title="">Log out</a>
+                        <a href="logout" title="">Log out</a>
                     </li>
                 </ul>
             </div>

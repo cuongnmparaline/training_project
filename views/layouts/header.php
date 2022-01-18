@@ -52,7 +52,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="?controller=admin&action=logout" title="">Log out</a>
+                        <a href="management/logout" title="">Log out</a>
                     </li>
                 </ul>
 

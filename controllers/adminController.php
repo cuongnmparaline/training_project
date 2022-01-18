@@ -1,5 +1,4 @@
 
-
 <?php
 require_once('controllers/baseController.php');
 require_once('assets/libraries/validation.php');
@@ -32,7 +31,7 @@ class AdminController extends BaseController
             $email = "";
         }
         // Get all admin account
-        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";  $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";
+        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";
         $totalRow = $this->adminModel->get($condition);
 
         // Pagging
@@ -86,7 +85,7 @@ class AdminController extends BaseController
             'admins' => $admins,
             'str_pagging' => $strPagging
         ];
-        $this->render('index', $data);
+        $this->render('search', $data);
 
     }
 
@@ -118,8 +117,8 @@ class AdminController extends BaseController
 
             // Conclude
             if (empty($error)) {
-                if ($this->adminModel->check_login($email, $password)) {
-                    $admin = $this->adminModel->get_id_current_admin($email, $password);
+                if ($this->adminModel->checkLogin($email, $password)) {
+                    $admin = $this->adminModel->getCurrentAdmin($email, $password);
                     $_SESSION['is_admin_login'] = true;
                     $_SESSION['admin_login'] = $email;
                     $_SESSION['admin_id'] = $admin->id;
@@ -136,7 +135,7 @@ class AdminController extends BaseController
     public function logout(){
         unset($_SESSION['is_admin_login']);
         unset($_SESSION['admin_login']);
-        redirect_to('management/login');
+        redirect_to('/management/login');
     }
 
     public function create()
@@ -184,7 +183,7 @@ class AdminController extends BaseController
             if (!is_email($_POST['email'])) {
                 $error['email'] = EMAIL_VALIDATE;
             }
-            if ($this->adminModel->check_mail_existed($_POST['email'])) {
+            if ($this->adminModel->checkMailExisted($_POST['email'])) {
                 $error['email'] = EMAIL_EXISTED;
             } else {
                 $email = $_POST['email'];
@@ -312,7 +311,7 @@ class AdminController extends BaseController
                 if ($this->adminModel->update($data, $id)) {
                     flash('admin_message', ADMIN_UPDATED . "<br>" . "<a href='management/search'>Return to list ADMIN</a>");
                 } else {
-                    flash('admin_message', ST_WRONG);
+                    flash('admin_message', ST_WRONG, 'alert alert-success');
                 }
             }
             $admin = $this->adminModel->getById($id);
@@ -331,7 +330,7 @@ class AdminController extends BaseController
     {
        check_role($_SESSION['role_type']);
         if (!isset($_GET['id'])) {
-            flash('admin_message', ST_WRONG);
+            flash('admin_message', ST_WRONG, 'alert alert-success');
             return false;
         }
         $id = $_GET['id'];
@@ -451,7 +450,7 @@ class AdminController extends BaseController
             if (empty($_POST['email'])) {
                 $error['email'] = EMAIL_BLANK;
             }
-            if($this->userModel->check_mail_existed($_POST['email'])){
+            if($this->userModel->checkMailExisted($_POST['email'])){
                 $error['email'] = EMAIL_EXISTED;
             } else {
                 $email = $_POST['email'];
@@ -490,7 +489,7 @@ class AdminController extends BaseController
                     flash('user_message', USER_CREATED . "<br>" . "<a href='management/search-user'>Return to list ADMIN</a>");
                 }
             } else {
-                flash ('user_message', ST_WRONG);
+                flash ('user_message', ST_WRONG, 'alert alert-success');
             }
         }
         $this->render('create_user');
@@ -586,7 +585,7 @@ class AdminController extends BaseController
                     flash('user_message', USER_UPDATED . "<br>" . "<a href='management/search-user'>Return to list USER</a>");
 //                    $success['admin'] = "Update ADMIN success" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>";
                 } else {
-                    flash('user_message', ST_WRONG);
+                    flash('user_message', ST_WRONG, 'alert alert-success');
                 }
             }
             $user = $this->userModel->getById($id);
@@ -610,7 +609,7 @@ class AdminController extends BaseController
                 flash('user_message', USER_REMOVED);
                 redirect_to('/management/search-user');
             } else {
-                flash('user_message', ST_WRONG);
+                flash('user_message', ST_WRONG, 'alert alert-success');
                 redirect_to('/management/search-user');
             }
         } else {

@@ -59,16 +59,14 @@ class UserController extends BaseController
 
             # Conclude
             if (empty($error)) {
-                if ($this->userModel->check_login($email, $password)) {
+                if ($this->userModel->checkLogin($email, $password)) {
                     $_SESSION['is_user_login'] = true;
                     $_SESSION['user_login'] = $email;
-//                    $_SESSION['user_id'] = $admin->id;
                     redirect_to("/profile");
                 } else {
                     $error['account'] = ACCOUNT_INCORRECT;
                 }
             }
-
         }
 
         $fb = new \Facebook\Facebook([
@@ -114,12 +112,12 @@ class UserController extends BaseController
                         'ins_id' => 0,
                         'ins_datetime' => date('d/m/yy')
                     ];
-                    if($this->userModel->addFbAccount($data_insert)){
-                        $_SESSION['user_login'] = 'true';
+                    if($this->userModel->add($data_insert)){
+                        $_SESSION['is_user_login'] = 'true';
                         $_SESSION['facebook_id'] = $facebook_id;
                         redirect_to('/profile');
                     } else {
-                        flash('user_messager', ST_WRONG);
+                        flash('user_message', ST_WRONG, 'alert alert-success');
                     }
                 }
             }catch (Exception $exc){
