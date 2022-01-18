@@ -18,7 +18,8 @@ class BaseModel implements ModelInterface {
     {
         $db = DB::getInstance();
         $sth = $db->prepare(
-            "SELECT *
+            "SELECT id, name, password, email,
+            avatar, role_type
             FROM $this->table
             WHERE id = :id"
         );

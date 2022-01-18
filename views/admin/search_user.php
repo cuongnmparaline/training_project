@@ -10,10 +10,10 @@ require_once('views/layouts/header.php');
             <div class="form-search" id="form-search">
                 <form action="management/search-user" method="GET">
                     <label for="name">Name</label>
-                    <input type="text" name="name" id="name" value=""> <br> <br>
+                    <input type="text" name="name" id="name" value="<?=set_value('name')?>"> <br> <br>
                     <?php echo form_error('name')?>
                     <label for="email">Email</label>
-                    <input type="text" name="email" id="email" value=""> <br> <br>
+                    <input type="text" name="email" id="email" value="<?=set_value('email')?>"> <br> <br>
                     <a href="management/search-user" class="btn btn-primary">Reset</a>
                     <input type="submit" id="search-button" name="btn-search-user" class="btn btn-success" value="Search" />
                 </form>

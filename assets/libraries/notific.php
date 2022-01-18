@@ -25,6 +25,7 @@ define("VERIFY_INCORRECT", "Password verify is not match");
 
 
 define("ST_WRONG", "Something wrong happened!");
+define("CANT_FOUND_ACC", "Can not found account!");
 
 
 # Success notification

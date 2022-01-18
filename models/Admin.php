@@ -12,13 +12,17 @@ class Admin extends BaseModel
 
     function getCurrentAdmin($email, $password){
         $db = DB::getInstance();
-        $sth = $db->prepare("SELECT id, role_type
+        $sth = $db->prepare("SELECT id, role_type, email
         FROM $this->table
         WHERE email = :email AND password = :password");
         $sth->bindValue('email', $email);
         $sth->bindValue('password', $password);
         if($sth->execute()){
-            return $sth->fetch(PDO::FETCH_OBJ);
+            $check = $sth->rowCount();
+            if($check > 0){
+                return $sth->fetch(PDO::FETCH_OBJ);
+            }
+            return false;
         } else {
             return false;
         }

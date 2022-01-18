@@ -13,6 +13,8 @@ require_once ('views/layouts/header.php');
                 <div class="section-detail">
                     <form method="POST"  enctype="multipart/form-data">
                         <?= flash('admin_message') ?>
+                        <?php if(isset($admin)){
+                            ?>
                         <p>ID: <?= $admin['id']?></p>
                         <label>Avatar*</label>
                         <input type="file" id='files' name="files[]" multiple>
@@ -42,6 +44,9 @@ require_once ('views/layouts/header.php');
                         <br> <br>
                         <a href="management/edit/<?=$admin['id']?>" class="btn btn-primary">Reset</a>
                         <button type="submit" name="btn-update-admin" id="btn-submit" class="btn btn-secondary">Save</button>
+                            <?php
+                            }
+                        ?>
                     </form>
                 </div>
             </div>

@@ -32,9 +32,9 @@ require_once ('views/layouts/header.php');
                         <input type="password" name="password_verify" id="password_verify">
                         <?php echo form_error('password_verify')?>
                         <label for="role">Status*</label> <br>
-                        <input type="radio" id="active" name="status" value="1">
+                        <input type="radio" id="active" name="status" value="1"<?php global $status; if($status == 1) echo "checked" ?>>
                         <label for="active" class="status">Active</label>
-                        <input type="radio" class="status" id="banned" name="status" value="2">
+                        <input type="radio" class="status" id="banned" name="status" value="2"<?php global $status; if($status == 2) echo "checked" ?>>
                         <label for="banned" class="status">Banned</label>
                         <?php echo form_error('status')?>
                         <br> <br>

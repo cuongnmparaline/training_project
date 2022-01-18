@@ -1,8 +1,6 @@
 <?php
 require_once('controllers/baseController.php');
-require_once('models/User.php');
 require_once('vendor/autoload.php');
-require_once('assets/libraries/validation.php');
 
 class UserController extends BaseController
 {
@@ -33,7 +31,9 @@ class UserController extends BaseController
     }
 
     public function login(){
-
+        if($this->isLoggedIn()){
+            redirect_to('profile');
+        }
         global $error, $email;
         if (isset($_POST['btn-login'])) {
             $error = [];
@@ -99,7 +99,7 @@ class UserController extends BaseController
                 $facebook_id = $user['id'];
 
                 if($this->userModel->checkFbIdExisted($facebook_id)){
-                    $_SESSION['is_user_login'] = 'true';
+                    $_SESSION['is_user_login'] = true;
                     $_SESSION['facebook_id'] = $facebook_id;
                     redirect_to('/profile');
                 } else {
@@ -113,7 +113,7 @@ class UserController extends BaseController
                         'ins_datetime' => date('d/m/yy')
                     ];
                     if($this->userModel->add($data_insert)){
-                        $_SESSION['is_user_login'] = 'true';
+                        $_SESSION['is_user_login'] = true;
                         $_SESSION['facebook_id'] = $facebook_id;
                         redirect_to('/profile');
                     } else {
@@ -135,5 +135,13 @@ class UserController extends BaseController
         unset($_SESSION['access_token']);
         unset($_SESSION['user_login']);
         redirect_to("/login");
+    }
+
+    public function isLoggedIn(){
+        if(isset($_SESSION['is_user_login'])){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

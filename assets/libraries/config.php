@@ -25,3 +25,8 @@ define("MIN_LENGHT", 0);
 ## Pagging
 
 define("NUM_PER_PAGE", 3);
+
+
+## Upload
+
+define("IMG_LOCATION", "assets/images/");

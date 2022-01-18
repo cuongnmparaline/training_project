@@ -12,7 +12,7 @@ class User extends BaseModel{
     public function getUserByEmail($email){
         $db = DB::getInstance();
         $sth = $db->prepare(
-            "SELECT *
+            "SELECT id, name, facebook_id, email, avatar, status
             FROM $this->table
             WHERE email = :email"
         );
@@ -42,7 +42,7 @@ class User extends BaseModel{
     public function getUserByFbId($facebook_id){
         $db = DB::getInstance();
         $sth = $db->prepare(
-            "SELECT *
+            "SELECT id, name, facebook_id, email, avatar, status
             FROM $this->table
             WHERE facebook_id = :facebook_id"
         );

@@ -1,9 +1,7 @@
 
 <?php
 require_once('controllers/baseController.php');
-require_once('assets/libraries/validation.php');
 require_once('models/Admin.php');
-require_once('models/User.php');
 require_once('assets/helper/url.php');
 require_once('assets/helper/layout.php');
 require_once('assets/helper/account.php');
@@ -22,6 +20,7 @@ class AdminController extends BaseController
 
     public function search()
     {
+        global $name, $email;
         check_role($_SESSION['role_type']);
         if (isset($_GET['btn-search'])) {
             $name = $_GET['name'];
@@ -49,12 +48,53 @@ class AdminController extends BaseController
         }
         if (isset($_GET['sort'])) {
             $sort = $_GET['sort'];
+
         } else {
             $sort = 'DESC';
         }
+        if($sort == 'DESC'){
+            $icon['id'] = 'fa fa-fw fa-angle-down';
+        } else {
+            $icon['id'] = 'fa fa-fw fa-angle-up';
+        }
+        $icon['id'] = 'fa fa-fw fa-angle-down';
+        $icon['name'] = 'fa fa-fw fa-angle-down';
+        $icon['email'] = 'fa fa-fw fa-angle-down';
+        $icon['role_type'] = 'fa fa-fw fa-angle-down';
+        switch ($order) {
+            case 'id':
+                if($sort == 'DESC'){
+                    $icon['id'] = 'fa fa-fw fa-angle-down';
+                } else {
+                    $icon['id'] = 'fa fa-fw fa-angle-up';
+                }
+                break;
+            case 'name':
+                if($sort == 'DESC'){
+                    $icon['name'] = 'fa fa-fw fa-angle-down';
+                } else {
+                    $icon['name'] = 'fa fa-fw fa-angle-up';
+                }
+                break;
+            case 'email':
+                if($sort == 'DESC'){
+                    $icon['email'] = 'fa fa-fw fa-angle-down';
+                } else {
+                    $icon['email'] = 'fa fa-fw fa-angle-up';
+                }
+                break;
+            case 'role_type':
+                if($sort == 'DESC'){
+                    $icon['role_type'] = 'fa fa-fw fa-angle-down';
+                } else {
+                    $icon['role_type'] = 'fa fa-fw fa-angle-up';
+                }
+                break;
+        }
         $sort_option = [
             'order' => $order,
-            'sort' => $sort
+            'sort' => $sort,
+            'icon' => $icon
         ];
         $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1 ORDER BY {$order} {$sort} LIMIT {$start}, {$numPerPage}";
         $admins = $this->adminModel->get($condition);
@@ -91,6 +131,9 @@ class AdminController extends BaseController
 
     public function login()
     {
+        if($this->isLoggedIn()){
+            redirect_to('search');
+        }
         global $email, $password, $error;
         if (isset($_POST['btn_login'])) {
             $error = [];
@@ -120,7 +163,7 @@ class AdminController extends BaseController
                 if ($this->adminModel->checkLogin($email, $password)) {
                     $admin = $this->adminModel->getCurrentAdmin($email, $password);
                     $_SESSION['is_admin_login'] = true;
-                    $_SESSION['admin_login'] = $email;
+                    $_SESSION['admin_login'] = $admin->email;
                     $_SESSION['admin_id'] = $admin->id;
                     $_SESSION['role_type'] = $admin->role_type;
                     redirect_to("search");
@@ -189,11 +232,9 @@ class AdminController extends BaseController
                 $email = $_POST['email'];
             }
 
-
-            // check avatar
-
+            // Check avatar
             if (!empty($_FILES['files']['name'][0])) {
-                $upload_dir = 'assets/images/';
+                $upload_dir = IMG_LOCATION;
                 $avatar = $upload_dir . $_FILES['files']['name'][0];
             } else {
                 $error['avatar'] = AVATAR_BLANK;
@@ -207,7 +248,6 @@ class AdminController extends BaseController
             }
 
             // get insertor id ( current admin id )
-
             $ins_id = $_SESSION['admin_id'];
 
             // check not error
@@ -283,7 +323,7 @@ class AdminController extends BaseController
 
             // Check avatar
             if (!empty($_FILES['files']['name'][0])) {
-                $upload_dir = 'assets/images/';
+                $upload_dir = IMG_LOCATION;
                 $avatar = $upload_dir . $_FILES['files']['name'][0];
             } else {
                 $avatar = $admin['avatar'];
@@ -321,8 +361,14 @@ class AdminController extends BaseController
         if (isset($_GET['id'])) {
             $id = (int)$_GET['id'];
             $admin = $this->adminModel->getById($id);
-            $data = ['admin' => $admin];
-            $this->render('edit', $data);
+            if(empty($admin)){
+                flash("admin_message", CANT_FOUND_ACC);
+                $this->render('edit');
+            } else {
+                $data = ['admin' => $admin];
+                $this->render('edit', $data);
+            }
+
         }
     }
 
@@ -343,6 +389,7 @@ class AdminController extends BaseController
     // User Action
 
     public function search_user(){
+        global $name, $email;
         if (isset($_GET['btn-search-user'])) {
             $name = $_GET['name'];
             $email = $_GET['email'];
@@ -412,7 +459,7 @@ class AdminController extends BaseController
 
     public function create_user(){
 
-        global $name, $email, $error;
+        global $name, $email, $status, $error;
         if (isset($_POST['btn-add-user'])) {
             $error = [];
             // Check name
@@ -458,7 +505,7 @@ class AdminController extends BaseController
 
             // check avatar
             if(!empty($_FILES['files']['name'][0])){
-                $upload_dir = 'assets/images/';
+                $upload_dir = IMG_LOCATION;
                 $avatar = $upload_dir . $_FILES['files']['name'][0];
             } else {
                 $error['avatar'] = AVATAR_BLANK;
@@ -504,7 +551,6 @@ class AdminController extends BaseController
                 $admin = $this->userModel->getById($id);
             }
             $error = [];
-
             // Check name
             if (empty($_POST['name'])) {
                 $error['name'] = NAME_BLANK;
@@ -555,9 +601,9 @@ class AdminController extends BaseController
                 $email = $_POST['email'];
             }
 
-            // check avatar
+            // Check avatar
             if(!empty($_FILES['files']['name'][0])){
-                $upload_dir = 'assets/images/';
+                $upload_dir = IMG_LOCATION;
                 $avatar = $upload_dir . $_FILES['files']['name'][0];
             } else {
                 $avatar = $admin['avatar'];
@@ -589,12 +635,20 @@ class AdminController extends BaseController
                 }
             }
             $user = $this->userModel->getById($id);
+
             $data = ['user' => $user];
             $this->render('edit_user', $data);
         } else {
-            if(isset($_GET['id'])){
-                $id = (int)$_GET['id'];
-                $user = $this->userModel->getById($id);
+            if(!isset($_GET['id'])){
+                flash('user_message', ST_WRONG);
+                $this->render('edit_user');
+            }
+            $id = (int)$_GET['id'];
+            $user = $this->userModel->getById($id);
+            if(empty($user)){
+                flash('user_message', CANT_FOUND_ACC);
+                $this->render('edit_user');
+            } else {
                 $data = ['user' => $user];
                 $this->render('edit_user', $data);
             }
@@ -620,10 +674,8 @@ class AdminController extends BaseController
     {
         // Count total files
         $countfiles = count($_FILES['files']['name']);
-
         // Upload directory
-        $upload_location = "assets/images/";
-
+        $upload_location = IMG_LOCATION;
         // To store uploaded files path
         $files_arr = array();
         // Loop all files
@@ -653,4 +705,11 @@ class AdminController extends BaseController
         echo json_encode($files_arr);
     }
 
+    public function isLoggedIn(){
+        if(isset($_SESSION['is_admin_login'])){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
