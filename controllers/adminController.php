@@ -32,10 +32,10 @@ class AdminController extends BaseController
             $email = "";
         }
         // Get all admin account
-
-        // Pagging
         $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";  $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";
         $totalRow = $this->adminModel->get($condition);
+
+        // Pagging
         $numPerPage = NUM_PER_PAGE;
         $totalNumRow = count($totalRow);
         $numPage = ceil($totalNumRow / $numPerPage);
@@ -61,7 +61,6 @@ class AdminController extends BaseController
         $admins = $this->adminModel->get($condition);
 
         // String pagging
-
         $pagePrev = $pageNum - 1;
         $strPagging = "<ul class='pagination'>";
         if ($pageNum > 1) {
@@ -95,8 +94,9 @@ class AdminController extends BaseController
     {
         global $email, $password, $error;
         if (isset($_POST['btn_login'])) {
-            $error = array();
-            # Check email
+            $error = [];
+
+            // Check email
             if (empty($_POST['email'])) {
                 $error['email'] = EMAIL_BLANK;
             }
@@ -106,7 +106,7 @@ class AdminController extends BaseController
                 $email = $_POST['email'];
             }
 
-            # Check password
+            // Check password
             if (empty($_POST['password'])) {
                 $error['password'] = PASS_BLANK;
             }
@@ -116,7 +116,7 @@ class AdminController extends BaseController
                 $password = md5($_POST['password']);
             }
 
-            # Conclude
+            // Conclude
             if (empty($error)) {
                 if ($this->adminModel->check_login($email, $password)) {
                     $admin = $this->adminModel->get_id_current_admin($email, $password);
@@ -144,7 +144,7 @@ class AdminController extends BaseController
         check_role($_SESSION['role_type']);
         global $name, $email, $error, $role;
         if (isset($_POST['btn-add-admin'])) {
-            $error = array();
+            $error = [];
 
             // Check name
             if (empty($_POST['name'])) {
@@ -234,13 +234,12 @@ class AdminController extends BaseController
     {
         check_role($_SESSION['role_type']);
         if (isset($_POST['btn-update-admin'])) {
-            global $email, $name, $error, $success;
+            global $email, $name, $error;
             if (isset($_GET['id'])) {
                 $id = $_GET['id'];
                 $admin = $this->adminModel->getById($id);
             }
             $error = [];
-            $success = [];
 
             // Check name
             if (empty($_POST['name'])) {
@@ -262,6 +261,7 @@ class AdminController extends BaseController
                     $password = md5($_POST['password']);
                 }
             }
+
             // Check verify password
             if (!empty($_POST['password_verify'])) {
                 if (!is_password($_POST['password'])) {
@@ -282,33 +282,33 @@ class AdminController extends BaseController
                 $email = $_POST['email'];
             }
 
-            // check avatar
-
+            // Check avatar
             if (!empty($_FILES['files']['name'][0])) {
                 $upload_dir = 'assets/images/';
                 $avatar = $upload_dir . $_FILES['files']['name'][0];
             } else {
                 $avatar = $admin['avatar'];
             }
-            // check role
+
+            // Check role
             if (empty($_POST['role'])) {
                 $error['role'] = ROLE_BLANK;
             } else {
                 $role = $_POST['role'];
             }
 
-            // get update id ( current admin id )
+            // get Update id ( current admin id )
             $updId = $_SESSION['admin_id'];
             if (empty($error)) {
-                $data = array(
+                $data = [
                     'name' => $name,
                     'password' => $password,
                     'email' => $email,
                     'avatar' => $avatar,
                     'role_type' => $role,
                     'upd_id' => $updId,
-                    'upd_datetime' => date('d/m/y'),
-                );
+                    'upd_datetime' => date('d/m/y')
+                ];
                 if ($this->adminModel->update($data, $id)) {
                     flash('admin_message', ADMIN_UPDATED . "<br>" . "<a href='management/search'>Return to list ADMIN</a>");
                 } else {
@@ -353,10 +353,10 @@ class AdminController extends BaseController
         }
 
         // Get all admin account
-
-        // Pagging
         $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";
         $totalRow = $this->userModel->get($condition);
+
+        // Pagging
         $numPerPage = NUM_PER_PAGE;
         $totalNumRow = count($totalRow);
         $numPage = ceil($totalNumRow / $numPerPage);
@@ -384,7 +384,6 @@ class AdminController extends BaseController
 
         // String pagging
         $pagePrev = $pageNum - 1;
-
         $strPagging = "<ul class='pagination'>";
         if ($pageNum > 1) {
             $pagePrev = $pageNum - 1;
@@ -459,7 +458,6 @@ class AdminController extends BaseController
             }
 
             // check avatar
-
             if(!empty($_FILES['files']['name'][0])){
                 $upload_dir = 'assets/images/';
                 $avatar = $upload_dir . $_FILES['files']['name'][0];
@@ -475,12 +473,11 @@ class AdminController extends BaseController
             }
 
             // get insertor id ( current admin id )
-
             $ins_id = $_SESSION['admin_id'];
 
             // check not error
             if (empty($error)) {
-                $data = array(
+                $data = [
                     'name' => $name,
                     'password' => $password,
                     'email' => $email,
@@ -488,7 +485,7 @@ class AdminController extends BaseController
                     'status' => $status,
                     'ins_id' => $ins_id,
                     'ins_datetime' => date('d/m/yy'),
-                );
+                ];
                 if($this->userModel->add($data)){
                     flash('user_message', USER_CREATED . "<br>" . "<a href='management/search-user'>Return to list ADMIN</a>");
                 }
@@ -502,13 +499,12 @@ class AdminController extends BaseController
     public function edit_user(){
 
         if(isset($_POST['btn-update-admin'])){
-            global $email, $name, $error, $success;
+            global $email, $name, $error;
             if(isset($_GET['id'])){
                 $id = $_GET['id'];
                 $admin = $this->userModel->getById($id);
             }
             $error = [];
-            $success = [];
 
             // Check name
             if (empty($_POST['name'])) {
@@ -561,7 +557,6 @@ class AdminController extends BaseController
             }
 
             // check avatar
-
             if(!empty($_FILES['files']['name'][0])){
                 $upload_dir = 'assets/images/';
                 $avatar = $upload_dir . $_FILES['files']['name'][0];
@@ -578,15 +573,15 @@ class AdminController extends BaseController
             // get update id ( current admin id )
             $upd_id = $_SESSION['admin_id'];
             if(empty($error)){
-                $data = array(
+                $data = [
                     'name' => $name,
                     'password' => $password,
                     'email' => $email,
                     'avatar' => $avatar,
                     'status' => $status,
                     'upd_id' => $upd_id,
-                    'upd_datetime' => date('d/m/y'),
-                );
+                    'upd_datetime' => date('d/m/y')
+                ];
                 if($this->userModel->update($data, $id)){
                     flash('user_message', USER_UPDATED . "<br>" . "<a href='management/search-user'>Return to list USER</a>");
 //                    $success['admin'] = "Update ADMIN success" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>";
@@ -624,7 +619,6 @@ class AdminController extends BaseController
     }
     function add_avatar()
     {
-
         // Count total files
         $countfiles = count($_FILES['files']['name']);
 

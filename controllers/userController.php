@@ -36,7 +36,7 @@ class UserController extends BaseController
 
         global $error, $email;
         if (isset($_POST['btn-login'])) {
-            $error = array();
+            $error = [];
             # Check email
             if (empty($_POST['email'])) {
                 $error['email'] = EMAIL_BLANK;
@@ -96,7 +96,6 @@ class UserController extends BaseController
                 $response = $fb->get("/me?fields=id, name, email, picture.type(large)", $accessToken);
                 $user = $response->getGraphUser();
                 $picture_url = $user->getPicture()->getUrl();
-//                $_SESSION['picture'] = $picture_url;
                 $name = $user['name'];
                 $email = $user['email'];
                 $facebook_id = $user['id'];
