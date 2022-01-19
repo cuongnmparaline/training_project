@@ -13,6 +13,9 @@ define("DB_USER", "root");
 define("DB_PASS", "");
 define("DB_NAME", "account_manager");
 
+define("DEL_FALSE", 0);
+define("DEL_TRUE", 1);
+
 ### BASE URL
 
 define("BASE_URL", "https://paralinetraining.com");
@@ -30,3 +33,8 @@ define("NUM_PER_PAGE", 3);
 ## Upload
 
 define("IMG_LOCATION", "assets/images/");
+
+## Dateime
+
+define("DATE_FORMAT", "Y-m-d H:i:s");
+

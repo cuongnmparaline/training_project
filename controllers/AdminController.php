@@ -1,9 +1,8 @@
 
 <?php
-require_once('controllers/baseController.php');
+require_once('controllers/BaseController.php');
 require_once('models/Admin.php');
 require_once('assets/helper/url.php');
-require_once('assets/helper/layout.php');
 require_once('assets/helper/account.php');
 class AdminController extends BaseController
 {
@@ -20,7 +19,7 @@ class AdminController extends BaseController
 
     public function search()
     {
-        global $name, $email;
+        $_SESSION['current_page'] = 'search';
         check_role($_SESSION['role_type']);
         if (isset($_GET['btn-search'])) {
             $name = $_GET['name'];
@@ -29,16 +28,6 @@ class AdminController extends BaseController
             $name = "";
             $email = "";
         }
-        // Get all admin account
-        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";
-        $totalRow = $this->adminModel->get($condition);
-
-        // Pagging
-        $numPerPage = NUM_PER_PAGE;
-        $totalNumRow = count($totalRow);
-        $numPage = ceil($totalNumRow / $numPerPage);
-        $pageNum = (int)!empty($_GET['page_id']) ? $_GET['page_id'] : 1;
-        $start = ($pageNum - 1) * $numPerPage;
 
         // Sort
         if (isset($_GET['order'])) {
@@ -94,39 +83,69 @@ class AdminController extends BaseController
         $sort_option = [
             'order' => $order,
             'sort' => $sort,
-            'icon' => $icon
+            'icon' => $icon,
         ];
-        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1 ORDER BY {$order} {$sort} LIMIT {$start}, {$numPerPage}";
-        $admins = $this->adminModel->get($condition);
+
+        // Get all admin account
+        $condition = [
+            'del_flag' => DEL_FALSE,
+            'name' => $name,
+            'email' => $email,
+            'order' => $order,
+            'sort' => $sort,
+            'pagging' => ""
+        ];
+
+        $fields = ['id', 'avatar', 'name', 'email', 'role_type'];
+        $totalRow = $this->adminModel->get($fields, $condition);
+
+        // Pagging
+        $numPerPage = NUM_PER_PAGE;
+        $totalNumRow = count($totalRow);
+        $numPage = ceil($totalNumRow / $numPerPage);
+        $pageNum = (int)!empty($_GET['page_id']) ? $_GET['page_id'] : 1;
+        $start = ($pageNum - 1) * $numPerPage;
+
+        $condition = [
+            'del_flag' => DEL_FALSE,
+            'name' => $name,
+            'email' => $email,
+            'order' => $order,
+            'sort' => $sort,
+            'pagging' => "LIMIT {$start}, {$numPerPage}"
+        ];
+        $fields = ['id', 'avatar', 'name', 'email', 'role_type'];
+        $admins = $this->adminModel->get($fields, $condition);
 
         // String pagging
         $pagePrev = $pageNum - 1;
         $strPagging = "<ul class='pagination'>";
         if ($pageNum > 1) {
             $pagePrev = $pageNum - 1;
-            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$pagePrev}'>Previous</a></li>";
+            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$pagePrev}'><<</a></li>";
         }
         for ($i = 1; $i <= $numPage; $i++) {
             $active = "";
             if ($pageNum == $i) {
-                $active = "class = 'active-num-page'";
+                $active = "active";
             }
-            $strPagging .= "<li class='page-item' {$active}><a class='page-link' href = 'management/search/{$i}'>$i</a></li>";
+            $strPagging .= "<li class='page-item'><a class='page-link {$active}' href = 'management/search/{$i}'>$i</a></li>";
         }
         $pageNext = $pageNum + 1;
         if ($pageNum < $numPage) {
             $pageNext = $pageNum + 1;
-            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$pageNext}'>Next</a></li>";
+            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$pageNext}'>>></a></li>";
         }
         $strPagging .= "</ul>";
 
         $data = [
+            'name' => $name,
+            'email' => $email,
             'sort_option' => $sort_option,
             'admins' => $admins,
             'str_pagging' => $strPagging
         ];
         $this->render('search', $data);
-
     }
 
     public function login()
@@ -134,15 +153,12 @@ class AdminController extends BaseController
         if($this->isLoggedIn()){
             redirect_to('search');
         }
-        global $email, $password, $error;
         if (isset($_POST['btn_login'])) {
             $error = [];
-
             // Check email
             if (empty($_POST['email'])) {
                 $error['email'] = EMAIL_BLANK;
-            }
-            if (!is_email($_POST['email'])) {
+            }elseif (!is_email($_POST['email'])) {
                 $error['email'] = EMAIL_VALIDATE;
             } else {
                 $email = $_POST['email'];
@@ -151,8 +167,7 @@ class AdminController extends BaseController
             // Check password
             if (empty($_POST['password'])) {
                 $error['password'] = PASS_BLANK;
-            }
-            if (!is_password($_POST['password'])) {
+            } elseif (!is_password($_POST['password'])) {
                 $error['password'] = PASS_VALIDATE;
             } else {
                 $password = md5($_POST['password']);
@@ -170,6 +185,12 @@ class AdminController extends BaseController
                 } else {
                     $error['account'] = ACCOUNT_INCORRECT;
                 }
+            } else {
+                $data = [
+                    'email' => $_POST['email'],
+                    'error' => $error
+                ];
+                $this->render('login', $data);
             }
         }
         $this->render('login');
@@ -183,16 +204,14 @@ class AdminController extends BaseController
 
     public function create()
     {
+        $_SESSION['current_page'] = 'search';
         check_role($_SESSION['role_type']);
-        global $name, $email, $error, $role;
         if (isset($_POST['btn-add-admin'])) {
             $error = [];
-
             // Check name
             if (empty($_POST['name'])) {
                 $error['name'] = NAME_BLANK;
-            }
-            if (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
+            } elseif (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
                 $error['name'] = NAME_VALIDATE;
             } else {
                 $name = $_POST['name'];
@@ -201,8 +220,7 @@ class AdminController extends BaseController
             // Check password
             if (empty($_POST['password'])) {
                 $error['password'] = PASS_BLANK;
-            }
-            if (!is_password($_POST['password'])) {
+            } elseif (!is_password($_POST['password'])) {
                 $error['password'] = PASS_VALIDATE;
             } else {
                 $password = md5($_POST['password']);
@@ -211,8 +229,7 @@ class AdminController extends BaseController
             // Check password verify
             if (empty($_POST['password_verify'])) {
                 $error['password_verify'] = PASS_VERIFY_BLANK;
-            }
-            if (!is_password($_POST['password'])) {
+            } elseif (!is_password($_POST['password'])) {
                 $error['password'] = PASS_VALIDATE;
             }
             if ($_POST['password'] != $_POST['password_verify']) {
@@ -222,8 +239,7 @@ class AdminController extends BaseController
             // Check email
             if (empty($_POST['email'])) {
                 $error['email'] = EMAIL_BLANK;
-            }
-            if (!is_email($_POST['email'])) {
+            }elseif (!is_email($_POST['email'])) {
                 $error['email'] = EMAIL_VALIDATE;
             }
             if ($this->adminModel->checkMailExisted($_POST['email'])) {
@@ -243,6 +259,7 @@ class AdminController extends BaseController
             // check role
             if (empty($_POST['role'])) {
                 $error['role'] = ROLE_BLANK;
+                $role = '';
             } else {
                 $role = $_POST['role'];
             }
@@ -252,18 +269,26 @@ class AdminController extends BaseController
 
             // check not error
             if (empty($error)) {
-                $data = array(
+                $data = [
                     'name' => $name,
                     'password' => $password,
                     'email' => $email,
                     'avatar' => $avatar,
                     'role_type' => $role,
                     'ins_id' => $ins_id,
-                    'ins_datetime' => date('d/m/yy'),
-                );
+                    'ins_datetime' => date(DATE_FORMAT),
+                ];
                 if ($this->adminModel->add($data)) {
                     flash('admin_message', ADMIN_CREATED . "<br>" . "<a href='management/search'>Return to list ADMIN</a>");
                 }
+            } else {
+                $data = [
+                    'name' => $_POST['name'],
+                    'email' => $_POST['email'],
+                    'role_type' => $role,
+                    'error' => $error
+                ];
+                $this->render('create', $data);
             }
         }
         $this->render('create');
@@ -271,12 +296,13 @@ class AdminController extends BaseController
 
     public function edit()
     {
+        $_SESSION['current_page'] = 'search';
         check_role($_SESSION['role_type']);
         if (isset($_POST['btn-update-admin'])) {
-            global $email, $name, $error;
             if (isset($_GET['id'])) {
                 $id = $_GET['id'];
-                $admin = $this->adminModel->getById($id);
+                $fields = ['id', 'avatar', 'name', 'password', 'email', 'role_type'];
+                $admin = $this->adminModel->getById($fields, $id);
             }
             $error = [];
 
@@ -314,8 +340,7 @@ class AdminController extends BaseController
             // Check email
             if (empty($_POST['email'])) {
                 $error['email'] = EMAIL_BLANK;
-            }
-            if (!is_email($_POST['email'])) {
+            } elseif (!is_email($_POST['email'])) {
                 $error['email'] = EMAIL_VALIDATE;
             } else {
                 $email = $_POST['email'];
@@ -346,34 +371,40 @@ class AdminController extends BaseController
                     'avatar' => $avatar,
                     'role_type' => $role,
                     'upd_id' => $updId,
-                    'upd_datetime' => date('d/m/y')
+                    'upd_datetime' => date(DATE_FORMAT)
                 ];
                 if ($this->adminModel->update($data, $id)) {
-                    flash('admin_message', ADMIN_UPDATED . "<br>" . "<a href='management/search'>Return to list ADMIN</a>");
-                } else {
-                    flash('admin_message', ST_WRONG, 'alert alert-success');
+                    $_SESSION['edit_success'] = "Edit thành công";
+//                    flash('admin_message', ADMIN_UPDATED . "<br>" . "<a href='management/search'>Return to list ADMIN</a>");
+                    redirect_to('/management/search');
                 }
+//                redirect_to('/management/search');
             }
-            $admin = $this->adminModel->getById($id);
-            $data = ['admin' => $admin];
+            $fields = ['id', 'avatar', 'name', 'password', 'email', 'role_type'];
+            $admin = $this->adminModel->getById($fields, $id);
+            $data = [
+                'admin' => $admin,
+                'error' => $error
+            ];
             $this->render('edit', $data);
         }
         if (isset($_GET['id'])) {
             $id = (int)$_GET['id'];
-            $admin = $this->adminModel->getById($id);
+            $fields = ['id', 'avatar', 'name', 'password', 'email', 'role_type'];
+            $admin = $this->adminModel->getById($fields, $id);
             if(empty($admin)){
-                flash("admin_message", CANT_FOUND_ACC);
+//                flash("admin_message", CANT_FOUND_ACC);
                 $this->render('edit');
             } else {
                 $data = ['admin' => $admin];
                 $this->render('edit', $data);
             }
-
         }
     }
 
     public function delete()
     {
+        $_SESSION['current_page'] = 'search';
        check_role($_SESSION['role_type']);
         if (!isset($_GET['id'])) {
             flash('admin_message', ST_WRONG, 'alert alert-success');
@@ -389,7 +420,7 @@ class AdminController extends BaseController
     // User Action
 
     public function search_user(){
-        global $name, $email;
+        $_SESSION['current_page'] = 'search_user';
         if (isset($_GET['btn-search-user'])) {
             $name = $_GET['name'];
             $email = $_GET['email'];
@@ -398,9 +429,74 @@ class AdminController extends BaseController
             $email = "";
         }
 
+        // Sort
+        if (isset($_GET['order'])) {
+            $order = $_GET['order'];
+        } else {
+            $order = 'id';
+        }
+        if (isset($_GET['sort'])) {
+            $sort = $_GET['sort'];
+
+        } else {
+            $sort = 'DESC';
+        }
+        if($sort == 'DESC'){
+            $icon['id'] = 'fa fa-fw fa-angle-down';
+        } else {
+            $icon['id'] = 'fa fa-fw fa-angle-up';
+        }
+        $icon['id'] = 'fa fa-fw fa-angle-down';
+        $icon['name'] = 'fa fa-fw fa-angle-down';
+        $icon['email'] = 'fa fa-fw fa-angle-down';
+        $icon['status'] = 'fa fa-fw fa-angle-down';
+        switch ($order) {
+            case 'id':
+                if($sort == 'DESC'){
+                    $icon['id'] = 'fa fa-fw fa-angle-down';
+                } else {
+                    $icon['id'] = 'fa fa-fw fa-angle-up';
+                }
+                break;
+            case 'name':
+                if($sort == 'DESC'){
+                    $icon['name'] = 'fa fa-fw fa-angle-down';
+                } else {
+                    $icon['name'] = 'fa fa-fw fa-angle-up';
+                }
+                break;
+            case 'email':
+                if($sort == 'DESC'){
+                    $icon['email'] = 'fa fa-fw fa-angle-down';
+                } else {
+                    $icon['email'] = 'fa fa-fw fa-angle-up';
+                }
+                break;
+            case 'status':
+                if($sort == 'DESC'){
+                    $icon['status'] = 'fa fa-fw fa-angle-down';
+                } else {
+                    $icon['status'] = 'fa fa-fw fa-angle-up';
+                }
+                break;
+        }
+        $sort_option = [
+            'order' => $order,
+            'sort' => $sort,
+            'icon' => $icon,
+        ];
+
         // Get all admin account
-        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1";
-        $totalRow = $this->userModel->get($condition);
+        $condition = [
+            'del_flag' => DEL_FALSE,
+            'name' => $name,
+            'email' => $email,
+            'order' => $order,
+            'sort' => $sort,
+            'pagging' => ""
+        ];
+        $fields = ['id', 'avatar', 'name', 'email', 'status'];
+        $totalRow = $this->userModel->get($fields, $condition);
 
         // Pagging
         $numPerPage = NUM_PER_PAGE;
@@ -409,57 +505,49 @@ class AdminController extends BaseController
         $pageNum = (int)!empty($_GET['page_id']) ? $_GET['page_id'] : 1;
         $start = ($pageNum - 1) * $numPerPage;
 
-        // Sort
-        if(isset($_GET['order'])){
-            $order = $_GET['order'];
-        } else {
-            $order = 'id';
-        }
-        if(isset($_GET['sort'])){
-            $sort = $_GET['sort'];
-        } else {
-            $sort = 'DESC';
-        }
-        $sort_option = [
+        $condition = [
+            'del_flag' => DEL_FALSE,
+            'name' => $name,
+            'email' => $email,
             'order' => $order,
-            'sort' => $sort
+            'sort' => $sort,
+            'pagging' => "LIMIT {$start}, {$numPerPage}"
         ];
-
-        $condition = "WHERE email LIKE '%{$email}%' AND del_flag != 1 OR name LIKE '%{$name}%' AND del_flag != 1 ORDER BY {$order} {$sort} LIMIT {$start}, {$numPerPage}";
-        $users = $this->userModel->get($condition);
+        $fields = ['id', 'avatar', 'name', 'email', 'status'];
+        $users = $this->userModel->get($fields, $condition);
 
         // String pagging
         $pagePrev = $pageNum - 1;
         $strPagging = "<ul class='pagination'>";
         if ($pageNum > 1) {
             $pagePrev = $pageNum - 1;
-            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search-user/{$pagePrev}'>Previous</a></li>";
+            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search-user/{$pagePrev}'><<</a></li>";
         }
         for ($i = 1; $i <= $numPage; $i++) {
             $active = "";
             if ($pageNum == $i) {
-                $active = "class = 'active-num-page'";
+                $active = "active";
             }
-            $strPagging .= "<li class='page-item' {$active}><a class='page-link' href = 'management/search-user/{$i}'>$i</a></li>";
+            $strPagging .= "<li class='page-item'><a class='page-link {$active}' href = 'management/search-user/{$i}'>$i</a></li>";
         }
         $pageNext = $pageNum + 1;
         if ($pageNum < $numPage) {
             $pageNext = $pageNum + 1;
-            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search-user/{$pageNext}'>Next</a></li>";
+            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search-user/{$pageNext}'>>></a></li>";
         }
         $strPagging .= "</ul>";
         $data = [
             'users' => $users,
             'str_pagging' => $strPagging,
-            'sort_option' => $sort_option
+            'sort_option' => $sort_option,
+            'name' => $name,
+            'email' => $email
         ];
         $this->render('search_user', $data);
-
     }
 
     public function create_user(){
-
-        global $name, $email, $status, $error;
+        $_SESSION['current_page'] = 'search_user';
         if (isset($_POST['btn-add-user'])) {
             $error = [];
             // Check name
@@ -475,8 +563,7 @@ class AdminController extends BaseController
             // Check password
             if (empty($_POST['password'])) {
                 $error['password'] = PASS_BLANK;
-            }
-            if (!is_password($_POST['password'])) {
+            }elseif (!is_password($_POST['password'])) {
                 $error['password'] = PASS_VALIDATE;
             } else {
                 $password = md5($_POST['password']);
@@ -514,6 +601,7 @@ class AdminController extends BaseController
             // check role
             if (empty($_POST['status'])) {
                 $error['status'] = STATUS_BLANK;
+                $status = '';
             } else {
                 $status = $_POST['status'];
             }
@@ -530,25 +618,32 @@ class AdminController extends BaseController
                     'avatar' => $avatar,
                     'status' => $status,
                     'ins_id' => $ins_id,
-                    'ins_datetime' => date('d/m/yy'),
+                    'ins_datetime' => date(DATE_FORMAT)
                 ];
                 if($this->userModel->add($data)){
                     flash('user_message', USER_CREATED . "<br>" . "<a href='management/search-user'>Return to list ADMIN</a>");
                 }
             } else {
-                flash ('user_message', ST_WRONG, 'alert alert-success');
+                $data = [
+                    'name' => $_POST['name'],
+                    'password' => $_POST['password'],
+                    'email' => $_POST['email'],
+                    'status' => $status,
+                    'error' => $error
+                ];
+                $this->render('create_user', $data);
             }
         }
         $this->render('create_user');
     }
 
     public function edit_user(){
-
+        $_SESSION['current_page'] = 'search_user';
         if(isset($_POST['btn-update-admin'])){
-            global $email, $name, $error;
             if(isset($_GET['id'])){
                 $id = $_GET['id'];
-                $admin = $this->userModel->getById($id);
+                $fields = ['id', 'avatar', 'name','password', 'email', 'status'];
+                $user = $this->userModel->getById($fields, $id);
             }
             $error = [];
             // Check name
@@ -563,7 +658,7 @@ class AdminController extends BaseController
 
             // Check password
             if(empty($_POST['password'])){
-                $password = $admin['password'];
+                $password = $user['password'];
             } else {
                 if (!is_password($_POST['password'])) {
                     $error['password'] = PASS_VALIDATE;
@@ -606,7 +701,7 @@ class AdminController extends BaseController
                 $upload_dir = IMG_LOCATION;
                 $avatar = $upload_dir . $_FILES['files']['name'][0];
             } else {
-                $avatar = $admin['avatar'];
+                $avatar = $user['avatar'];
             }
             // check role
             if (empty($_POST['status'])) {
@@ -625,18 +720,20 @@ class AdminController extends BaseController
                     'avatar' => $avatar,
                     'status' => $status,
                     'upd_id' => $upd_id,
-                    'upd_datetime' => date('d/m/y')
+                    'upd_datetime' => date(DATE_FORMAT)
                 ];
                 if($this->userModel->update($data, $id)){
                     flash('user_message', USER_UPDATED . "<br>" . "<a href='management/search-user'>Return to list USER</a>");
-//                    $success['admin'] = "Update ADMIN success" . "<br>" . "<a href='?controller=admin&action=index'>Return to list ADMIN</a>";
                 } else {
                     flash('user_message', ST_WRONG, 'alert alert-success');
                 }
             }
-            $user = $this->userModel->getById($id);
-
-            $data = ['user' => $user];
+            $fields = ['id', 'avatar', 'name', 'password', 'email', 'status'];
+            $user = $this->userModel->getById($fields, $id);
+            $data = [
+                'user' => $user,
+                'error' => $error
+            ];
             $this->render('edit_user', $data);
         } else {
             if(!isset($_GET['id'])){
@@ -644,7 +741,8 @@ class AdminController extends BaseController
                 $this->render('edit_user');
             }
             $id = (int)$_GET['id'];
-            $user = $this->userModel->getById($id);
+            $fields = ['id', 'avatar', 'name', 'email', 'password', 'status'];
+            $user = $this->userModel->getById($fields, $id);
             if(empty($user)){
                 flash('user_message', CANT_FOUND_ACC);
                 $this->render('edit_user');
@@ -657,6 +755,7 @@ class AdminController extends BaseController
     }
 
     public function delete_user(){
+        $_SESSION['current_page'] = 'search_user';
         if(isset($_GET['id'])){
             $id = $_GET['id'];
             if($this->userModel->delete($id)){

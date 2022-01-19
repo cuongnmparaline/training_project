@@ -1,5 +1,5 @@
 <?php
-require_once('controllers/baseController.php');
+require_once('controllers/BaseController.php');
 require_once('vendor/autoload.php');
 
 class UserController extends BaseController
@@ -34,7 +34,6 @@ class UserController extends BaseController
         if($this->isLoggedIn()){
             redirect_to('profile');
         }
-        global $error, $email;
         if (isset($_POST['btn-login'])) {
             $error = [];
             # Check email
@@ -66,6 +65,11 @@ class UserController extends BaseController
                 } else {
                     $error['account'] = ACCOUNT_INCORRECT;
                 }
+            } else {
+                $data = [
+                    'email' => $email,
+                    'error' => $error
+                ];
             }
         }
 
@@ -110,7 +114,7 @@ class UserController extends BaseController
                         'email' => $email,
                         'status' => 1,
                         'ins_id' => 0,
-                        'ins_datetime' => date('d/m/yy')
+                        'ins_datetime' => date(DATE_FORMAT)
                     ];
                     if($this->userModel->add($data_insert)){
                         $_SESSION['is_user_login'] = true;

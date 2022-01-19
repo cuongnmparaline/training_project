@@ -2,7 +2,7 @@
 // interface Move
 interface ModelInterface
 {
-    function get($condition);
+    function get($fields, $condition);
 
     function add($data);
 
@@ -10,6 +10,6 @@ interface ModelInterface
 
     function update($data, $id);
 
-    function getById($id);
+    function getById($fields, $id);
 
 }

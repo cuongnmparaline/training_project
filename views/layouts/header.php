@@ -22,6 +22,7 @@
     <script src="assets/js/app.js"></script>
 
 </head>
+
 <body>
 <div id="site">
     <div id="container">
@@ -30,7 +31,7 @@
                 <a href="/management" title="" id="logo" class="fl-left">ACCOUNT MANAGEMENT</a>
                 <ul id="main-menu" class="fl-left">
                     <li>
-                        <a href="management/search" title="">Admin Management</a>
+                    <a <?php if(isset($_SESSION['current_page']) && $_SESSION['current_page'] == 'search') echo "class='active'";?> href="management/search" title="">Admin Management</a>
                         <ul class="sub-menu">
                             <li>
                                 <a href="management/search" title="">Search</a>
@@ -41,7 +42,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="management/search-user" title="">User Management</a>
+                        <a <?php if(isset($_SESSION['current_page']) && $_SESSION['current_page'] == 'search_user') echo "class='active'";?> href="management/search-user" title="">User Management</a>
                         <ul class="sub-menu">
                             <li>
                                 <a href="management/search-user" title="">Search</a>

@@ -18,25 +18,25 @@ require_once ('views/layouts/header.php');
                         <div id="preview">
                         </div>
                         <input type="button" id="upload_avatar" value='Upload'>
-                        <?php echo form_error('avatar') ?>
+                        <?php if(isset($error['avatar'])) echo "<p class='error'>{$error['avatar']}</p>" ?>
                         <label for="name">Name*</label>
-                        <input type="text" name="name" id="name" value="<?= set_value('name') ?>">
-                        <?php echo form_error('name')?>
+                        <input type="text" name="name" id="name" value="<?php if(isset($name)) echo $name?>">
+                        <?php if(isset($error['name'])) echo "<p class='error'>{$error['name']}</p>" ?>
                         <label for="email">Email*</label>
-                        <input type="email" name="email" id="email" value="<?= set_value('email') ?>">
-                        <?php echo form_error('email')?>
+                        <input type="email" name="email" id="email" value="<?php if(isset($email)) echo $email?>">
+                        <?php if(isset($error['email'])) echo "<p class='error'>{$error['email']}</p>" ?>
                         <label for="password">Password*</label>
                         <input type="password" name="password" id="password">
-                        <?php echo form_error('password')?>
+                        <?php if(isset($error['password'])) echo "<p class='error'>{$error['password']}</p>" ?>
                         <label for="password">Password Verify*</label>
                         <input type="password" name="password_verify" id="password_verify">
-                        <?php echo form_error('password_verify')?>
+                        <?php if(isset($error['password_verify'])) echo "<p class='error'>{$error['password_verify']}</p>" ?>
                         <label for="role">Status*</label> <br>
-                        <input type="radio" id="active" name="status" value="1"<?php global $status; if($status == 1) echo "checked" ?>>
+                        <input type="radio" id="active" name="status" value="1" <?php if(!empty($status) && $status == 1) echo "checked" ?>>
                         <label for="active" class="status">Active</label>
-                        <input type="radio" class="status" id="banned" name="status" value="2"<?php global $status; if($status == 2) echo "checked" ?>>
+                        <input type="radio" class="status" id="banned" name="status" value="2" <?php if(!empty($status) && $status == 2) echo "checked" ?>>
                         <label for="banned" class="status">Banned</label>
-                        <?php echo form_error('status')?>
+                        <?php if(isset($error['status'])) echo "<p class='error'>{$error['status']}</p>" ?>
                         <br> <br>
                         <a href="management/create-user" class="btn btn-primary">Reset</a>
                         <button type="submit" name="btn-add-user" id="btn-submit" class="btn btn-secondary">Save</button>

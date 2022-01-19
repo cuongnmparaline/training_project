@@ -8,18 +8,17 @@ require_once('views/layouts/header.php');
             <div class="form-search" id="form-search">
                 <form action="management/search" method="GET" enctype="multipart/form-data">
                     <label for="name">Name</label>
-                    <input type="text" name="name" id="name" value="<?=set_value('name')?>"> <br> <br>
-                    <?php echo form_error('name')?>
+                    <input type="text" name="name" id="name" value="<?php if(isset($name)) echo $name?>"> <br> <br>
                     <label for="email">Email</label>
-                    <input type="text" name="email" id="email" value="<?=set_value('email')?>"> <br> <br>
+                    <input type="text" name="email" id="email" value="<?php if(isset($email)) echo $email?>"> <br> <br>
                     <a href="management/search" class="btn btn-primary">Reset</a>
                     <input type="submit" id="search-button" name="btn-search" class="btn btn-success" value="Search" />
                 </form>
                 <br> <br>
             </div>
             <div class="section" id="detail-page">
+                <?php flash('admin_message'); ?>
                 <div class="section-detail">
-                    <?php flash('admin_message'); ?>
                     <div class="table-responsive">
                         <nav aria-label="Page navigation example">
                             <?php if(!empty($str_pagging)) echo $str_pagging ?>

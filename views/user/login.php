@@ -10,13 +10,13 @@
 <div id="wp-form-login">
     <?php flash('user_message'); ?>
     <form action="/login" method="POST" id="form-login">
-        <input type="text" name="email" id="email" placeholder="Email" value="">
-        <?php echo form_error('email'); ?>
+        <input type="text" name="email" id="email" placeholder="Email" value="<?php if(isset($email)) echo $email?>">
+        <?php if(isset($error['email'])) echo "<p class='error'>{$error['email']}</p>" ?>
         <input type="password" name="password" id="password" placeholder="Password">
+        <?php if(isset($error['password'])) echo "<p class='error'>{$error['password']}</p>" ?>
         <a href="<?php if(isset($data['login_url'])) echo $data['login_url']; ?>">Login via Facebook</a>
-        <?php echo form_error('password'); ?>
         <input type="submit" name="btn-login" value="Login" id="btn-login">
-        <?php echo form_error('account'); ?>
+        <?php if(isset($error['account'])) echo "<p class='error'>{$error['account']}</p>" ?>
     </form>
 
 </div>
