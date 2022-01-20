@@ -30,60 +30,14 @@ class AdminController extends BaseController
         }
 
         // Sort
-        if (isset($_GET['order'])) {
-            $order = $_GET['order'];
-        } else {
-            $order = 'id';
-        }
-        if (isset($_GET['sort'])) {
-            $sort = $_GET['sort'];
+        $icon = isset($_GET['sort']) && $_GET['sort'] == 'DESC' ? '-up' : '-down';
+        $order = isset($_GET['order']) ? $_GET['order'] : 'id';
+        $sort = isset($_GET['sort']) && $_GET['sort'] == 'DESC' ? 'ASC' : 'DESC';
 
-        } else {
-            $sort = 'DESC';
-        }
-        if($sort == 'DESC'){
-            $icon['id'] = 'fa fa-fw fa-angle-down';
-        } else {
-            $icon['id'] = 'fa fa-fw fa-angle-up';
-        }
-        $icon['id'] = 'fa fa-fw fa-angle-down';
-        $icon['name'] = 'fa fa-fw fa-angle-down';
-        $icon['email'] = 'fa fa-fw fa-angle-down';
-        $icon['role_type'] = 'fa fa-fw fa-angle-down';
-        switch ($order) {
-            case 'id':
-                if($sort == 'DESC'){
-                    $icon['id'] = 'fa fa-fw fa-angle-down';
-                } else {
-                    $icon['id'] = 'fa fa-fw fa-angle-up';
-                }
-                break;
-            case 'name':
-                if($sort == 'DESC'){
-                    $icon['name'] = 'fa fa-fw fa-angle-down';
-                } else {
-                    $icon['name'] = 'fa fa-fw fa-angle-up';
-                }
-                break;
-            case 'email':
-                if($sort == 'DESC'){
-                    $icon['email'] = 'fa fa-fw fa-angle-down';
-                } else {
-                    $icon['email'] = 'fa fa-fw fa-angle-up';
-                }
-                break;
-            case 'role_type':
-                if($sort == 'DESC'){
-                    $icon['role_type'] = 'fa fa-fw fa-angle-down';
-                } else {
-                    $icon['role_type'] = 'fa fa-fw fa-angle-up';
-                }
-                break;
-        }
         $sort_option = [
             'order' => $order,
             'sort' => $sort,
-            'icon' => $icon,
+            'icon' => $icon
         ];
 
         // Get all admin account
@@ -160,31 +114,30 @@ class AdminController extends BaseController
                 $error['email'] = EMAIL_BLANK;
             }elseif (!is_email($_POST['email'])) {
                 $error['email'] = EMAIL_VALIDATE;
-            } else {
-                $email = $_POST['email'];
             }
+            $email = $_POST['email'];
 
             // Check password
             if (empty($_POST['password'])) {
                 $error['password'] = PASS_BLANK;
             } elseif (!is_password($_POST['password'])) {
                 $error['password'] = PASS_VALIDATE;
+            }
+            $password = md5($_POST['password']);
+
+            if ($this->adminModel->checkLogin($email, $password)) {
+                $admin = $this->adminModel->getCurrentAdmin($email, $password);
             } else {
-                $password = md5($_POST['password']);
+                $error['account'] = ACCOUNT_INCORRECT;
             }
 
             // Conclude
             if (empty($error)) {
-                if ($this->adminModel->checkLogin($email, $password)) {
-                    $admin = $this->adminModel->getCurrentAdmin($email, $password);
-                    $_SESSION['is_admin_login'] = true;
-                    $_SESSION['admin_login'] = $admin->email;
-                    $_SESSION['admin_id'] = $admin->id;
-                    $_SESSION['role_type'] = $admin->role_type;
-                    redirect_to("search");
-                } else {
-                    $error['account'] = ACCOUNT_INCORRECT;
-                }
+                $_SESSION['is_admin_login'] = true;
+                $_SESSION['admin_login'] = $admin->email;
+                $_SESSION['admin_id'] = $admin->id;
+                $_SESSION['role_type'] = $admin->role_type;
+                redirect_to("search");
             } else {
                 $data = [
                     'email' => $_POST['email'],
@@ -209,27 +162,19 @@ class AdminController extends BaseController
         if (isset($_POST['btn-add-admin'])) {
             $error = [];
             // Check name
-            if (empty($_POST['name'])) {
-                $error['name'] = NAME_BLANK;
-            } elseif (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
+            if (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
                 $error['name'] = NAME_VALIDATE;
-            } else {
-                $name = $_POST['name'];
             }
+            $name = $_POST['name'];
 
             // Check password
-            if (empty($_POST['password'])) {
-                $error['password'] = PASS_BLANK;
-            } elseif (!is_password($_POST['password'])) {
+            if (!is_password($_POST['password'])) {
                 $error['password'] = PASS_VALIDATE;
-            } else {
-                $password = md5($_POST['password']);
             }
+            $password = md5($_POST['password']);
 
             // Check password verify
-            if (empty($_POST['password_verify'])) {
-                $error['password_verify'] = PASS_VERIFY_BLANK;
-            } elseif (!is_password($_POST['password'])) {
+            if (!is_password($_POST['password'])) {
                 $error['password'] = PASS_VALIDATE;
             }
             if ($_POST['password'] != $_POST['password_verify']) {
@@ -237,24 +182,21 @@ class AdminController extends BaseController
             }
 
             // Check email
-            if (empty($_POST['email'])) {
-                $error['email'] = EMAIL_BLANK;
-            }elseif (!is_email($_POST['email'])) {
+            if (!is_email($_POST['email'])) {
                 $error['email'] = EMAIL_VALIDATE;
             }
             if ($this->adminModel->checkMailExisted($_POST['email'])) {
                 $error['email'] = EMAIL_EXISTED;
-            } else {
-                $email = $_POST['email'];
             }
+            $email = $_POST['email'];
+
 
             // Check avatar
-            if (!empty($_FILES['files']['name'][0])) {
-                $upload_dir = IMG_LOCATION;
-                $avatar = $upload_dir . $_FILES['files']['name'][0];
-            } else {
+            if (empty($_FILES['files']['name'][0])) {
                 $error['avatar'] = AVATAR_BLANK;
             }
+            $upload_dir = IMG_LOCATION;
+            $avatar = $upload_dir . $_FILES['files']['name'][0];
 
             // check role
             if (empty($_POST['role'])) {
@@ -263,6 +205,8 @@ class AdminController extends BaseController
             } else {
                 $role = $_POST['role'];
             }
+
+
 
             // get insertor id ( current admin id )
             $ins_id = $_SESSION['admin_id'];
@@ -308,47 +252,40 @@ class AdminController extends BaseController
             $error = [];
 
             // Check name
-            if (empty($_POST['name'])) {
-                $error['name'] = NAME_BLANK;
-            }
             if (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
                 $error['name'] = NAME_VALIDATE;
-            } else {
-                $name = $_POST['name'];
             }
+            $name = $_POST['name'];
+
 
             // Check password
-            if (empty($_POST['password'])) {
+            if(empty($_POST['password'])){
                 $password = $admin['password'];
             } else {
                 if (!is_password($_POST['password'])) {
                     $error['password'] = PASS_VALIDATE;
-                } else {
-                    $password = md5($_POST['password']);
                 }
+                $password = md5($_POST['password']);
             }
 
-            // Check verify password
+            // Check password verify
             if (!empty($_POST['password_verify'])) {
                 if (!is_password($_POST['password'])) {
                     $error['password'] = PASS_VALIDATE;
                 }
-                if ($_POST['password'] != $_POST['password_verify']) {
+                if($_POST['password'] != $_POST['password_verify']){
                     $error['password_verify'] = VERIFY_INCORRECT;
                 }
             }
 
             // Check email
-            if (empty($_POST['email'])) {
-                $error['email'] = EMAIL_BLANK;
-            } elseif (!is_email($_POST['email'])) {
+            if (!is_email($_POST['email'])) {
                 $error['email'] = EMAIL_VALIDATE;
-            } else {
-                $email = $_POST['email'];
             }
+            $email = $_POST['email'];
 
             // Check avatar
-            if (!empty($_FILES['files']['name'][0])) {
+            if(!empty($_FILES['files']['name'][0])){
                 $upload_dir = IMG_LOCATION;
                 $avatar = $upload_dir . $_FILES['files']['name'][0];
             } else {
@@ -358,12 +295,13 @@ class AdminController extends BaseController
             // Check role
             if (empty($_POST['role'])) {
                 $error['role'] = ROLE_BLANK;
-            } else {
-                $role = $_POST['role'];
             }
+            $role = $_POST['role'];
+
 
             // get Update id ( current admin id )
             $updId = $_SESSION['admin_id'];
+
             if (empty($error)) {
                 $data = [
                     'name' => $name,
@@ -378,7 +316,6 @@ class AdminController extends BaseController
                     flash('admin_message', ADMIN_UPDATED);
                     redirect_to('/management/search');
                 }
-//                redirect_to('/management/search');
             }
             $fields = ['id', 'avatar', 'name', 'password', 'email', 'role_type'];
             $admin = $this->adminModel->getById($fields, $id);
@@ -392,7 +329,7 @@ class AdminController extends BaseController
             $id = (int)$_GET['id'];
             $fields = ['id', 'avatar', 'name', 'password', 'email', 'role_type'];
             $admin = $this->adminModel->getById($fields, $id);
-            if(empty($admin)){
+            if (empty($admin)) {
                 flash("error_message", CANT_FOUND_ACC);
                 $this->render('edit');
             } else {
@@ -405,7 +342,7 @@ class AdminController extends BaseController
     public function delete()
     {
         $_SESSION['current_page'] = 'search';
-       check_role($_SESSION['role_type']);
+        check_role($_SESSION['role_type']);
         if (!isset($_GET['id'])) {
             flash('admin_message', ST_WRONG, 'alert alert-success');
             return false;
@@ -430,60 +367,14 @@ class AdminController extends BaseController
         }
 
         // Sort
-        if (isset($_GET['order'])) {
-            $order = $_GET['order'];
-        } else {
-            $order = 'id';
-        }
-        if (isset($_GET['sort'])) {
-            $sort = $_GET['sort'];
+        $icon = isset($_GET['sort']) && $_GET['sort'] == 'DESC' ? '-up' : '-down';
+        $order = isset($_GET['order']) ? $_GET['order'] : 'id';
+        $sort = isset($_GET['sort']) && $_GET['sort'] == 'DESC' ? 'ASC' : 'DESC';
 
-        } else {
-            $sort = 'DESC';
-        }
-        if($sort == 'DESC'){
-            $icon['id'] = 'fa fa-fw fa-angle-down';
-        } else {
-            $icon['id'] = 'fa fa-fw fa-angle-up';
-        }
-        $icon['id'] = 'fa fa-fw fa-angle-down';
-        $icon['name'] = 'fa fa-fw fa-angle-down';
-        $icon['email'] = 'fa fa-fw fa-angle-down';
-        $icon['status'] = 'fa fa-fw fa-angle-down';
-        switch ($order) {
-            case 'id':
-                if($sort == 'DESC'){
-                    $icon['id'] = 'fa fa-fw fa-angle-down';
-                } else {
-                    $icon['id'] = 'fa fa-fw fa-angle-up';
-                }
-                break;
-            case 'name':
-                if($sort == 'DESC'){
-                    $icon['name'] = 'fa fa-fw fa-angle-down';
-                } else {
-                    $icon['name'] = 'fa fa-fw fa-angle-up';
-                }
-                break;
-            case 'email':
-                if($sort == 'DESC'){
-                    $icon['email'] = 'fa fa-fw fa-angle-down';
-                } else {
-                    $icon['email'] = 'fa fa-fw fa-angle-up';
-                }
-                break;
-            case 'status':
-                if($sort == 'DESC'){
-                    $icon['status'] = 'fa fa-fw fa-angle-down';
-                } else {
-                    $icon['status'] = 'fa fa-fw fa-angle-up';
-                }
-                break;
-        }
         $sort_option = [
             'order' => $order,
             'sort' => $sort,
-            'icon' => $icon,
+            'icon' => $icon
         ];
 
         // Get all admin account
@@ -551,28 +442,20 @@ class AdminController extends BaseController
         if (isset($_POST['btn-add-user'])) {
             $error = [];
             // Check name
-            if (empty($_POST['name'])) {
-                $error['name'] = NAME_BLANK;
-            }
             if (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
                 $error['name'] = NAME_VALIDATE;
-            } else {
-                $name = $_POST['name'];
             }
+            $name = $_POST['name'];
+
 
             // Check password
-            if (empty($_POST['password'])) {
-                $error['password'] = PASS_BLANK;
-            }elseif (!is_password($_POST['password'])) {
+            if (!is_password($_POST['password'])) {
                 $error['password'] = PASS_VALIDATE;
-            } else {
-                $password = md5($_POST['password']);
             }
+            $password = md5($_POST['password']);
+
 
             // Check password verfiy
-            if (empty($_POST['password_verify'])) {
-                $error['password_verify'] = PASS_VERIFY_BLANK;
-            }
             if (!is_password($_POST['password'])) {
                 $error['password'] = PASS_VALIDATE;
             }
@@ -581,24 +464,23 @@ class AdminController extends BaseController
             }
 
             // Check email
-            if (empty($_POST['email'])) {
-                $error['email'] = EMAIL_BLANK;
+            if (!is_email($_POST['email'])) {
+                $error['email'] = EMAIL_VALIDATE;
             }
-            if($this->userModel->checkMailExisted($_POST['email'])){
+            if ($this->adminModel->checkMailExisted($_POST['email'])) {
                 $error['email'] = EMAIL_EXISTED;
-            } else {
-                $email = $_POST['email'];
             }
+            $email = $_POST['email'];
 
             // check avatar
-            if(!empty($_FILES['files']['name'][0])){
+            if(!empty($_FILES['files']['name'][0])) {
                 $upload_dir = IMG_LOCATION;
                 $avatar = $upload_dir . $_FILES['files']['name'][0];
             } else {
                 $error['avatar'] = AVATAR_BLANK;
             }
 
-            // check role
+            // Check status
             if (empty($_POST['status'])) {
                 $error['status'] = STATUS_BLANK;
                 $status = '';
@@ -648,9 +530,6 @@ class AdminController extends BaseController
             }
             $error = [];
             // Check name
-            if (empty($_POST['name'])) {
-                $error['name'] = NAME_BLANK;
-            }
             if (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
                 $error['name'] = NAME_VALIDATE;
             } else {
@@ -664,17 +543,7 @@ class AdminController extends BaseController
                 if (!is_password($_POST['password'])) {
                     $error['password'] = PASS_VALIDATE;
                 }
-                if(empty($_POST['password_verify'])){
-                    $error['password_verify'] = PASS_VERIFY_BLANK;
-                }
-                if (!is_password($_POST['password'])) {
-                    $error['password'] = PASS_VALIDATE;
-                }
-                if($_POST['password'] == $_POST['password_verify']){
-                    $password = md5($_POST['password']);
-                } else {
-                    $error['password_verify'] = VERIFY_INCORRECT;
-                }
+                $password = md5($_POST['password']);
             }
 
             // Check password verify
@@ -688,14 +557,12 @@ class AdminController extends BaseController
             }
 
             // Check mail
-            if (empty($_POST['email'])) {
-                $error['email'] = EMAIL_BLANK;
-            }
+
             if (!is_email($_POST['email'])) {
                 $error['email'] = EMAIL_VALIDATE;
-            } else {
-                $email = $_POST['email'];
             }
+            $email = $_POST['email'];
+
 
             // Check avatar
             if(!empty($_FILES['files']['name'][0])){
@@ -704,15 +571,16 @@ class AdminController extends BaseController
             } else {
                 $avatar = $user['avatar'];
             }
-            // check role
+
+            // Check status
             if (empty($_POST['status'])) {
                 $error['status'] = STATUS_BLANK;
-            } else {
-                $status = $_POST['status'];
             }
+            $status = $_POST['status'];
 
             // get update id ( current admin id )
             $upd_id = $_SESSION['admin_id'];
+
             if(empty($error)){
                 $data = [
                     'name' => $name,

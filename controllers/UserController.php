@@ -39,37 +39,34 @@ class UserController extends BaseController
             # Check email
             if (empty($_POST['email'])) {
                 $error['email'] = EMAIL_BLANK;
-            }
-            if (!is_email($_POST['email'])) {
+            }elseif (!is_email($_POST['email'])) {
                 $error['email'] = EMAIL_VALIDATE;
-            } else {
-                $email = $_POST['email'];
             }
+            $email = $_POST['email'];
+
 
             # Check password
             if (empty($_POST['password'])) {
                 $error['password'] = PASS_BLANK;
-            }
-            if (!is_password($_POST['password'])) {
+            }elseif (!is_password($_POST['password'])) {
                 $error['password'] = PASS_VALIDATE;
-            } else {
-                $password = md5($_POST['password']);
             }
+            $password = md5($_POST['password']);
 
+            if (!$this->userModel->checkLogin($email, $password)) {
+                $error['account'] = ACCOUNT_INCORRECT;
+            }
             # Conclude
             if (empty($error)) {
-                if ($this->userModel->checkLogin($email, $password)) {
-                    $_SESSION['is_user_login'] = true;
-                    $_SESSION['user_login'] = $email;
-                    redirect_to("/profile");
-                } else {
-                    $error['account'] = ACCOUNT_INCORRECT;
-                }
+                $_SESSION['is_user_login'] = true;
+                $_SESSION['user_login'] = $email;
+                redirect_to("/profile");
             } else {
                 $data = [
-                    'email' => $email,
+                    'email' => $_POST['email'],
                     'error' => $error
                 ];
+                $this->render('login', $data);
             }
         }
 
@@ -80,7 +77,8 @@ class UserController extends BaseController
         ]);
 
         $helper = $fb->getRedirectLoginHelper();
-        $login_url = $helper->getLoginUrl("https://paralinetraining.com/?controller=user&action=login");
+        $baseUrl = BASE_URL;
+        $login_url = $helper->getLoginUrl("{$baseUrl}/?controller=user&action=login");
 
         try {
             $accessToken = $helper->getAccessToken();

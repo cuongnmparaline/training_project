@@ -18,7 +18,7 @@ define("DEL_TRUE", 1);
 
 ### BASE URL
 
-define("BASE_URL", "https://paralinetraining.com");
+define("BASE_URL", "https://616b-14-248-83-33.ngrok.io");
 
 ## Validate
 

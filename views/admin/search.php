@@ -23,22 +23,21 @@ require_once('views/layouts/header.php');
                         <nav aria-label="Page navigation example">
                             <?php if(!empty($str_pagging)) echo $str_pagging ?>
                         </nav>
-                        <?php $sort_option['sort'] == 'DESC' ? $sort_option['sort'] = 'ASC' : $sort_option['sort'] = 'DESC'; ?>
                         <table class="table" id="admin-table">
                             <thead>
                             <tr>
                                 <th>
-                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=id&sort=<?=$sort_option['sort']?>">ID <i class="<?= $sort_option['icon']['id']?>"></i><a/>
+                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=id&sort=<?=$sort_option['sort']?>">ID <i class="fa fas fa-sort<?php echo $sort_option['order'] == 'id' ? $sort_option['icon'] : ''?>"></i><a/>
                                 </th>
                                 <th scope="col">Avatar</th>
                                 <th scope="col">
-                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=name&sort=<?=$sort_option['sort']?>">Name <i class="<?= $sort_option['icon']['name']?>"></i><a/>
+                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=name&sort=<?=$sort_option['sort']?>">Name <i class="fa fas fa-sort<?php echo $sort_option['order'] == 'name' ? $sort_option['icon'] : ''?>"></i><a/>
                                 </th>
                                 <th scope="col">
-                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=email&sort=<?=$sort_option['sort']?>">Email <i class="<?= $sort_option['icon']['email']?>"></i><a/>
+                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=email&sort=<?=$sort_option['sort']?>">Email <i class="fa fas fa-sort<?php echo $sort_option['order'] == 'email' ? $sort_option['icon'] : ''?>"></i><a/>
                                 </th>
                                 <th scope="col">
-                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=role_type&sort=<?=$sort_option['sort']?>">Role <i class="<?= $sort_option['icon']['role_type']?>"></i><a/>
+                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=role_type&sort=<?=$sort_option['sort']?>">Role <i class="fa fas fa-sort<?php echo $sort_option['order'] == 'role_type' ? $sort_option['icon'] : ''?>"></i><a/>
                                 </th>
                                 <th scope="col">Action</th>
                             </tr>
