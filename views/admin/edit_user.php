@@ -12,7 +12,6 @@ require_once ('views/layouts/header.php');
             <div class="section" id="detail-add-admin">
                 <div class="section-detail">
                     <form method="POST"  enctype="multipart/form-data">
-                        <?= flash('user_message') ?>
                         <?php if(isset($user)){
                         ?>
                         <p>ID: <?= $user['id']?></p>

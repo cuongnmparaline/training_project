@@ -279,7 +279,8 @@ class AdminController extends BaseController
                     'ins_datetime' => date(DATE_FORMAT),
                 ];
                 if ($this->adminModel->add($data)) {
-                    flash('admin_message', ADMIN_CREATED . "<br>" . "<a href='management/search'>Return to list ADMIN</a>");
+                    flash('admin_message', ADMIN_CREATED);
+                    redirect_to('/management/search');
                 }
             } else {
                 $data = [
@@ -374,8 +375,7 @@ class AdminController extends BaseController
                     'upd_datetime' => date(DATE_FORMAT)
                 ];
                 if ($this->adminModel->update($data, $id)) {
-                    $_SESSION['edit_success'] = "Edit thành công";
-//                    flash('admin_message', ADMIN_UPDATED . "<br>" . "<a href='management/search'>Return to list ADMIN</a>");
+                    flash('admin_message', ADMIN_UPDATED);
                     redirect_to('/management/search');
                 }
 //                redirect_to('/management/search');
@@ -393,7 +393,7 @@ class AdminController extends BaseController
             $fields = ['id', 'avatar', 'name', 'password', 'email', 'role_type'];
             $admin = $this->adminModel->getById($fields, $id);
             if(empty($admin)){
-//                flash("admin_message", CANT_FOUND_ACC);
+                flash("error_message", CANT_FOUND_ACC);
                 $this->render('edit');
             } else {
                 $data = ['admin' => $admin];
@@ -621,7 +621,8 @@ class AdminController extends BaseController
                     'ins_datetime' => date(DATE_FORMAT)
                 ];
                 if($this->userModel->add($data)){
-                    flash('user_message', USER_CREATED . "<br>" . "<a href='management/search-user'>Return to list ADMIN</a>");
+                    flash('user_message', USER_CREATED);
+                    redirect_to('/management/search-user');
                 }
             } else {
                 $data = [
@@ -723,9 +724,10 @@ class AdminController extends BaseController
                     'upd_datetime' => date(DATE_FORMAT)
                 ];
                 if($this->userModel->update($data, $id)){
-                    flash('user_message', USER_UPDATED . "<br>" . "<a href='management/search-user'>Return to list USER</a>");
+                    flash('user_message', USER_UPDATED);
+                    redirect_to('/management/search-user');
                 } else {
-                    flash('user_message', ST_WRONG, 'alert alert-success');
+                    flash('error_message', ST_WRONG, 'alert alert-danger');
                 }
             }
             $fields = ['id', 'avatar', 'name', 'password', 'email', 'status'];

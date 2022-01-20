@@ -12,7 +12,6 @@ require_once ('views/layouts/header.php');
             <div class="section" id="detail-add-admin">
                 <div class="section-detail">
                     <form method="POST"  enctype="multipart/form-data">
-                        <?= flash('admin_message') ?>
                         <label>Avatar*</label>
                         <input type="file" id='files' name="files[]" multiple><br> <br>
                         <div id="preview">

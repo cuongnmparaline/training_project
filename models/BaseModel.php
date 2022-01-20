@@ -20,7 +20,6 @@ class BaseModel implements ModelInterface {
             return $sth->fetchAll(PDO::FETCH_ASSOC);
         }
         return false;
-
     }
 
     public function getById($fields, $id)

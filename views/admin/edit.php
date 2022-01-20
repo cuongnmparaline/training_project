@@ -12,7 +12,6 @@ require_once ('views/layouts/header.php');
             <div class="section" id="detail-add-admin">
                 <div class="section-detail">
                     <form method="POST"  enctype="multipart/form-data">
-                        <?= flash('admin_message') ?>
                         <?php if(isset($admin)){
                             ?>
                         <p>ID: <?= $admin['id']?></p>
@@ -46,6 +45,7 @@ require_once ('views/layouts/header.php');
                         <button type="submit" name="btn-update-admin" id="btn-submit" class="btn btn-secondary">Save</button>
                             <?php
                             }
+                            echo flash("error_message");
                         ?>
                     </form>
                 </div>
