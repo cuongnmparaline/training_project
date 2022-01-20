@@ -54,7 +54,6 @@ class BaseModel implements ModelInterface {
             return true;
         }
         return false;
-
     }
 
     public function delete($id){
@@ -64,7 +63,6 @@ class BaseModel implements ModelInterface {
             return true;
         }
         return false;
-
     }
 
     public function add($data){
@@ -103,5 +101,4 @@ class BaseModel implements ModelInterface {
         $check = $sth->rowCount();
         return ($check > 0) ? true : false;
     }
-
 }
