@@ -11,6 +11,7 @@ require_once ('views/layouts/header.php');
             </div>
             <div class="section" id="detail-add-admin">
                 <div class="section-detail">
+                    <?= flash('error_message'); ?>
                     <form method="POST"  enctype="multipart/form-data">
                         <?php if(isset($user)){
                         ?>
@@ -42,7 +43,7 @@ require_once ('views/layouts/header.php');
                             <?php if(isset($error['status'])) echo "<p class='error'>{$error['status']}</p>" ?>
                         <br> <br>
                         <a href="management/edit-user/<?=$user['id']?>" class="btn btn-primary">Reset</a>
-                        <button type="submit" name="btn-update-admin" id="btn-submit" class="btn btn-secondary">Save</button>
+                        <button type="submit" name="btn-update-user" id="btn-submit" class="btn btn-secondary">Save</button>
                         <?php
                         }
                         ?>

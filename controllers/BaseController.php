@@ -1,6 +1,7 @@
 <?php
-require_once('models/User.php');
-require_once('assets/libraries/validation.php');
+require_once('models/UserModel.php');
+require_once('components/ValidationComponent.php');
+require_once('components/ValidationComponent.php');
 class BaseController
 {
     protected $folder;

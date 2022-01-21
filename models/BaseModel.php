@@ -1,7 +1,7 @@
 <?php
 require_once ('models/ModelInterface.php');
 
-class BaseModel implements ModelInterface {
+abstract class BaseModel implements ModelInterface {
     protected $table;
 
     public function __construct()
@@ -9,10 +9,25 @@ class BaseModel implements ModelInterface {
         $this->db = DB::getInstance();
     }
 
-    public function get($fields, $condition)
+    public function get($fields, $condition = [])
     {
-        $where = "WHERE email LIKE '%{$condition['email']}%' AND del_flag = {$condition['del_flag']}
-         OR name LIKE '%{$condition['email']}%' AND del_flag = {$condition['del_flag']} ORDER BY {$condition['order']} {$condition['sort']} {$condition['pagging']}";
+        $del_cond = DEL_FALSE;
+        $orderBy = '';
+        $pagging = '';
+        $name = isset($condition['name']) ? $condition['name'] : '';
+        $email = isset($condition['email']) ? $condition['email'] : '';
+        $numPerPage = NUM_PER_PAGE;
+        if(isset($condition['page'])){
+            $offset = ((int)$condition['page'] - 1) * $numPerPage;
+        }
+        if(isset($offset)){
+            $pagging = "LIMIT {$offset}, {$numPerPage}";
+        }
+        if(isset($condition['order']) && isset($condition['sort'])){
+            $orderBy = "ORDER BY {$condition['order']} {$condition['sort']}";
+        }
+        $where = "WHERE email LIKE '%{$name}%' AND del_flag = {$del_cond}
+         OR name LIKE '%{$email}%' AND del_flag = {$del_cond} {$orderBy} {$pagging}";
         $fields = implode(', ', $fields);
         $sth = $this->db->prepare("SELECT $fields
         FROM $this->table {$where}");
@@ -24,13 +39,16 @@ class BaseModel implements ModelInterface {
 
     public function getById($fields, $id)
     {
+        $del_cond = DEL_FALSE;
+        $where = "WHERE id = :id AND del_flag = :del_cond";
         $fields = implode(', ', $fields);
         $sth = $this->db->prepare(
             "SELECT $fields
             FROM $this->table
-            WHERE id = :id"
+            {$where}"
         );
         $sth->bindValue('id', $id);
+        $sth->bindValue('del_cond', $del_cond);
         if($sth->execute()){
             return $sth->fetch(PDO::FETCH_ASSOC);
         }
@@ -39,14 +57,18 @@ class BaseModel implements ModelInterface {
 
     public function update($data, $id)
     {
+        $upd_id = $_SESSION['admin']['admin_id'];
+        $upd_datetime = date(DATE_FORMAT);
         $key = array_keys($data);
         $setValue = "";
         foreach ($key as $field){
             $setValue = $setValue."$field = :$field, ";
         }
-        $setValue = substr($setValue, 0, -2);
+        $setValue = $setValue . " upd_id = :upd_id, upd_datetime = :upd_datetime";
         $sth = $this->db->prepare("UPDATE $this->table SET {$setValue} WHERE id = :id");
         $sth->bindValue(':id', $id);
+        $sth->bindValue(':upd_id', $upd_id);
+        $sth->bindValue(':upd_datetime', $upd_datetime);
         foreach ($data as $field => $value){
             $sth->bindValue(":$field", $value);
         }
@@ -65,15 +87,23 @@ class BaseModel implements ModelInterface {
         return false;
     }
 
-    public function add($data){
+    public function create($data){
+
+        $ins_id = $_SESSION['admin']['admin_id'];
+        $ins_datetime = date(DATE_FORMAT);
         $key = array_keys($data);
         $fields = implode(', ', $key);
+        $fields = $fields . ", ins_id, ins_datetime";
         $values = implode(', :', $key);
+        $values = $values . ", :ins_id, :ins_datetime";
         $sth = $this->db->prepare("INSERT INTO $this->table ({$fields})
                     VALUES (:{$values})");
         foreach ($data as $field => $value){
             $sth->bindValue(":$field", $value);
         }
+        $sth->bindValue(":ins_id", $ins_id);
+        $sth->bindValue(":ins_datetime", $ins_datetime);
+
         if($sth->execute()){
             return true;
         }

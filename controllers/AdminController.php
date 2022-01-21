@@ -1,348 +1,157 @@
 
 <?php
 require_once('controllers/BaseController.php');
-require_once('models/Admin.php');
-require_once('assets/helper/url.php');
-require_once('assets/helper/account.php');
+require_once('models/AdminModel.php');
+require_once('helpers/url.php');
+require_once('helpers/account.php');
+require_once('helpers/pagging.php');
+require_once('helpers/sort.php');
+
 class AdminController extends BaseController
 {
     private $adminModel;
     private $userModel;
+
     function __construct()
     {
+        $this->check_role();
         $this->folder = 'admin';
-        $this->adminModel = new Admin();
-        $this->userModel = new User();
+        $this->adminModel = new AdminModel();
+        $this->userModel = new UserModel();
+        $this->ValidationComponent = new ValidationComponent();
     }
 
     // Admin Action
-
-    public function search()
-    {
-        $_SESSION['current_page'] = 'search';
-        check_role($_SESSION['role_type']);
-        if (isset($_GET['btn-search'])) {
-            $name = $_GET['name'];
-            $email = $_GET['email'];
-        } else {
-            $name = "";
-            $email = "";
-        }
-
-        // Sort
-        $icon = isset($_GET['sort']) && $_GET['sort'] == 'DESC' ? '-up' : '-down';
-        $order = isset($_GET['order']) ? $_GET['order'] : 'id';
-        $sort = isset($_GET['sort']) && $_GET['sort'] == 'DESC' ? 'ASC' : 'DESC';
-
-        $sort_option = [
-            'order' => $order,
-            'sort' => $sort,
-            'icon' => $icon
-        ];
-
-        // Get all admin account
-        $condition = [
-            'del_flag' => DEL_FALSE,
-            'name' => $name,
-            'email' => $email,
-            'order' => $order,
-            'sort' => $sort,
-            'pagging' => ""
-        ];
-
-        $fields = ['id', 'avatar', 'name', 'email', 'role_type'];
-        $totalRow = $this->adminModel->get($fields, $condition);
-
-        // Pagging
-        $numPerPage = NUM_PER_PAGE;
-        $totalNumRow = count($totalRow);
-        $numPage = ceil($totalNumRow / $numPerPage);
-        $pageNum = (int)!empty($_GET['page_id']) ? $_GET['page_id'] : 1;
-        $start = ($pageNum - 1) * $numPerPage;
-
-        $condition = [
-            'del_flag' => DEL_FALSE,
-            'name' => $name,
-            'email' => $email,
-            'order' => $order,
-            'sort' => $sort,
-            'pagging' => "LIMIT {$start}, {$numPerPage}"
-        ];
-        $fields = ['id', 'avatar', 'name', 'email', 'role_type'];
-        $admins = $this->adminModel->get($fields, $condition);
-
-        // String pagging
-        $pagePrev = $pageNum - 1;
-        $strPagging = "<ul class='pagination'>";
-        if ($pageNum > 1) {
-            $pagePrev = $pageNum - 1;
-            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$pagePrev}'><<</a></li>";
-        }
-        for ($i = 1; $i <= $numPage; $i++) {
-            $active = "";
-            if ($pageNum == $i) {
-                $active = "active";
-            }
-            $strPagging .= "<li class='page-item'><a class='page-link {$active}' href = 'management/search/{$i}'>$i</a></li>";
-        }
-        $pageNext = $pageNum + 1;
-        if ($pageNum < $numPage) {
-            $pageNext = $pageNum + 1;
-            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search/{$pageNext}'>>></a></li>";
-        }
-        $strPagging .= "</ul>";
-
-        $data = [
-            'name' => $name,
-            'email' => $email,
-            'sort_option' => $sort_option,
-            'admins' => $admins,
-            'str_pagging' => $strPagging
-        ];
-        $this->render('search', $data);
-    }
-
     public function login()
     {
         if($this->isLoggedIn()){
             redirect_to('search');
         }
-        if (isset($_POST['btn_login'])) {
-            $error = [];
-            // Check email
-            if (empty($_POST['email'])) {
-                $error['email'] = EMAIL_BLANK;
-            }elseif (!is_email($_POST['email'])) {
-                $error['email'] = EMAIL_VALIDATE;
-            }
+        if (isset($_POST['btn-login'])) {
+            // step 1. Validate
             $email = $_POST['email'];
-
-            // Check password
-            if (empty($_POST['password'])) {
-                $error['password'] = PASS_BLANK;
-            } elseif (!is_password($_POST['password'])) {
-                $error['password'] = PASS_VALIDATE;
-            }
             $password = md5($_POST['password']);
-
-            if ($this->adminModel->checkLogin($email, $password)) {
-                $admin = $this->adminModel->getCurrentAdmin($email, $password);
-            } else {
-                $error['account'] = ACCOUNT_INCORRECT;
-            }
-
-            // Conclude
-            if (empty($error)) {
-                $_SESSION['is_admin_login'] = true;
-                $_SESSION['admin_login'] = $admin->email;
-                $_SESSION['admin_id'] = $admin->id;
-                $_SESSION['role_type'] = $admin->role_type;
-                redirect_to("search");
-            } else {
+            $validate = $this->ValidationComponent->checkLogin($email, $password);
+            // step 2. check login
+            if ($validate['status'] == false) {
                 $data = [
                     'email' => $_POST['email'],
-                    'error' => $error
+                    'errors' => $validate['errors']
                 ];
                 $this->render('login', $data);
+            } else {
+                $admin = $this->adminModel->getCurrentAdmin($email, $password);
+                $_SESSION['admin'] = [
+                    'is_admin_login' => true,
+                    'admin_login' => $admin->email,
+                    'admin_id' => $admin->id,
+                    'role_type' => $admin->role_type
+                ];
+                redirect_to('search');
             }
         }
         $this->render('login');
     }
 
     public function logout(){
-        unset($_SESSION['is_admin_login']);
-        unset($_SESSION['admin_login']);
+        unset($_SESSION['admin']);
         redirect_to('/management/login');
+    }
+
+    public function search()
+    {
+        $this->check_role();
+        $_SESSION['current_page'] = 'search';
+        $fields = ['id', 'avatar', 'name', 'email', 'role_type'];
+        $totalAdmins = $this->adminModel->get($fields);
+        $numPerPage = NUM_PER_PAGE;
+        $adminNumber = count($totalAdmins);
+        $totalNumberPage = ceil($adminNumber/$numPerPage);
+        $conditionSearch = $_GET;
+        $listAdmin = $this->adminModel->pagging($conditionSearch);
+        $data = [
+            'admins' => $listAdmin,
+            'name' => isset($_GET['name']) ? $_GET['name'] :"",
+            'email' => isset($_GET['email']) ? $_GET['email'] :"",
+            'page' => isset($_GET['page_id']) ? $_GET['page_id'] : 1,
+            'totalNumberPage' => $totalNumberPage
+        ];
+        // step 2. set data to view
+        $this->render('search', $data);
     }
 
     public function create()
     {
         $_SESSION['current_page'] = 'search';
-        check_role($_SESSION['role_type']);
-        if (isset($_POST['btn-add-admin'])) {
-            $error = [];
-            // Check name
-            if (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
-                $error['name'] = NAME_VALIDATE;
-            }
-            $name = $_POST['name'];
-
-            // Check password
-            if (!is_password($_POST['password'])) {
-                $error['password'] = PASS_VALIDATE;
-            }
-            $password = md5($_POST['password']);
-
-            // Check password verify
-            if (!is_password($_POST['password'])) {
-                $error['password'] = PASS_VALIDATE;
-            }
-            if ($_POST['password'] != $_POST['password_verify']) {
-                $error['password_verify'] = VERIFY_INCORRECT;
-            }
-
-            // Check email
-            if (!is_email($_POST['email'])) {
-                $error['email'] = EMAIL_VALIDATE;
-            }
-            if ($this->adminModel->checkMailExisted($_POST['email'])) {
-                $error['email'] = EMAIL_EXISTED;
-            }
-            $email = $_POST['email'];
-
-
-            // Check avatar
-            if (empty($_FILES['files']['name'][0])) {
-                $error['avatar'] = AVATAR_BLANK;
-            }
-            $upload_dir = IMG_LOCATION;
-            $avatar = $upload_dir . $_FILES['files']['name'][0];
-
-            // check role
-            if (empty($_POST['role'])) {
-                $error['role'] = ROLE_BLANK;
-                $role = '';
-            } else {
-                $role = $_POST['role'];
-            }
-
-
-
-            // get insertor id ( current admin id )
-            $ins_id = $_SESSION['admin_id'];
-
-            // check not error
-            if (empty($error)) {
-                $data = [
-                    'name' => $name,
-                    'password' => $password,
-                    'email' => $email,
-                    'avatar' => $avatar,
-                    'role_type' => $role,
-                    'ins_id' => $ins_id,
-                    'ins_datetime' => date(DATE_FORMAT),
-                ];
-                if ($this->adminModel->add($data)) {
-                    flash('admin_message', ADMIN_CREATED);
-                    redirect_to('/management/search');
-                }
-            } else {
+        if(isset($_POST['btn-add-admin'])){
+            $data = [
+                'post' => $_POST,
+                'file' => $_FILES,
+            ];
+            $validate = $this->ValidationComponent->ValidateCreateAdmin($data);
+            if($validate['status'] == false){
                 $data = [
                     'name' => $_POST['name'],
                     'email' => $_POST['email'],
-                    'role_type' => $role,
-                    'error' => $error
+                    'role_type' => isset($_POST['role']) ? $_POST['role'] : '',
+                    'errors' => $validate['errors']
                 ];
                 $this->render('create', $data);
-            }
-        }
-        $this->render('create');
-    }
-
-    public function edit()
-    {
-        $_SESSION['current_page'] = 'search';
-        check_role($_SESSION['role_type']);
-        if (isset($_POST['btn-update-admin'])) {
-            if (isset($_GET['id'])) {
-                $id = $_GET['id'];
-                $fields = ['id', 'avatar', 'name', 'password', 'email', 'role_type'];
-                $admin = $this->adminModel->getById($fields, $id);
-            }
-            $error = [];
-
-            // Check name
-            if (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
-                $error['name'] = NAME_VALIDATE;
-            }
-            $name = $_POST['name'];
-
-
-            // Check password
-            if(empty($_POST['password'])){
-                $password = $admin['password'];
             } else {
-                if (!is_password($_POST['password'])) {
-                    $error['password'] = PASS_VALIDATE;
-                }
-                $password = md5($_POST['password']);
-            }
-
-            // Check password verify
-            if (!empty($_POST['password_verify'])) {
-                if (!is_password($_POST['password'])) {
-                    $error['password'] = PASS_VALIDATE;
-                }
-                if($_POST['password'] != $_POST['password_verify']){
-                    $error['password_verify'] = VERIFY_INCORRECT;
-                }
-            }
-
-            // Check email
-            if (!is_email($_POST['email'])) {
-                $error['email'] = EMAIL_VALIDATE;
-            }
-            $email = $_POST['email'];
-
-            // Check avatar
-            if(!empty($_FILES['files']['name'][0])){
-                $upload_dir = IMG_LOCATION;
-                $avatar = $upload_dir . $_FILES['files']['name'][0];
-            } else {
-                $avatar = $admin['avatar'];
-            }
-
-            // Check role
-            if (empty($_POST['role'])) {
-                $error['role'] = ROLE_BLANK;
-            }
-            $role = $_POST['role'];
-
-
-            // get Update id ( current admin id )
-            $updId = $_SESSION['admin_id'];
-
-            if (empty($error)) {
-                $data = [
-                    'name' => $name,
-                    'password' => $password,
-                    'email' => $email,
-                    'avatar' => $avatar,
-                    'role_type' => $role,
-                    'upd_id' => $updId,
-                    'upd_datetime' => date(DATE_FORMAT)
-                ];
-                if ($this->adminModel->update($data, $id)) {
-                    flash('admin_message', ADMIN_UPDATED);
+                $admin = $validate['admin'];
+                if($this->adminModel->create($admin)){
+                    flash("admin_message", ADMIN_CREATED);
                     redirect_to('/management/search');
                 }
             }
-            $fields = ['id', 'avatar', 'name', 'password', 'email', 'role_type'];
-            $admin = $this->adminModel->getById($fields, $id);
-            $data = [
-                'admin' => $admin,
-                'error' => $error
-            ];
+        }
+        $this->render('create');
+
+    }
+
+    public function edit(){
+        $_SESSION['current_page'] = 'search';
+        if (!isset($_GET['id'])) {
+            flash("admin_message", CANT_FOUND_ACC);
+            redirect_to('/management/search');
+        }
+        $id = (int)$_GET['id'];
+        $fields = ['id', 'avatar', 'name', 'password', 'email', 'role_type'];
+        $admin = $this->adminModel->getById($fields, $id);
+        if (empty($admin)) {
+            flash("error_message", CANT_FOUND_ACC);
+            $this->render('edit');
+        } else {
+            $data = ['admin' => $admin];
             $this->render('edit', $data);
         }
-        if (isset($_GET['id'])) {
-            $id = (int)$_GET['id'];
-            $fields = ['id', 'avatar', 'name', 'password', 'email', 'role_type'];
-            $admin = $this->adminModel->getById($fields, $id);
-            if (empty($admin)) {
-                flash("error_message", CANT_FOUND_ACC);
-                $this->render('edit');
-            } else {
-                $data = ['admin' => $admin];
+
+        if(isset($_POST['btn-update-admin'])){
+            $data = [
+                'admin' => $admin,
+                'post' => $_POST,
+                'file' => $_FILES
+            ];
+
+            $validate = $this->ValidationComponent->ValidateEditAdmin($data);
+            if($validate['status'] == false){
+                $data = [
+                    'admin' => $admin,
+                    'errors' => $validate['errors']
+                ];
                 $this->render('edit', $data);
+            } else {
+                $admin = $validate['admin'];
+                if($this->adminModel->update($admin, $id)){
+                    flash("admin_message", ADMIN_UPDATED);
+                    redirect_to('/management/search');
+                }
             }
         }
     }
 
-    public function delete()
-    {
+    public function delete(){
         $_SESSION['current_page'] = 'search';
-        check_role($_SESSION['role_type']);
         if (!isset($_GET['id'])) {
             flash('admin_message', ST_WRONG, 'alert alert-success');
             return false;
@@ -354,291 +163,7 @@ class AdminController extends BaseController
         }
     }
 
-    // User Action
-
-    public function search_user(){
-        $_SESSION['current_page'] = 'search_user';
-        if (isset($_GET['btn-search-user'])) {
-            $name = $_GET['name'];
-            $email = $_GET['email'];
-        } else {
-            $name = "";
-            $email = "";
-        }
-
-        // Sort
-        $icon = isset($_GET['sort']) && $_GET['sort'] == 'DESC' ? '-up' : '-down';
-        $order = isset($_GET['order']) ? $_GET['order'] : 'id';
-        $sort = isset($_GET['sort']) && $_GET['sort'] == 'DESC' ? 'ASC' : 'DESC';
-
-        $sort_option = [
-            'order' => $order,
-            'sort' => $sort,
-            'icon' => $icon
-        ];
-
-        // Get all admin account
-        $condition = [
-            'del_flag' => DEL_FALSE,
-            'name' => $name,
-            'email' => $email,
-            'order' => $order,
-            'sort' => $sort,
-            'pagging' => ""
-        ];
-        $fields = ['id', 'avatar', 'name', 'email', 'status'];
-        $totalRow = $this->userModel->get($fields, $condition);
-
-        // Pagging
-        $numPerPage = NUM_PER_PAGE;
-        $totalNumRow = count($totalRow);
-        $numPage = ceil($totalNumRow / $numPerPage);
-        $pageNum = (int)!empty($_GET['page_id']) ? $_GET['page_id'] : 1;
-        $start = ($pageNum - 1) * $numPerPage;
-
-        $condition = [
-            'del_flag' => DEL_FALSE,
-            'name' => $name,
-            'email' => $email,
-            'order' => $order,
-            'sort' => $sort,
-            'pagging' => "LIMIT {$start}, {$numPerPage}"
-        ];
-        $fields = ['id', 'avatar', 'name', 'email', 'status'];
-        $users = $this->userModel->get($fields, $condition);
-
-        // String pagging
-        $pagePrev = $pageNum - 1;
-        $strPagging = "<ul class='pagination'>";
-        if ($pageNum > 1) {
-            $pagePrev = $pageNum - 1;
-            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search-user/{$pagePrev}'><<</a></li>";
-        }
-        for ($i = 1; $i <= $numPage; $i++) {
-            $active = "";
-            if ($pageNum == $i) {
-                $active = "active";
-            }
-            $strPagging .= "<li class='page-item'><a class='page-link {$active}' href = 'management/search-user/{$i}'>$i</a></li>";
-        }
-        $pageNext = $pageNum + 1;
-        if ($pageNum < $numPage) {
-            $pageNext = $pageNum + 1;
-            $strPagging .= "<li class='page-item'><a class='page-link' href = 'management/search-user/{$pageNext}'>>></a></li>";
-        }
-        $strPagging .= "</ul>";
-        $data = [
-            'users' => $users,
-            'str_pagging' => $strPagging,
-            'sort_option' => $sort_option,
-            'name' => $name,
-            'email' => $email
-        ];
-        $this->render('search_user', $data);
-    }
-
-    public function create_user(){
-        $_SESSION['current_page'] = 'search_user';
-        if (isset($_POST['btn-add-user'])) {
-            $error = [];
-            // Check name
-            if (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
-                $error['name'] = NAME_VALIDATE;
-            }
-            $name = $_POST['name'];
-
-
-            // Check password
-            if (!is_password($_POST['password'])) {
-                $error['password'] = PASS_VALIDATE;
-            }
-            $password = md5($_POST['password']);
-
-
-            // Check password verfiy
-            if (!is_password($_POST['password'])) {
-                $error['password'] = PASS_VALIDATE;
-            }
-            if($_POST['password'] != $_POST['password_verify']){
-                $error['password_verify'] = VERIFY_INCORRECT;
-            }
-
-            // Check email
-            if (!is_email($_POST['email'])) {
-                $error['email'] = EMAIL_VALIDATE;
-            }
-            if ($this->adminModel->checkMailExisted($_POST['email'])) {
-                $error['email'] = EMAIL_EXISTED;
-            }
-            $email = $_POST['email'];
-
-            // check avatar
-            if(!empty($_FILES['files']['name'][0])) {
-                $upload_dir = IMG_LOCATION;
-                $avatar = $upload_dir . $_FILES['files']['name'][0];
-            } else {
-                $error['avatar'] = AVATAR_BLANK;
-            }
-
-            // Check status
-            if (empty($_POST['status'])) {
-                $error['status'] = STATUS_BLANK;
-                $status = '';
-            } else {
-                $status = $_POST['status'];
-            }
-
-            // get insertor id ( current admin id )
-            $ins_id = $_SESSION['admin_id'];
-
-            // check not error
-            if (empty($error)) {
-                $data = [
-                    'name' => $name,
-                    'password' => $password,
-                    'email' => $email,
-                    'avatar' => $avatar,
-                    'status' => $status,
-                    'ins_id' => $ins_id,
-                    'ins_datetime' => date(DATE_FORMAT)
-                ];
-                if($this->userModel->add($data)){
-                    flash('user_message', USER_CREATED);
-                    redirect_to('/management/search-user');
-                }
-            } else {
-                $data = [
-                    'name' => $_POST['name'],
-                    'password' => $_POST['password'],
-                    'email' => $_POST['email'],
-                    'status' => $status,
-                    'error' => $error
-                ];
-                $this->render('create_user', $data);
-            }
-        }
-        $this->render('create_user');
-    }
-
-    public function edit_user(){
-        $_SESSION['current_page'] = 'search_user';
-        if(isset($_POST['btn-update-admin'])){
-            if(isset($_GET['id'])){
-                $id = $_GET['id'];
-                $fields = ['id', 'avatar', 'name','password', 'email', 'status'];
-                $user = $this->userModel->getById($fields, $id);
-            }
-            $error = [];
-            // Check name
-            if (!(strlen($_POST['name']) >= MIN_LENGHT && strlen($_POST['name']) <= MAX_LENGHT)) {
-                $error['name'] = NAME_VALIDATE;
-            } else {
-                $name = $_POST['name'];
-            }
-
-            // Check password
-            if(empty($_POST['password'])){
-                $password = $user['password'];
-            } else {
-                if (!is_password($_POST['password'])) {
-                    $error['password'] = PASS_VALIDATE;
-                }
-                $password = md5($_POST['password']);
-            }
-
-            // Check password verify
-            if (!empty($_POST['password_verify'])) {
-                if (!is_password($_POST['password'])) {
-                    $error['password'] = PASS_VALIDATE;
-                }
-                if($_POST['password'] != $_POST['password_verify']){
-                    $error['password_verify'] = VERIFY_INCORRECT;
-                }
-            }
-
-            // Check mail
-
-            if (!is_email($_POST['email'])) {
-                $error['email'] = EMAIL_VALIDATE;
-            }
-            $email = $_POST['email'];
-
-
-            // Check avatar
-            if(!empty($_FILES['files']['name'][0])){
-                $upload_dir = IMG_LOCATION;
-                $avatar = $upload_dir . $_FILES['files']['name'][0];
-            } else {
-                $avatar = $user['avatar'];
-            }
-
-            // Check status
-            if (empty($_POST['status'])) {
-                $error['status'] = STATUS_BLANK;
-            }
-            $status = $_POST['status'];
-
-            // get update id ( current admin id )
-            $upd_id = $_SESSION['admin_id'];
-
-            if(empty($error)){
-                $data = [
-                    'name' => $name,
-                    'password' => $password,
-                    'email' => $email,
-                    'avatar' => $avatar,
-                    'status' => $status,
-                    'upd_id' => $upd_id,
-                    'upd_datetime' => date(DATE_FORMAT)
-                ];
-                if($this->userModel->update($data, $id)){
-                    flash('user_message', USER_UPDATED);
-                    redirect_to('/management/search-user');
-                } else {
-                    flash('error_message', ST_WRONG, 'alert alert-danger');
-                }
-            }
-            $fields = ['id', 'avatar', 'name', 'password', 'email', 'status'];
-            $user = $this->userModel->getById($fields, $id);
-            $data = [
-                'user' => $user,
-                'error' => $error
-            ];
-            $this->render('edit_user', $data);
-        } else {
-            if(!isset($_GET['id'])){
-                flash('user_message', ST_WRONG);
-                $this->render('edit_user');
-            }
-            $id = (int)$_GET['id'];
-            $fields = ['id', 'avatar', 'name', 'email', 'password', 'status'];
-            $user = $this->userModel->getById($fields, $id);
-            if(empty($user)){
-                flash('user_message', CANT_FOUND_ACC);
-                $this->render('edit_user');
-            } else {
-                $data = ['user' => $user];
-                $this->render('edit_user', $data);
-            }
-        }
-
-    }
-
-    public function delete_user(){
-        $_SESSION['current_page'] = 'search_user';
-        if(isset($_GET['id'])){
-            $id = $_GET['id'];
-            if($this->userModel->delete($id)){
-                flash('user_message', USER_REMOVED);
-                redirect_to('/management/search-user');
-            } else {
-                flash('user_message', ST_WRONG, 'alert alert-success');
-                redirect_to('/management/search-user');
-            }
-        } else {
-            redirect_to('/management/search-user');
-        }
-    }
+    // UserModel Action
     function add_avatar()
     {
         // Count total files
@@ -646,7 +171,7 @@ class AdminController extends BaseController
         // Upload directory
         $upload_location = IMG_LOCATION;
         // To store uploaded files path
-        $files_arr = array();
+        $files_arr = [];
         // Loop all files
         for ($index = 0; $index < $countfiles; $index++) {
             if (isset($_FILES['files']['name'][$index]) && $_FILES['files']['name'][$index] != '') {
@@ -674,11 +199,124 @@ class AdminController extends BaseController
         echo json_encode($files_arr);
     }
 
+    // UserModel function
+
+    public function search_user(){
+        $_SESSION['current_page'] = 'search_user';
+        $fields = ['id', 'avatar', 'name', 'email', 'status'];
+        $totalUsers = $this->userModel->get($fields);
+        $numPerPage = NUM_PER_PAGE;
+        $userNumber = count($totalUsers);
+        $totalNumberPage = ceil($userNumber/$numPerPage);
+        $conditionSearch = $_GET;
+        $listUser = $this->userModel->pagging($conditionSearch);
+        $data = [
+            'users' => $listUser,
+            'name' => isset($_GET['name']) ? $_GET['name'] :"",
+            'email' => isset($_GET['email']) ? $_GET['email'] :"",
+            'page' => isset($_GET['page_id']) ? $_GET['page_id'] : 1,
+            'totalNumberPage' => $totalNumberPage
+        ];
+        // step 2. set data to view
+        $this->render('search_user', $data);
+    }
+
+    public function create_user(){
+        $_SESSION['current_page'] = 'search_user';
+        if(isset($_POST['btn-add-user'])){
+            $data = [
+                'post' => $_POST,
+                'file' => $_FILES,
+            ];
+            $validate = $this->ValidationComponent->ValidateCreateUser($data);
+            if($validate['status'] == false){
+                $data = [
+                    'name' => $_POST['name'],
+                    'email' => $_POST['email'],
+                    'status' => isset($_POST['status']) ? $_POST['status'] : '',
+                    'errors' => $validate['errors']
+                ];
+                $this->render('create_user', $data);
+            } else {
+                $user = $validate['user'];
+                if($this->userModel->create($user)){
+                    flash("user_message", USER_CREATED);
+                    redirect_to('/management/search-user');
+                }
+            }
+        }
+        $this->render('create_user');
+    }
+
+    public function edit_user(){
+        $_SESSION['current_page'] = 'search_user';
+        if (!isset($_GET['id'])) {
+            flash("user_message", CANT_FOUND_ACC);
+            redirect_to('/management/search-user');
+        }
+        $id = (int)$_GET['id'];
+        $fields = ['id', 'avatar', 'name', 'password', 'email', 'status'];
+        $user = $this->userModel->getById($fields, $id);
+        if (empty($user)) {
+            flash("error_message", CANT_FOUND_ACC);
+            $this->render('edit_user');
+        } else {
+            $data = ['user' => $user];
+            $this->render('edit_user', $data);
+        }
+
+        if(isset($_POST['btn-update-user'])){
+            $data = [
+                'user' => $user,
+                'post' => $_POST,
+                'file' => $_FILES
+            ];
+
+            $validate = $this->ValidationComponent->ValidateEditUser($data);
+            if($validate['status'] == false){
+                $data = [
+                    'user' => $user,
+                    'errors' => $validate['errors']
+                ];
+                $this->render('edit', $data);
+            } else {
+                $user = $validate['user'];
+                if($this->userModel->update($user, $id)){
+                    flash("user_message", USER_UPDATED);
+                    redirect_to('/management/search-user');
+                }
+            }
+        }
+    }
+
+    public function delete_user(){
+        $_SESSION['current_page'] = 'search';
+        if (!isset($_GET['id'])) {
+            flash('user_message', ST_WRONG, 'alert alert-danger');
+            return false;
+        }
+        $id = $_GET['id'];
+        if ($this->userModel->delete($id)) {
+            flash('user_message', USER_REMOVED);
+            redirect_to('/management/search-user');
+        }
+    }
+
     public function isLoggedIn(){
         if(isset($_SESSION['is_admin_login'])){
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function check_role()
+    {
+        $role = isset($_SESSION['admin']['role_type']) ? $_SESSION['admin']['role_type'] : 2;
+        $adminCanNotAccess = ['search', 'create', 'edit', 'delete'];
+        if($role == 2 && in_array($_GET['action'], $adminCanNotAccess)){
+            flash("user_message", ROLE_ALERT);
+            redirect_to('/management/search-user');
         }
     }
 }

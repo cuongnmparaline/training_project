@@ -1,6 +1,6 @@
 RewriteEngine On
 
-#### Module Admin
+#### Module AdminModel
 
 # Search admin
 rewriteRule ^management$ ?controller=admin&action=search
@@ -38,7 +38,7 @@ rewriteRule ^management/login$ ?controller=admin&action=login
 rewriteRule ^management/logout$ ?controller=admin&action=logout
 
 
-#### Module User
+#### Module UserModel
 rewriteRule  ^login$ ?controller=user&action=login
 rewriteRule  ^logout$ ?controller=user&action=logout
 rewriteRule  ^profile$ ?controller=user&action=profile

@@ -21,23 +21,24 @@ require_once('views/layouts/header.php');
                 <div class="section-detail">
                     <div class="table-responsive">
                         <nav aria-label="Page navigation example">
-                            <?php if(!empty($str_pagging)) echo $str_pagging ?>
+                            <?= str_pagging($page, $totalNumberPage, 'admin'); ?>
                         </nav>
                         <table class="table" id="admin-table">
+                            <?php $sortOption = sort_table(); ?>
                             <thead>
                             <tr>
                                 <th>
-                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=id&sort=<?=$sort_option['sort']?>">ID <i class="fa fas fa-sort<?php echo $sort_option['order'] == 'id' ? $sort_option['icon'] : ''?>"></i><a/>
+                                    <a class="column-sort" id="id" href="management/search?order=id&sort=<?= isset($sortOption['sort']) ? $sortOption['sort'] : ''?>">ID <i class="fa fas fa-sort<?= $sortOption['order'] == 'id' ? $sortOption['icon'] : ''?>"></i><a/>
                                 </th>
                                 <th scope="col">Avatar</th>
                                 <th scope="col">
-                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=name&sort=<?=$sort_option['sort']?>">Name <i class="fa fas fa-sort<?php echo $sort_option['order'] == 'name' ? $sort_option['icon'] : ''?>"></i><a/>
+                                    <a class="column-sort" id="id" href="management/search?order=name&sort=<?= isset($sortOption['sort']) ? $sortOption['sort'] : ''?>">Name <i class="fa fas fa-sort<?= $sortOption['order'] == 'name' ? $sortOption['icon'] : ''?>"></i><a/>
                                 </th>
                                 <th scope="col">
-                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=email&sort=<?=$sort_option['sort']?>">Email <i class="fa fas fa-sort<?php echo $sort_option['order'] == 'email' ? $sort_option['icon'] : ''?>"></i><a/>
+                                    <a class="column-sort" id="id" href="management/search?order=email&sort=<?= isset($sortOption['sort']) ? $sortOption['sort'] : ''?>">Email <i class="fa fas fa-sort<?= $sortOption['order'] == 'email' ? $sortOption['icon'] : ''?>"></i><a/>
                                 </th>
                                 <th scope="col">
-                                    <a class="column-sort" id="id" data-order="desc" href="management/search?order=role_type&sort=<?=$sort_option['sort']?>">Role <i class="fa fas fa-sort<?php echo $sort_option['order'] == 'role_type' ? $sort_option['icon'] : ''?>"></i><a/>
+                                    <a class="column-sort" id="id" href="management/search?order=role_type&sort=<?= isset($sortOption['sort']) ? $sortOption['sort'] : ''?>">Role <i class="fa fas fa-sort<?= $sortOption['order'] == 'role_type' ? $sortOption['icon'] : ''?>"></i><a/>
                                 </th>
                                 <th scope="col">Action</th>
                             </tr>

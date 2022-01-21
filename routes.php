@@ -19,16 +19,16 @@ if (!array_key_exists($controller, $controllers) || !in_array($action, $controll
     $action = 'error';
 }
 if($controller == 'admin'){
-    if(!isset($_SESSION['is_admin_login']) && $action != 'login'){
+    if(!isset($_SESSION['admin']['is_admin_login']) && $action != 'login'){
         redirect_to('/management/login');
     }
 }
-
-if($controller == 'user'){
-    if(!isset($_SESSION['is_user_login']) && $action != 'login'){
-        redirect_to('/login');
-    }
-}
+//
+//if($controller == 'user'){
+//    if(!isset($_SESSION[['is_user_login']) && $action != 'login'){
+//        redirect_to('/login');
+//    }
+//}
 
 // Nhúng file định nghĩa controller vào để có thể dùng được class định nghĩa trong file đó
 include_once('controllers/' . $controller . 'Controller.php');

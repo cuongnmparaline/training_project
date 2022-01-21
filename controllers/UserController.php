@@ -1,14 +1,16 @@
 <?php
 require_once('controllers/BaseController.php');
 require_once('vendor/autoload.php');
-
+require_once ('components/FbLoginComponent.php');
 class UserController extends BaseController
 {
     private $userModel;
     function __construct()
     {
         $this->folder = 'user';
-        $this->userModel = new User();
+        $this->userModel = new UserModel();
+        $this->ValidationComponent = new ValidationComponent();
+        $this->FbLoginComponent = new FbLoginComponent();
     }
 
     public function profile()
@@ -34,98 +36,29 @@ class UserController extends BaseController
         if($this->isLoggedIn()){
             redirect_to('profile');
         }
+
         if (isset($_POST['btn-login'])) {
-            $error = [];
-            # Check email
-            if (empty($_POST['email'])) {
-                $error['email'] = EMAIL_BLANK;
-            }elseif (!is_email($_POST['email'])) {
-                $error['email'] = EMAIL_VALIDATE;
-            }
+            // step 1. Validate
             $email = $_POST['email'];
-
-
-            # Check password
-            if (empty($_POST['password'])) {
-                $error['password'] = PASS_BLANK;
-            }elseif (!is_password($_POST['password'])) {
-                $error['password'] = PASS_VALIDATE;
-            }
             $password = md5($_POST['password']);
-
-            if (!$this->userModel->checkLogin($email, $password)) {
-                $error['account'] = ACCOUNT_INCORRECT;
-            }
-            # Conclude
-            if (empty($error)) {
-                $_SESSION['is_user_login'] = true;
-                $_SESSION['user_login'] = $email;
-                redirect_to("/profile");
-            } else {
+            $validate = $this->ValidationComponent->checkLogin($email, $password, 'user');
+            // step 2. check login
+            if ($validate['status'] == false) {
                 $data = [
                     'email' => $_POST['email'],
-                    'error' => $error
+                    'errors' => $validate['errors']
                 ];
                 $this->render('login', $data);
+            } else {
+                $_SESSION['user'] = [
+                    'is_user_login' => true,
+                    'user_login' => $email,
+                ];
+                redirect_to("profile");
             }
+
         }
-
-        $fb = new \Facebook\Facebook([
-            'app_id' => API_ID,
-            'app_secret' => APP_SECRET,
-            'default_graph_version' => 'v12.0'
-        ]);
-
-        $helper = $fb->getRedirectLoginHelper();
-        $baseUrl = BASE_URL;
-        $login_url = $helper->getLoginUrl("{$baseUrl}/?controller=user&action=login");
-
-        try {
-            $accessToken = $helper->getAccessToken();
-            if(isset($accessToken)){
-                $_SESSION['access_token'] = (string)$accessToken;
-                redirect_to('/login');
-            }
-        }catch (Exception $exc){
-            echo $exc->getMessage();
-        }
-
-        if(isset($_SESSION['access_token'])){
-            try {
-                $fb->setDefaultAccessToken($_SESSION['access_token']);
-                $response = $fb->get("/me?fields=id, name, email, picture.type(large)", $accessToken);
-                $user = $response->getGraphUser();
-                $picture_url = $user->getPicture()->getUrl();
-                $name = $user['name'];
-                $email = $user['email'];
-                $facebook_id = $user['id'];
-
-                if($this->userModel->checkFbIdExisted($facebook_id)){
-                    $_SESSION['is_user_login'] = true;
-                    $_SESSION['facebook_id'] = $facebook_id;
-                    redirect_to('/profile');
-                } else {
-                    $data_insert = [
-                        'name' => $name,
-                        'facebook_id' => $facebook_id,
-                        'avatar' => $picture_url,
-                        'email' => $email,
-                        'status' => 1,
-                        'ins_id' => 0,
-                        'ins_datetime' => date(DATE_FORMAT)
-                    ];
-                    if($this->userModel->add($data_insert)){
-                        $_SESSION['is_user_login'] = true;
-                        $_SESSION['facebook_id'] = $facebook_id;
-                        redirect_to('/profile');
-                    } else {
-                        flash('user_message', ST_WRONG, 'alert alert-success');
-                    }
-                }
-            }catch (Exception $exc){
-                echo $exc->getMessage();
-            }
-        }
+        $login_url = $this->FbLoginComponent->getLoginFb();
         $data = [
             'login_url' => $login_url
         ];

@@ -4,7 +4,7 @@ interface ModelInterface
 {
     function get($fields, $condition);
 
-    function add($data);
+    function create($data);
 
     function delete($id);
 

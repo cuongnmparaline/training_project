@@ -1,9 +1,10 @@
 
 <?php
 require_once('database.php');
-require_once('assets/helper/url.php');
-require_once('assets/libraries/notific.php');
-require_once('assets/libraries/config.php');
+require_once('config/messages.php');
+require_once ('helpers/url.php');
+require_once('config/config.php');
+require_once('config/const.php');
 
 
 if (isset($_GET['controller'])) {

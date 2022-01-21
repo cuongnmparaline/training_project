@@ -37,6 +37,8 @@ define("USER_REMOVED", "User was removed successfully!");
 define("USER_CREATED", "User was created successfully!");
 define("USER_UPDATED", "User was updated successfully!");
 
+define("ROLE_ALERT", "Only Super AdminModel could access AdminModel Management! You are in UserModel Management");
+
 
 
 
