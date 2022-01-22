@@ -15,6 +15,7 @@ class AdminController extends BaseController
     function __construct()
     {
         $this->check_role();
+        $this->check_page();
         $this->folder = 'admin';
         $this->adminModel = new AdminModel();
         $this->userModel = new UserModel();
@@ -24,7 +25,7 @@ class AdminController extends BaseController
     // Admin Action
     public function login()
     {
-        if($this->isLoggedIn()){
+        if ($this->isLoggedIn()) {
             redirect_to('search');
         }
         if (isset($_POST['btn-login'])) {
@@ -33,11 +34,8 @@ class AdminController extends BaseController
             $password = md5($_POST['password']);
             $validate = $this->ValidationComponent->checkLogin($email, $password);
             // step 2. check login
-            if ($validate['status'] == false) {
-                $data = [
-                    'email' => $_POST['email'],
-                    'errors' => $validate['errors']
-                ];
+            if (!$validate['status']) {
+                $data = ['errors' => $validate['errors']];
                 $this->render('login', $data);
             } else {
                 $admin = $this->adminModel->getCurrentAdmin($email, $password);
@@ -53,26 +51,25 @@ class AdminController extends BaseController
         $this->render('login');
     }
 
-    public function logout(){
+    public function logout()
+    {
         unset($_SESSION['admin']);
         redirect_to('/management/login');
     }
 
     public function search()
     {
-        $this->check_role();
-        $_SESSION['current_page'] = 'search';
         $fields = ['id', 'avatar', 'name', 'email', 'role_type'];
         $totalAdmins = $this->adminModel->get($fields);
         $numPerPage = NUM_PER_PAGE;
         $adminNumber = count($totalAdmins);
-        $totalNumberPage = ceil($adminNumber/$numPerPage);
+        $totalNumberPage = ceil($adminNumber / $numPerPage);
         $conditionSearch = $_GET;
         $listAdmin = $this->adminModel->pagging($conditionSearch);
         $data = [
             'admins' => $listAdmin,
-            'name' => isset($_GET['name']) ? $_GET['name'] :"",
-            'email' => isset($_GET['email']) ? $_GET['email'] :"",
+            'name' => isset($_GET['name']) ? $_GET['name'] : "",
+            'email' => isset($_GET['email']) ? $_GET['email'] : "",
             'page' => isset($_GET['page_id']) ? $_GET['page_id'] : 1,
             'totalNumberPage' => $totalNumberPage
         ];
@@ -82,14 +79,13 @@ class AdminController extends BaseController
 
     public function create()
     {
-        $_SESSION['current_page'] = 'search';
-        if(isset($_POST['btn-add-admin'])){
+        if (isset($_POST['btn-add-admin'])) {
             $data = [
                 'post' => $_POST,
                 'file' => $_FILES,
             ];
             $validate = $this->ValidationComponent->ValidateCreateAdmin($data);
-            if($validate['status'] == false){
+            if ($validate['status'] == false) {
                 $data = [
                     'name' => $_POST['name'],
                     'email' => $_POST['email'],
@@ -99,7 +95,7 @@ class AdminController extends BaseController
                 $this->render('create', $data);
             } else {
                 $admin = $validate['admin'];
-                if($this->adminModel->create($admin)){
+                if ($this->adminModel->create($admin)) {
                     flash("admin_message", ADMIN_CREATED);
                     redirect_to('/management/search');
                 }
@@ -109,8 +105,8 @@ class AdminController extends BaseController
 
     }
 
-    public function edit(){
-        $_SESSION['current_page'] = 'search';
+    public function edit()
+    {
         if (!isset($_GET['id'])) {
             flash("admin_message", CANT_FOUND_ACC);
             redirect_to('/management/search');
@@ -126,7 +122,7 @@ class AdminController extends BaseController
             $this->render('edit', $data);
         }
 
-        if(isset($_POST['btn-update-admin'])){
+        if (isset($_POST['btn-update-admin'])) {
             $data = [
                 'admin' => $admin,
                 'post' => $_POST,
@@ -134,7 +130,7 @@ class AdminController extends BaseController
             ];
 
             $validate = $this->ValidationComponent->ValidateEditAdmin($data);
-            if($validate['status'] == false){
+            if ($validate['status'] == false) {
                 $data = [
                     'admin' => $admin,
                     'errors' => $validate['errors']
@@ -142,7 +138,7 @@ class AdminController extends BaseController
                 $this->render('edit', $data);
             } else {
                 $admin = $validate['admin'];
-                if($this->adminModel->update($admin, $id)){
+                if ($this->adminModel->update($admin, $id)) {
                     flash("admin_message", ADMIN_UPDATED);
                     redirect_to('/management/search');
                 }
@@ -150,8 +146,8 @@ class AdminController extends BaseController
         }
     }
 
-    public function delete(){
-        $_SESSION['current_page'] = 'search';
+    public function delete()
+    {
         if (!isset($_GET['id'])) {
             flash('admin_message', ST_WRONG, 'alert alert-success');
             return false;
@@ -201,19 +197,19 @@ class AdminController extends BaseController
 
     // UserModel function
 
-    public function search_user(){
-        $_SESSION['current_page'] = 'search_user';
+    public function search_user()
+    {
         $fields = ['id', 'avatar', 'name', 'email', 'status'];
         $totalUsers = $this->userModel->get($fields);
         $numPerPage = NUM_PER_PAGE;
         $userNumber = count($totalUsers);
-        $totalNumberPage = ceil($userNumber/$numPerPage);
+        $totalNumberPage = ceil($userNumber / $numPerPage);
         $conditionSearch = $_GET;
         $listUser = $this->userModel->pagging($conditionSearch);
         $data = [
             'users' => $listUser,
-            'name' => isset($_GET['name']) ? $_GET['name'] :"",
-            'email' => isset($_GET['email']) ? $_GET['email'] :"",
+            'name' => isset($_GET['name']) ? $_GET['name'] : "",
+            'email' => isset($_GET['email']) ? $_GET['email'] : "",
             'page' => isset($_GET['page_id']) ? $_GET['page_id'] : 1,
             'totalNumberPage' => $totalNumberPage
         ];
@@ -221,15 +217,15 @@ class AdminController extends BaseController
         $this->render('search_user', $data);
     }
 
-    public function create_user(){
-        $_SESSION['current_page'] = 'search_user';
-        if(isset($_POST['btn-add-user'])){
+    public function create_user()
+    {
+        if (isset($_POST['btn-add-user'])) {
             $data = [
                 'post' => $_POST,
                 'file' => $_FILES,
             ];
             $validate = $this->ValidationComponent->ValidateCreateUser($data);
-            if($validate['status'] == false){
+            if ($validate['status'] == false) {
                 $data = [
                     'name' => $_POST['name'],
                     'email' => $_POST['email'],
@@ -239,7 +235,7 @@ class AdminController extends BaseController
                 $this->render('create_user', $data);
             } else {
                 $user = $validate['user'];
-                if($this->userModel->create($user)){
+                if ($this->userModel->create($user)) {
                     flash("user_message", USER_CREATED);
                     redirect_to('/management/search-user');
                 }
@@ -248,8 +244,8 @@ class AdminController extends BaseController
         $this->render('create_user');
     }
 
-    public function edit_user(){
-        $_SESSION['current_page'] = 'search_user';
+    public function edit_user()
+    {
         if (!isset($_GET['id'])) {
             flash("user_message", CANT_FOUND_ACC);
             redirect_to('/management/search-user');
@@ -265,7 +261,7 @@ class AdminController extends BaseController
             $this->render('edit_user', $data);
         }
 
-        if(isset($_POST['btn-update-user'])){
+        if (isset($_POST['btn-update-user'])) {
             $data = [
                 'user' => $user,
                 'post' => $_POST,
@@ -273,7 +269,7 @@ class AdminController extends BaseController
             ];
 
             $validate = $this->ValidationComponent->ValidateEditUser($data);
-            if($validate['status'] == false){
+            if ($validate['status'] == false) {
                 $data = [
                     'user' => $user,
                     'errors' => $validate['errors']
@@ -281,7 +277,7 @@ class AdminController extends BaseController
                 $this->render('edit', $data);
             } else {
                 $user = $validate['user'];
-                if($this->userModel->update($user, $id)){
+                if ($this->userModel->update($user, $id)) {
                     flash("user_message", USER_UPDATED);
                     redirect_to('/management/search-user');
                 }
@@ -289,8 +285,8 @@ class AdminController extends BaseController
         }
     }
 
-    public function delete_user(){
-        $_SESSION['current_page'] = 'search';
+    public function delete_user()
+    {
         if (!isset($_GET['id'])) {
             flash('user_message', ST_WRONG, 'alert alert-danger');
             return false;
@@ -302,8 +298,9 @@ class AdminController extends BaseController
         }
     }
 
-    public function isLoggedIn(){
-        if(isset($_SESSION['is_admin_login'])){
+    public function isLoggedIn()
+    {
+        if (isset($_SESSION['is_admin_login'])) {
             return true;
         } else {
             return false;
@@ -314,9 +311,23 @@ class AdminController extends BaseController
     {
         $role = isset($_SESSION['admin']['role_type']) ? $_SESSION['admin']['role_type'] : 2;
         $adminCanNotAccess = ['search', 'create', 'edit', 'delete'];
-        if($role == 2 && in_array($_GET['action'], $adminCanNotAccess)){
+        if ($role == 2 && in_array($_GET['action'], $adminCanNotAccess)) {
             flash("user_message", ROLE_ALERT);
             redirect_to('/management/search-user');
+        }
+    }
+
+    public function check_page()
+    {
+        $page = isset($_GET['action']) ? $_GET['action'] : '';
+        $adminPage = ['search', 'create', 'edit', 'delete'];
+        $userPage = ['search_user', 'create_user', 'edit_user', 'delete_user'];
+        if (!empty($page)) {
+            if (in_array($page, $adminPage)) {
+                $_SESSION['current_page'] = 'search';
+            } else {
+                $_SESSION['current_page'] = 'search_user';
+            }
         }
     }
 }

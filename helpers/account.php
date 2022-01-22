@@ -30,13 +30,3 @@ function set_status($status){
     }
 }
 
-//function set_icon($data, $field){
-//    if(!empty($data['icon'])){
-//        return false;
-//    }
-//    if(!empty($data['icon'][$field])){
-//        return $data['icon']['default'];
-//    }
-//    return $data['icon'][$field];
-//
-//}
