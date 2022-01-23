@@ -150,7 +150,7 @@ class AdminController extends BaseController
     {
         if (!isset($_GET['id'])) {
             flash('admin_message', ST_WRONG, 'alert alert-success');
-            return false;
+            redirect_to('/management/search');
         }
         $id = $_GET['id'];
         if ($this->adminModel->delete($id)) {
@@ -289,7 +289,7 @@ class AdminController extends BaseController
     {
         if (!isset($_GET['id'])) {
             flash('user_message', ST_WRONG, 'alert alert-danger');
-            return false;
+            redirect_to('/management/search-user');
         }
         $id = $_GET['id'];
         if ($this->userModel->delete($id)) {
@@ -321,7 +321,6 @@ class AdminController extends BaseController
     {
         $page = isset($_GET['action']) ? $_GET['action'] : '';
         $adminPage = ['search', 'create', 'edit', 'delete'];
-        $userPage = ['search_user', 'create_user', 'edit_user', 'delete_user'];
         if (!empty($page)) {
             if (in_array($page, $adminPage)) {
                 $_SESSION['current_page'] = 'search';
