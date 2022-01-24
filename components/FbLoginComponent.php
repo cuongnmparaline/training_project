@@ -39,7 +39,7 @@ class FbLoginComponent{
                 $facebook_id = $user['id'];
 
                 if($this->userModel->checkFbIdExisted($facebook_id)){
-                    $_SESSION['is_user_login'] = true;
+                    $_SESSION['user']['is_user_login'] = true;
                     $_SESSION['facebook_id'] = $facebook_id;
                     redirect_to('/profile');
                 } else {
@@ -52,8 +52,8 @@ class FbLoginComponent{
                         'ins_id' => 0,
                         'ins_datetime' => date(DATE_FORMAT)
                     ];
-                    if($this->userModel->add($data_insert)){
-                        $_SESSION['is_user_login'] = true;
+                    if($this->userModel->create($data_insert)){
+                        $_SESSION['user']['is_user_login'] = true;
                         $_SESSION['facebook_id'] = $facebook_id;
                         redirect_to('/profile');
                     } else {

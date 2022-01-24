@@ -88,7 +88,6 @@ abstract class BaseModel implements ModelInterface {
     }
 
     public function create($data){
-
         $ins_id = $_SESSION['admin']['admin_id'];
         $ins_datetime = date(DATE_FORMAT);
         $key = array_keys($data);
@@ -111,9 +110,11 @@ abstract class BaseModel implements ModelInterface {
     }
 
     public function checkLogin($email, $password){
+        $del_cond = DEL_FALSE;
+        $where = "WHERE email = :email AND password = :password AND del_flag = {$del_cond}";
         $sth = $this->db->prepare("SELECT id
         FROM $this->table
-        WHERE email = :email AND password = :password");
+        {$where}");
         $sth->bindValue('email', $email);
         $sth->bindValue(':password', $password);
         $sth->execute();
@@ -122,10 +123,12 @@ abstract class BaseModel implements ModelInterface {
     }
 
     function checkMailExisted($email){
+        $del_cond = DEL_FALSE;
+        $where = "WHERE email = :email AND del_flag = {$del_cond}";
         $sth = $this->db->prepare(
             "SELECT email
-            FROM $this->table
-            WHERE email = :email");
+            FROM $this->table {$where}
+            ");
         $sth->bindParam('email', $email);
         $sth->execute();
         $check = $sth->rowCount();

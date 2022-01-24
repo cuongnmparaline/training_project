@@ -24,11 +24,11 @@ if($controller == 'admin'){
     }
 }
 //
-if($controller == 'user'){
-    if(!isset($_SESSION['is_user_login']) && $action != 'login'){
-        redirect_to('/login');
-    }
-}
+//if($controller == 'user'){
+//    if(!isset($_SESSION['user']['is_user_login']) && $action != 'login'){
+//        redirect_to('/login');
+//    }
+//}
 
 // Nhúng file định nghĩa controller vào để có thể dùng được class định nghĩa trong file đó
 include_once('controllers/' . $controller . 'Controller.php');

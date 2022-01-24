@@ -31,6 +31,8 @@ class AdminModel extends BaseModel
 
     function getCurrentAdmin($email, $password)
     {
+        $del_cond = DEL_FALSE;
+        $where = "WHERE email = :email AND password = :password AND del_flag = {$del_cond}";
         $sth = $this->db->prepare("SELECT id, role_type, email
             FROM $this->table
             WHERE email = :email AND password = :password");

@@ -22,8 +22,8 @@ class UserController extends BaseController
                 'user' => $user
             ];
         }
-        if(isset($_SESSION['user_login'])){
-            $email = $_SESSION['user_login'];
+        if(isset($_SESSION['user']['user_email'])){
+            $email = $_SESSION['user']['user_email'];
             $user = $this->userModel->getUserByEmail($email);
             $data = [
                 'user' => $user
@@ -52,11 +52,10 @@ class UserController extends BaseController
             } else {
                 $_SESSION['user'] = [
                     'is_user_login' => true,
-                    'user_login' => $email,
+                    'user_email' => $email,
                 ];
                 redirect_to("profile");
             }
-
         }
         $login_url = $this->FbLoginComponent->getLoginFb();
         $data = [
@@ -66,14 +65,14 @@ class UserController extends BaseController
     }
 
     public function logout(){
-        unset($_SESSION['is_user_login']);
+        unset($_SESSION['user']);
         unset($_SESSION['access_token']);
-        unset($_SESSION['user_login']);
+        unset($_SESSION['facebook_id']);
         redirect_to("/login");
     }
 
     public function isLoggedIn(){
-        if(isset($_SESSION['is_user_login'])){
+        if(isset($_SESSION['user']['is_user_login'])){
             return true;
         } else {
             return false;
