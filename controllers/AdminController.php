@@ -25,6 +25,7 @@ class AdminController extends BaseController
     // Admin Action
     public function login()
     {
+        $data = [];
         if ($this->isLoggedIn()) {
             redirect_to('search');
         }
@@ -36,7 +37,6 @@ class AdminController extends BaseController
             // step 2. check login
             if (!$validate['status']) {
                 $data = ['errors' => $validate['errors']];
-                $this->render('login', $data);
             } else {
                 $admin = $this->adminModel->getCurrentAdmin($email, $password);
                 $_SESSION['admin'] = [
@@ -48,7 +48,7 @@ class AdminController extends BaseController
                 redirect_to('search');
             }
         }
-        $this->render('login');
+        $this->render('login', $data);
     }
 
     public function logout()
@@ -79,6 +79,7 @@ class AdminController extends BaseController
 
     public function create()
     {
+        $data = [];
         if (isset($_POST['btn-add-admin'])) {
             $data = [
                 'post' => $_POST,
@@ -92,7 +93,6 @@ class AdminController extends BaseController
                     'role_type' => isset($_POST['role']) ? $_POST['role'] : '',
                     'errors' => $validate['errors']
                 ];
-                $this->render('create', $data);
             } else {
                 $admin = $validate['admin'];
                 if ($this->adminModel->create($admin)) {
@@ -101,12 +101,12 @@ class AdminController extends BaseController
                 }
             }
         }
-        $this->render('create');
-
+        $this->render('create', $data);
     }
 
     public function edit()
     {
+        $data = [];
         if (!isset($_GET['id'])) {
             flash("admin_message", CANT_FOUND_ACC);
             redirect_to('/management/search');
@@ -116,12 +116,9 @@ class AdminController extends BaseController
         $admin = $this->adminModel->getById($fields, $id);
         if (empty($admin)) {
             flash("error_message", CANT_FOUND_ACC);
-            $this->render('edit');
         } else {
             $data = ['admin' => $admin];
-            $this->render('edit', $data);
         }
-
         if (isset($_POST['btn-update-admin'])) {
             $data = [
                 'admin' => $admin,
@@ -135,7 +132,6 @@ class AdminController extends BaseController
                     'admin' => $admin,
                     'errors' => $validate['errors']
                 ];
-                $this->render('edit', $data);
             } else {
                 $admin = $validate['admin'];
                 if ($this->adminModel->update($admin, $id)) {
@@ -144,48 +140,34 @@ class AdminController extends BaseController
                 }
             }
         }
+        $this->render('edit', $data);
     }
 
     public function delete()
     {
         if (!isset($_GET['id'])) {
             flash('admin_message', ST_WRONG, 'alert alert-success');
-            redirect_to('/management/search');
         }
         $id = $_GET['id'];
         if ($this->adminModel->delete($id)) {
             flash('admin_message', ADMIN_REMOVED);
-            redirect_to('/management/search');
         }
+        redirect_to('/management/search');
     }
 
     // UserModel Action
     function add_avatar()
     {
-        // Count total files
         $countfiles = count($_FILES['files']['name']);
-        // Upload directory
         $upload_location = IMG_LOCATION;
-        // To store uploaded files path
         $files_arr = [];
-        // Loop all files
         for ($index = 0; $index < $countfiles; $index++) {
             if (isset($_FILES['files']['name'][$index]) && $_FILES['files']['name'][$index] != '') {
-                // File name
                 $filename = $_FILES['files']['name'][$index];
-
-                // Get extension
                 $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-
-                // Valid image extension
                 $valid_ext = array("png", "jpeg", "jpg");
-
-                // Check extension
                 if (in_array($ext, $valid_ext)) {
-                    // File path
                     $path = $upload_location . $filename;
-
-                    // Upload file
                     if (move_uploaded_file($_FILES['files']['tmp_name'][$index], $path)) {
                         $files_arr[] = $path;
                     }
@@ -219,6 +201,7 @@ class AdminController extends BaseController
 
     public function create_user()
     {
+        $data = [];
         if (isset($_POST['btn-add-user'])) {
             $data = [
                 'post' => $_POST,
@@ -232,7 +215,7 @@ class AdminController extends BaseController
                     'status' => isset($_POST['status']) ? $_POST['status'] : '',
                     'errors' => $validate['errors']
                 ];
-                $this->render('create_user', $data);
+
             } else {
                 $user = $validate['user'];
                 if ($this->userModel->create($user)) {
@@ -241,11 +224,12 @@ class AdminController extends BaseController
                 }
             }
         }
-        $this->render('create_user');
+        $this->render('create_user', $data);
     }
 
     public function edit_user()
     {
+        $data = [];
         if (!isset($_GET['id'])) {
             flash("user_message", CANT_FOUND_ACC);
             redirect_to('/management/search-user');
@@ -255,26 +239,21 @@ class AdminController extends BaseController
         $user = $this->userModel->getById($fields, $id);
         if (empty($user)) {
             flash("error_message", CANT_FOUND_ACC);
-            $this->render('edit_user');
         } else {
             $data = ['user' => $user];
-            $this->render('edit_user', $data);
         }
-
         if (isset($_POST['btn-update-user'])) {
             $data = [
                 'user' => $user,
                 'post' => $_POST,
                 'file' => $_FILES
             ];
-
             $validate = $this->ValidationComponent->ValidateEditUser($data);
             if ($validate['status'] == false) {
                 $data = [
                     'user' => $user,
                     'errors' => $validate['errors']
                 ];
-                $this->render('edit', $data);
             } else {
                 $user = $validate['user'];
                 if ($this->userModel->update($user, $id)) {
@@ -283,19 +262,19 @@ class AdminController extends BaseController
                 }
             }
         }
+        $this->render('edit_user', $data);
     }
 
     public function delete_user()
     {
         if (!isset($_GET['id'])) {
             flash('user_message', ST_WRONG, 'alert alert-danger');
-            redirect_to('/management/search-user');
         }
         $id = $_GET['id'];
         if ($this->userModel->delete($id)) {
             flash('user_message', USER_REMOVED);
-            redirect_to('/management/search-user');
         }
+        redirect_to('/management/search-user');
     }
 
     public function isLoggedIn()
