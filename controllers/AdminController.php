@@ -86,7 +86,7 @@ class AdminController extends BaseController
                 'file' => $_FILES,
             ];
             $validate = $this->ValidationComponent->ValidateCreateAdmin($data);
-            if ($validate['status'] == false) {
+            if (!validate['status']) {
                 $data = [
                     'name' => $_POST['name'],
                     'email' => $_POST['email'],
