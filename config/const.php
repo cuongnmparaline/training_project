@@ -3,6 +3,8 @@
 define('ACTIVE', 1);
 define('DELETED', 0);
 
+define('SUPER_ADMIN', 1);
+define('ADMIN', 2);
 
 define("DEL_FALSE", 0);
 define("DEL_TRUE", 1);

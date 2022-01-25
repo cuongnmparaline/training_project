@@ -1,12 +1,16 @@
 <?php
-require_once('models/UserModel.php');
+//require_once('models/UserModel.php');
 require_once('components/ValidationComponent.php');
 require_once('components/ValidationComponent.php');
-class BaseController
+abstract class BaseController
 {
     protected $folder;
+    public function __construct()
+    {
+       $this->model = $this->autoloadModel();
+    }
 
-    function render($file, $data = array())
+    protected function render($file, $data = array())
     {
         $view_file = 'views/' . $this->folder . '/' . $file . '.php';
         if (is_file($view_file)) {
@@ -18,5 +22,16 @@ class BaseController
         } else {
             header('Location: search.php?controller=pages&action=error');
         }
+    }
+
+    protected function model($model){
+        require_once 'models/' . $model . '.php';
+        return new $model();
+    }
+
+    protected function autoloadModel(){
+        $model = $this->folder . 'Model';
+        require_once 'models/' . $model . '.php';
+        return new $model();
     }
 }

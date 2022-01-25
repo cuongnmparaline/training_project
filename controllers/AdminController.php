@@ -1,7 +1,6 @@
 
 <?php
 require_once('controllers/BaseController.php');
-require_once('models/AdminModel.php');
 require_once('helpers/url.php');
 require_once('helpers/account.php');
 require_once('helpers/pagging.php');
@@ -9,23 +8,20 @@ require_once('helpers/sort.php');
 
 class AdminController extends BaseController
 {
-    private $adminModel;
     private $userModel;
-
     function __construct()
     {
+        $this->folder = 'Admin';
+        parent::__construct();
         $this->check_role();
         $this->check_page();
-        $this->folder = 'admin';
-        $this->adminModel = new AdminModel();
-        $this->userModel = new UserModel();
-        $this->ValidationComponent = new ValidationComponent();
+        $this->userModel = $this->model('UserModel');
+        $this->validate = new ValidationComponent();
     }
-
     // Admin Action
     public function login()
     {
-        $data = [];
+        $dataView = [];
         if ($this->isLoggedIn()) {
             redirect_to('search');
         }
@@ -33,12 +29,12 @@ class AdminController extends BaseController
             // step 1. Validate
             $email = $_POST['email'];
             $password = md5($_POST['password']);
-            $validate = $this->ValidationComponent->checkLogin($email, $password);
+            $validate = $this->validate->checkLogin($email, $password);
             // step 2. check login
             if (!$validate['status']) {
-                $data = ['errors' => $validate['errors']];
+                $dataView['errors'] = $validate['errors'];
             } else {
-                $admin = $this->adminModel->getCurrentAdmin($email, $password);
+                $admin = $this->model->getCurrentAdmin($email, $password);
                 $_SESSION['admin'] = [
                     'is_admin_login' => true,
                     'admin_login' => $admin->email,
@@ -48,7 +44,7 @@ class AdminController extends BaseController
                 redirect_to('search');
             }
         }
-        $this->render('login', $data);
+        $this->render('login', $dataView);
     }
 
     public function logout()
@@ -60,13 +56,13 @@ class AdminController extends BaseController
     public function search()
     {
         $fields = ['id', 'avatar', 'name', 'email', 'role_type'];
-        $totalAdmins = $this->adminModel->get($fields);
+        $totalAdmins = $this->model->get($fields);
         $numPerPage = NUM_PER_PAGE;
         $adminNumber = count($totalAdmins);
         $totalNumberPage = ceil($adminNumber / $numPerPage);
         $conditionSearch = $_GET;
-        $listAdmin = $this->adminModel->pagging($conditionSearch);
-        $data = [
+        $listAdmin = $this->model->pagging($conditionSearch);
+        $dataView = [
             'admins' => $listAdmin,
             'name' => isset($_GET['name']) ? $_GET['name'] : "",
             'email' => isset($_GET['email']) ? $_GET['email'] : "",
@@ -74,20 +70,20 @@ class AdminController extends BaseController
             'totalNumberPage' => $totalNumberPage
         ];
         // step 2. set data to view
-        $this->render('search', $data);
+        $this->render('search', $dataView);
     }
 
     public function create()
     {
-        $data = [];
+        $dataView = [];
         if (isset($_POST['btn-add-admin'])) {
-            $data = [
+            $validatePostData = [
                 'post' => $_POST,
                 'file' => $_FILES,
             ];
-            $validate = $this->ValidationComponent->ValidateCreateAdmin($data);
-            if (!validate['status']) {
-                $data = [
+            $validate = $this->validate->ValidateCreateAdmin($validatePostData);
+            if (!$validate['status']) {
+                $dataView = [
                     'name' => $_POST['name'],
                     'email' => $_POST['email'],
                     'role_type' => isset($_POST['role']) ? $_POST['role'] : '',
@@ -95,52 +91,52 @@ class AdminController extends BaseController
                 ];
             } else {
                 $admin = $validate['admin'];
-                if ($this->adminModel->create($admin)) {
+                if ($this->model->create($admin)) {
                     flash("admin_message", ADMIN_CREATED);
                     redirect_to('/management/search');
                 }
             }
         }
-        $this->render('create', $data);
+        $this->render('create', $dataView);
     }
 
     public function edit()
     {
-        $data = [];
+        $dataView = [];
         if (!isset($_GET['id'])) {
             flash("admin_message", CANT_FOUND_ACC);
             redirect_to('/management/search');
         }
         $id = (int)$_GET['id'];
         $fields = ['id', 'avatar', 'name', 'password', 'email', 'role_type'];
-        $admin = $this->adminModel->getById($fields, $id);
+        $admin = $this->model->getById($fields, $id);
         if (empty($admin)) {
             flash("error_message", CANT_FOUND_ACC);
         } else {
-            $data = ['admin' => $admin];
+            $dataView['admin'] =  $admin;
         }
         if (isset($_POST['btn-update-admin'])) {
-            $data = [
+            $dataView = [
                 'admin' => $admin,
                 'post' => $_POST,
                 'file' => $_FILES
             ];
 
-            $validate = $this->ValidationComponent->ValidateEditAdmin($data);
-            if ($validate['status'] == false) {
-                $data = [
+            $validate = $this->validate->ValidateEditAdmin($dataView);
+            if (!$validate['status']) {
+                $dataView = [
                     'admin' => $admin,
                     'errors' => $validate['errors']
                 ];
             } else {
                 $admin = $validate['admin'];
-                if ($this->adminModel->update($admin, $id)) {
+                if ($this->model->update($admin, $id)) {
                     flash("admin_message", ADMIN_UPDATED);
                     redirect_to('/management/search');
                 }
             }
         }
-        $this->render('edit', $data);
+        $this->render('edit', $dataView);
     }
 
     public function delete()
@@ -149,7 +145,7 @@ class AdminController extends BaseController
             flash('admin_message', ST_WRONG, 'alert alert-success');
         }
         $id = $_GET['id'];
-        if ($this->adminModel->delete($id)) {
+        if ($this->model->delete($id)) {
             flash('admin_message', ADMIN_REMOVED);
         }
         redirect_to('/management/search');
@@ -188,7 +184,7 @@ class AdminController extends BaseController
         $totalNumberPage = ceil($userNumber / $numPerPage);
         $conditionSearch = $_GET;
         $listUser = $this->userModel->pagging($conditionSearch);
-        $data = [
+        $dataView = [
             'users' => $listUser,
             'name' => isset($_GET['name']) ? $_GET['name'] : "",
             'email' => isset($_GET['email']) ? $_GET['email'] : "",
@@ -196,20 +192,20 @@ class AdminController extends BaseController
             'totalNumberPage' => $totalNumberPage
         ];
         // step 2. set data to view
-        $this->render('search_user', $data);
+        $this->render('search_user', $dataView);
     }
 
     public function create_user()
     {
-        $data = [];
+        $dataview = [];
         if (isset($_POST['btn-add-user'])) {
-            $data = [
+            $validatePostData = [
                 'post' => $_POST,
                 'file' => $_FILES,
             ];
-            $validate = $this->ValidationComponent->ValidateCreateUser($data);
-            if ($validate['status'] == false) {
-                $data = [
+            $validate = $this->validate->ValidateCreateUser($validatePostData);
+            if (!$validate['status']) {
+                $dataview = [
                     'name' => $_POST['name'],
                     'email' => $_POST['email'],
                     'status' => isset($_POST['status']) ? $_POST['status'] : '',
@@ -224,12 +220,12 @@ class AdminController extends BaseController
                 }
             }
         }
-        $this->render('create_user', $data);
+        $this->render('create_user', $dataview);
     }
 
     public function edit_user()
     {
-        $data = [];
+        $dataView = [];
         if (!isset($_GET['id'])) {
             flash("user_message", CANT_FOUND_ACC);
             redirect_to('/management/search-user');
@@ -240,17 +236,17 @@ class AdminController extends BaseController
         if (empty($user)) {
             flash("error_message", CANT_FOUND_ACC);
         } else {
-            $data = ['user' => $user];
+            $dataView['user'] = $user;
         }
         if (isset($_POST['btn-update-user'])) {
-            $data = [
+            $validatePostData = [
                 'user' => $user,
                 'post' => $_POST,
                 'file' => $_FILES
             ];
-            $validate = $this->ValidationComponent->ValidateEditUser($data);
-            if ($validate['status'] == false) {
-                $data = [
+            $validate = $this->validate->ValidateEditUser($validatePostData);
+            if (!$validate['status']) {
+                $dataView = [
                     'user' => $user,
                     'errors' => $validate['errors']
                 ];
@@ -262,7 +258,7 @@ class AdminController extends BaseController
                 }
             }
         }
-        $this->render('edit_user', $data);
+        $this->render('edit_user', $dataView);
     }
 
     public function delete_user()
@@ -288,9 +284,9 @@ class AdminController extends BaseController
 
     public function check_role()
     {
-        $role = isset($_SESSION['admin']['role_type']) ? $_SESSION['admin']['role_type'] : 2;
+        $role = isset($_SESSION['admin']['role_type']) ? $_SESSION['admin']['role_type'] : ADMIN;
         $adminCanNotAccess = ['search', 'create', 'edit', 'delete'];
-        if ($role == 2 && in_array($_GET['action'], $adminCanNotAccess)) {
+        if ($role == ADMIN && in_array($_GET['action'], $adminCanNotAccess)) {
             flash("user_message", ROLE_ALERT);
             redirect_to('/management/search-user');
         }

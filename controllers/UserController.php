@@ -4,11 +4,10 @@ require_once('vendor/autoload.php');
 require_once ('components/FbLoginComponent.php');
 class UserController extends BaseController
 {
-    private $userModel;
     function __construct()
     {
-        $this->folder = 'user';
-        $this->userModel = new UserModel();
+        $this->folder = 'User';
+        parent::__construct();
         $this->ValidationComponent = new ValidationComponent();
         $this->FbLoginComponent = new FbLoginComponent();
     }
@@ -17,19 +16,17 @@ class UserController extends BaseController
     {
         if(isset($_SESSION['facebook_id'])){
             $facebook_id = $_SESSION['facebook_id'];
-            $user = $this->userModel->getUserByFbId($facebook_id);
-            $data = [
-                'user' => $user
-            ];
+            $user = $this->model->getUserByFbId($facebook_id);
+            $dataView['user'] = $user;
         }
         if(isset($_SESSION['user']['user_email'])){
             $email = $_SESSION['user']['user_email'];
-            $user = $this->userModel->getUserByEmail($email);
-            $data = [
+            $user = $this->model->getUserByEmail($email);
+            $dataView = [
                 'user' => $user
             ];
         }
-       $this->render('profile', $data);
+       $this->render('profile', $dataView);
     }
 
     public function login(){
@@ -44,11 +41,11 @@ class UserController extends BaseController
             $validate = $this->ValidationComponent->checkLogin($email, $password, 'user');
             // step 2. check login
             if ($validate['status'] == false) {
-                $data = [
-                    'email' => $_POST['email'],
+                $dataView = [
+                    'email' => $email,
                     'errors' => $validate['errors']
                 ];
-                $this->render('login', $data);
+                $this->render('login', $dataView);
             } else {
                 $_SESSION['user'] = [
                     'is_user_login' => true,
@@ -58,10 +55,8 @@ class UserController extends BaseController
             }
         }
         $login_url = $this->FbLoginComponent->getLoginFb();
-        $data = [
-            'login_url' => $login_url
-        ];
-        $this->render('login', $data);
+        $dataView['login_url'] = $login_url;
+        $this->render('login', $dataView);
     }
 
     public function logout(){
