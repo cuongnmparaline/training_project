@@ -12,11 +12,14 @@ require_once ('views/layouts/header.php');
             <div class="section" id="detail-add-admin">
                 <div class="section-detail">
                     <form method="POST"  enctype="multipart/form-data">
-                        <label>Avatar*</label>
-                        <input type="file" id='files' name="files[]" multiple><br> <br>
-                        <div id="preview">
+                        <div class="form_group clearfix">
+                            <label for="detail">Avatar*</label><br/><br/>
+                            <input type="file" name="file" id="file"><br/>
+                            <input id="thumbnail_url" type ="hidden" name="thumbnail_url" value="" />
+                            <div id="show_list_file" >
+                            </div>
+                            <input type="submit" name="Upload" value="Upload" id="upload_single_bt">
                         </div>
-                        <input type="button" id="upload_avatar" value='Upload'>
                         <?php if(isset($errors['avatar'])) echo "<p class='error'>{$errors['avatar']}</p>" ?>
                         <label for="name">Name*</label>
                         <input type="text" name="name" id="name" value="<?php if(isset($name)) echo $name?>">

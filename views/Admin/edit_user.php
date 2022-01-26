@@ -16,13 +16,17 @@ require_once ('views/layouts/header.php');
                         <?php if(isset($user)){
                         ?>
                         <p>ID: <?= $user['id']?></p>
-                        <label>Avatar*</label>
-                        <input type="file" id='files' name="files[]" multiple>
-                        <div id="preview">
-                            <img src="<?= $user['avatar']?>" width="100px;" height="100px">
+                        <div class="form_group clearfix">
+                            <label for="detail">Avatar*</label><br/><br/>
+                            <input type="file" name="file" id="file"><br/>
+                            <input id="thumbnail_url" type ="hidden" name="thumbnail_url" value="" />
+                            <div id="show_list_file" >
+                                <img src="<?= $user['avatar']?>" width="100px;" height="100px">
+                            </div>
+                            <input type="submit" name="Upload" value="Upload" id="upload_single_bt">
                         </div>
-                        <input type="button" id="upload_avatar" value='Upload'>
-                            <?php if(isset($error['avatar'])) echo "<p class='error'>{$error['avatar']}</p>" ?>
+                        <?php if(isset($errors['avatar'])) echo "<p class='error'>{$errors['avatar']}</p>" ?>
+                        <?php if(isset($error['avatar'])) echo "<p class='error'>{$error['avatar']}</p>" ?>
                         <label for="name">Name*</label>
                         <input type="text" name="name" id="name" value="<?= $user['name'] ?>">
                             <?php if(isset($error['name'])) echo "<p class='error'>{$error['name']}</p>" ?>

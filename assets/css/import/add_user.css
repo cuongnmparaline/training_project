@@ -1,5 +1,9 @@
 /*ADD ADMIN*/
 
+#show_list_file img {
+    width: 100px;
+}
+
 #main-menu {
     margin-left: 400px;
 }

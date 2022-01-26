@@ -15,7 +15,7 @@ class AdminController extends BaseController
         parent::__construct();
         $this->check_role();
         $this->check_page();
-        $this->userModel = $this->model('UserModel');
+        $this->userModel = $this->loadModel('UserModel');
         $this->validate = new ValidationComponent();
     }
     // Admin Action
@@ -154,23 +154,39 @@ class AdminController extends BaseController
     // UserModel Action
     function add_avatar()
     {
-        $countfiles = count($_FILES['files']['name']);
-        $upload_location = IMG_LOCATION;
-        $files_arr = [];
-        for ($index = 0; $index < $countfiles; $index++) {
-            if (isset($_FILES['files']['name'][$index]) && $_FILES['files']['name'][$index] != '') {
-                $filename = $_FILES['files']['name'][$index];
-                $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-                $valid_ext = array("png", "jpeg", "jpg");
-                if (in_array($ext, $valid_ext)) {
-                    $path = $upload_location . $filename;
-                    if (move_uploaded_file($_FILES['files']['tmp_name'][$index], $path)) {
-                        $files_arr[] = $path;
-                    }
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            // Create file dir
+            $target_dir = IMG_LOCATION;
+            $target_file = $target_dir . basename($_FILES['file']['name']);
+            // Check format image
+            $type_file = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+            $type_fileAllow = array('png', 'jpg', 'jpeg', 'gif');
+            if (!in_array(strtolower($type_file), $type_fileAllow)) {
+                $error = FORMAT_FILE_ERROR;
+            }
+            // Check file size
+            $size_file = $_FILES['file']['size'];
+            if ($size_file > 5242880) {
+                $error = SIZE_FILE_ERROR;
+            }
+            // Check file existed
+//            if (file_exists($target_file)) {
+//                $error['file'] = "File existed";
+//            }
+            // Conclude
+            if (empty($error)) {
+                if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
+                    $flag = true;
+                    echo json_encode(array('status' => 'true','file_path' => $target_file));
+                } else {
+                    echo json_encode(array('status' => 'error'));
                 }
+            } else {
+                echo json_encode(
+                    array('status' => 'error', 'error' => $error)
+                );
             }
         }
-        echo json_encode($files_arr);
     }
 
     // UserModel function

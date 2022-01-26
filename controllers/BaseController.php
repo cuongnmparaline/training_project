@@ -24,7 +24,7 @@ abstract class BaseController
         }
     }
 
-    protected function model($model){
+    protected function loadModel($model){
         require_once 'models/' . $model . '.php';
         return new $model();
     }

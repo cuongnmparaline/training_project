@@ -1,5 +1,5 @@
 
 
 <?php
-echo 'Có lỗi xảy ra!';
+echo ST_WRONG;
 ?>

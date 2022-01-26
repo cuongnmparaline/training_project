@@ -39,7 +39,8 @@ define("USER_UPDATED", "User was updated successfully!");
 
 define("ROLE_ALERT", "Only Super AdminModel could access AdminModel Management! You are in UserModel Management");
 
-
+define("FORMAT_FILE_ERROR", "This file format is not supported");
+define("SIZE_FILE_ERROR", "YOUR FILE CAN NOT BE OVER 5MB");
 
 
 

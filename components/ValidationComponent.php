@@ -79,11 +79,11 @@ class ValidationComponent {
         $email = $data['post']['email'];
 
         // Check avatar
-        if (empty($data['file']['files']['name'][0])) {
+        if (empty($data['file']['file']['name'])) {
             $result['errors']['avatar'] = AVATAR_BLANK;
         }
         $upload_dir = IMG_LOCATION;
-        $avatar = $upload_dir . $_FILES['files']['name'][0];
+        $avatar = $upload_dir . $data['file']['file']['name'];
 
         // check role
         if (empty($data['post']['role'])) {
@@ -149,9 +149,9 @@ class ValidationComponent {
         $email = $data['post']['email'];
 
         // Check avatar
-        if(!empty($_FILES['files']['name'][0])){
+        if(!empty($data['file']['file']['name'])){
             $upload_dir = IMG_LOCATION;
-            $avatar = $upload_dir . $_FILES['files']['name'][0];
+            $avatar = $upload_dir . $data['file']['file']['name'];
         } else {
             $avatar = $data['admin']['avatar'];
         }
@@ -215,11 +215,11 @@ class ValidationComponent {
         $email = $data['post']['email'];
 
         // Check avatar
-        if (empty($data['file']['files']['name'][0])) {
+        if (empty($data['file']['file'])) {
             $result['errors']['avatar'] = AVATAR_BLANK;
         }
         $upload_dir = IMG_LOCATION;
-        $avatar = $upload_dir . $_FILES['files']['name'][0];
+        $avatar = $upload_dir . $data['file']['file']['name'];
 
         // check status
         if (empty($data['post']['status'])) {
@@ -285,9 +285,9 @@ class ValidationComponent {
         $email = $data['post']['email'];
 
         // Check avatar
-        if(!empty($_FILES['files']['name'][0])){
+        if(!empty($data['file']['file']['name'])){
             $upload_dir = IMG_LOCATION;
-            $avatar = $upload_dir . $_FILES['files']['name'][0];
+            $avatar = $upload_dir . $data['file']['file']['name'];
         } else {
             $avatar = $data['user']['avatar'];
         }
