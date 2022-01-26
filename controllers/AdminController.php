@@ -166,7 +166,7 @@ class AdminController extends BaseController
             }
             // Check file size
             $size_file = $_FILES['file']['size'];
-            if ($size_file > 5242880) {
+            if ($size_file > MAX_FILE_SIZE) {
                 $error = SIZE_FILE_ERROR;
             }
             // Check file existed

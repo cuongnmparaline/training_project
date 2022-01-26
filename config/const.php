@@ -9,6 +9,8 @@ define('ADMIN', 2);
 define("DEL_FALSE", 0);
 define("DEL_TRUE", 1);
 
+define("MAX_FILE_SIZE" ,5242880);
+
 ## Validate
 
 define("MAX_LENGHT", 128);
