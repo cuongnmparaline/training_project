@@ -119,7 +119,7 @@ abstract class BaseModel implements ModelInterface {
         $sth->bindValue(':password', $password);
         $sth->execute();
         $check = $sth->rowCount();
-        return ($check > 0) ? true : false;
+        return ($check > 0) ? $sth->fetch() : false;
     }
 
     function checkMailExisted($email){

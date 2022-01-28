@@ -20,26 +20,26 @@ require_once ('views/layouts/header.php');
                             </div>
                             <input type="submit" name="Upload" value="Upload" id="upload_single_bt">
                         </div>
-                        <?php if(isset($errors['avatar'])) echo "<p class='error'>{$errors['avatar']}</p>" ?>
+                        <?=flash_error('errorCreate', 'avatar')?>
                         <label for="name">Name*</label>
                         <input type="text" name="name" id="name" value="<?php if(isset($name)) echo $name?>">
-                        <?php if(isset($errors['name'])) echo "<p class='error'>{$errors['name']}</p>" ?>
+                        <?=flash_error('errorCreate', 'name')?>
                         <label for="email">Email*</label>
                         <input type="email" name="email" id="email" value="<?php if(isset($email)) echo $email?>">
-                        <?php if(isset($errors['email'])) echo "<p class='error'>{$errors['email']}</p>" ?>
+                        <?=flash_error('errorCreate', 'email')?>
                         <label for="password">Password*</label>
                         <input type="password" name="password" id="password">
-                        <?php if(isset($errors['password'])) echo "<p class='error'>{$errors['password']}</p>" ?>
+                        <?=flash_error('errorCreate', 'password')?>
                         <label for="password">Password Verify*</label>
                         <input type="password" name="password_verify" id="password_verify">
-                        <?php if(isset($errors['password_verify'])) echo "<p class='error'>{$errors['password_verify']}</p>" ?>
+                        <?=flash_error('errorCreate', 'passwordVerify')?>
                         <label for="role">Role*</label> <br>
                         <input type="radio" id="super_admin" name="role" value="1" <?php if(!empty($role_type) && $role_type == 1) echo "checked" ?>>
                         <label for="super_admin" class="role">Super Admin</label>
                         <input type="radio" class="role" id="admin" name="role" value="2"<?php if(!empty($role_type) && $role_type == 2) echo "checked" ?>>
-                        <label for="admin" class="role">Admin</label>
-                       <?php if(isset($errors['role'])) echo "<p class='error'>{$errors['role']}</p>" ?>
-                        <br> <br>
+                        <label for="admin" class="role">Admin</label> <br>
+                        <?=flash_error('errorCreate', 'role')?>
+                        <br>
                         <a href="management/create" class="btn btn-primary">Reset</a>
                         <button type="submit" name="btn-add-admin" id="btn-submit" class="btn btn-secondary">Save</button>
                     </form>

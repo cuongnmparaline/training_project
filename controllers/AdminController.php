@@ -1,22 +1,23 @@
 
 <?php
 require_once('controllers/BaseController.php');
-require_once('helpers/url.php');
+require_once('helpers/message.php');
 require_once('helpers/account.php');
 require_once('helpers/pagging.php');
 require_once('helpers/sort.php');
+require_once ('components/validate/AdminValidate.php');
+require_once ('components/validate/UserValidate.php');
 
 class AdminController extends BaseController
 {
-    private $userModel;
     function __construct()
     {
         $this->folder = 'Admin';
         parent::__construct();
         $this->check_role();
         $this->check_page();
-        $this->userModel = $this->loadModel('UserModel');
-        $this->validate = new ValidationComponent();
+        $this->adminValidate = new AdminValidate();
+        $this->userValidate = new UserValidate();
     }
     // Admin Action
     public function login()
@@ -25,26 +26,25 @@ class AdminController extends BaseController
         if ($this->isLoggedIn()) {
             redirect_to('search');
         }
-        if (isset($_POST['btn-login'])) {
-            // step 1. Validate
-            $email = $_POST['email'];
-            $password = md5($_POST['password']);
-            $validate = $this->validate->checkLogin($email, $password);
-            // step 2. check login
-            if (!$validate['status']) {
-                $dataView['errors'] = $validate['errors'];
-            } else {
-                $admin = $this->model->getCurrentAdmin($email, $password);
-                $_SESSION['admin'] = [
-                    'is_admin_login' => true,
-                    'admin_login' => $admin->email,
-                    'admin_id' => $admin->id,
-                    'role_type' => $admin->role_type
-                ];
-                redirect_to('search');
-            }
+        if(!isset($_POST)){
+           return $this->render('login', $dataView);
         }
-        $this->render('login', $dataView);
+        $email = isset($_POST['email']) ? $_POST['email'] : '';
+        $password = isset($_POST['password']) ? md5($_POST['password']) : '';
+        $admin = $this->adminValidate->checkLogin($email, $password);
+        // step 2. check login
+        if (empty($admin)) {
+            flash_error('errorLogin', 'account', ST_WRONG);
+            return $this->render('login', $dataView);
+        }
+        $_SESSION['admin'] = [
+            'is_admin_login' => true,
+            'admin_login' => $admin->email,
+            'admin_id' => $admin->id,
+            'role_type' => $admin->role_type
+        ];
+            redirect_to('search');
+
     }
 
     public function logout()
@@ -81,14 +81,14 @@ class AdminController extends BaseController
                 'post' => $_POST,
                 'file' => $_FILES,
             ];
-            $validate = $this->validate->ValidateCreateAdmin($validatePostData);
+            $validate = $this->adminValidate->ValidateCreate($validatePostData);
             if (!$validate['status']) {
                 $dataView = [
                     'name' => $_POST['name'],
                     'email' => $_POST['email'],
                     'role_type' => isset($_POST['role']) ? $_POST['role'] : '',
-                    'errors' => $validate['errors']
                 ];
+                $this->render('create', $dataView);
             } else {
                 $admin = $validate['admin'];
                 if ($this->model->create($admin)) {
@@ -122,13 +122,9 @@ class AdminController extends BaseController
                 'file' => $_FILES
             ];
 
-            $validate = $this->validate->ValidateEditAdmin($dataView);
-            if (!$validate['status']) {
-                $dataView = [
-                    'admin' => $admin,
-                    'errors' => $validate['errors']
-                ];
-            } else {
+            $validate = $this->adminValidate->ValidateEdit($dataView);
+            if ($validate['status']) {
+
                 $admin = $validate['admin'];
                 if ($this->model->update($admin, $id)) {
                     flash("admin_message", ADMIN_UPDATED);
@@ -219,15 +215,13 @@ class AdminController extends BaseController
                 'post' => $_POST,
                 'file' => $_FILES,
             ];
-            $validate = $this->validate->ValidateCreateUser($validatePostData);
+            $validate = $this->userValidate->ValidateCreate($validatePostData);
             if (!$validate['status']) {
                 $dataview = [
                     'name' => $_POST['name'],
                     'email' => $_POST['email'],
-                    'status' => isset($_POST['status']) ? $_POST['status'] : '',
-                    'errors' => $validate['errors']
+                    'status' => isset($_POST['status']) ? $_POST['status'] : ''
                 ];
-
             } else {
                 $user = $validate['user'];
                 if ($this->userModel->create($user)) {
@@ -260,13 +254,8 @@ class AdminController extends BaseController
                 'post' => $_POST,
                 'file' => $_FILES
             ];
-            $validate = $this->validate->ValidateEditUser($validatePostData);
-            if (!$validate['status']) {
-                $dataView = [
-                    'user' => $user,
-                    'errors' => $validate['errors']
-                ];
-            } else {
+            $validate = $this->userValidate->ValidateEdit($validatePostData);
+            if ($validate['status']) {
                 $user = $validate['user'];
                 if ($this->userModel->update($user, $id)) {
                     flash("user_message", USER_UPDATED);

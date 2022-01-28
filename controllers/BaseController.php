@@ -1,13 +1,12 @@
 <?php
-//require_once('models/UserModel.php');
-require_once('components/ValidationComponent.php');
-require_once('components/ValidationComponent.php');
+require_once('models/UserModel.php');
 abstract class BaseController
 {
     protected $folder;
     public function __construct()
     {
-       $this->model = $this->autoloadModel();
+        $this->userModel = new UserModel;
+        $this->model = $this->autoloadModel();
     }
 
     protected function render($file, $data = array())
