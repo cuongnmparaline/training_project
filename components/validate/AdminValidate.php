@@ -76,11 +76,12 @@ class AdminValidate extends BaseValidate {
         } elseif (!$this->is_password($password)) {
             flash_error('errorLogin', 'password', EMAIL_BLANK);
         }
-        if(!$this->adminModel->checkLogin($email,$password)){
-            $result['errors']['account'] = ACCOUNT_INCORRECT;
+        $admin = $this->adminModel->checkLogin($email,$password);
+        if(empty($admin)){
+            flash_error('errorLogin', 'account', ACCOUNT_INCORRECT);
         }
-        if(empty($result['errors'])){
-            return true;
+        if(empty($_SESSION['errorLogin'])){
+            return $admin;
         }
         return false;
     }

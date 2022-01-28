@@ -1,5 +1,5 @@
 <?php
-require_once ('components/validate/UserValidate.php');
+require_once ('components/validate/BaseValidate.php');
 require_once ('models/UserModel.php');
 
 class UserValidate extends BaseValidate {
@@ -78,11 +78,12 @@ class UserValidate extends BaseValidate {
         } elseif (!$this->is_password($password)) {
             flash_error('errorLogin', 'password', EMAIL_BLANK);
         }
-        if(!$this->userModel->checkLogin($email,$password)){
-            $result['errors']['account'] = ACCOUNT_INCORRECT;
+        $user = $this->userModel->checkLogin($email,$password);
+        if(empty($user)){
+            flash_error('errorLogin', 'account', ACCOUNT_INCORRECT);
         }
         if(empty($result['errors'])){
-            return true;
+            return $user;
         }
         return false;
     }

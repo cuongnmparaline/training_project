@@ -25,26 +25,26 @@ require_once ('views/layouts/header.php');
                             </div>
                             <input type="submit" name="Upload" value="Upload" id="upload_single_bt">
                         </div>
-                        <?php if(isset($errors['avatar'])) echo "<p class='error'>{$errors['avatar']}</p>" ?>
+                            <?=flash_error('errorEdit', 'avatar')?>
                         <?php if(isset($error['avatar'])) echo "<p class='error'>{$error['avatar']}</p>" ?>
                         <label for="name">Name*</label>
                         <input type="text" name="name" id="name" value="<?= $user['name'] ?>">
-                            <?php if(isset($error['name'])) echo "<p class='error'>{$error['name']}</p>" ?>
+                            <?=flash_error('errorEdit', 'name')?>
                         <label for="email">Email*</label>
                         <input type="email" name="email" id="email" value="<?= $user['email'] ?>">
-                            <?php if(isset($error['email'])) echo "<p class='error'>{$error['email']}</p>" ?>
+                            <?=flash_error('errorEdit', 'email')?>
                         <label for="password">Password*</label>
                         <input type="password" name="password" id="password">
-                            <?php if(isset($error['password'])) echo "<p class='error'>{$error['password']}</p>" ?>
+                            <?=flash_error('errorEdit', 'password')?>
                         <label for="password">Password Verify*</label>
                         <input type="password" name="password_verify" id="password_verify">
-                            <?php if(isset($error['password_verify'])) echo "<p class='error'>{$error['password_verify']}</p>" ?>
+                            <?=flash_error('errorEdit', 'passwordVerify')?>
                         <label for="role">Role*</label> <br>
                         <input <?php if($user['status'] == 1) echo "checked";?> type="radio" id="active" name="status" value="1">
                         <label for="active" class="status">Active</label>
                         <input <?php if($user['status'] == 2) echo "checked";?> type="radio" class="role" id="banned" name="status" value="2">
                         <label for="banned" class="status">Banned</label>
-                            <?php if(isset($error['status'])) echo "<p class='error'>{$error['status']}</p>" ?>
+                            <?=flash_error('errorEdit', 'status')?>
                         <br> <br>
                         <a href="management/edit-user/<?=$user['id']?>" class="btn btn-primary">Reset</a>
                         <button type="submit" name="btn-update-user" id="btn-submit" class="btn btn-secondary">Save</button>

@@ -36,7 +36,7 @@ abstract class BaseValidate{
     }
 
     protected function checkPassword($password, $type = 'errorCreate'){
-        if (!$this->is_password($password)) {
+        if (empty($password)) {
             flash_error($type, 'password', PASS_BLANK);
         }
         if (!$this->is_password($password)) {

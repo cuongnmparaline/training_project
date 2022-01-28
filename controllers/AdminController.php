@@ -22,20 +22,20 @@ class AdminController extends BaseController
     // Admin Action
     public function login()
     {
-        $dataView = [];
         if ($this->isLoggedIn()) {
             redirect_to('search');
         }
-        if(!isset($_POST)){
-           return $this->render('login', $dataView);
+        if(empty($_POST)){
+           return $this->render('login');
         }
         $email = isset($_POST['email']) ? $_POST['email'] : '';
         $password = isset($_POST['password']) ? md5($_POST['password']) : '';
+
         $admin = $this->adminValidate->checkLogin($email, $password);
         // step 2. check login
         if (empty($admin)) {
             flash_error('errorLogin', 'account', ST_WRONG);
-            return $this->render('login', $dataView);
+            return $this->render('login');
         }
         $_SESSION['admin'] = [
             'is_admin_login' => true,
@@ -43,8 +43,11 @@ class AdminController extends BaseController
             'admin_id' => $admin->id,
             'role_type' => $admin->role_type
         ];
+        if($this->isSuperAdmin()){
             redirect_to('search');
-
+        } else {
+            redirect_to('search-user');
+        }
     }
 
     public function logout()
@@ -75,34 +78,32 @@ class AdminController extends BaseController
 
     public function create()
     {
-        $dataView = [];
-        if (isset($_POST['btn-add-admin'])) {
-            $validatePostData = [
-                'post' => $_POST,
-                'file' => $_FILES,
+        if (empty($_POST)) {
+            return $this->render('create');
+        }
+        $validatePostData = [
+            'post' => $_POST,
+            'file' => $_FILES,
+        ];
+        $validate = $this->adminValidate->ValidateCreate($validatePostData);
+        if (!$validate['status']) {
+            $dataView = [
+                'name' => $_POST['name'],
+                'email' => $_POST['email'],
+                'role_type' => isset($_POST['role']) ? $_POST['role'] : '',
             ];
-            $validate = $this->adminValidate->ValidateCreate($validatePostData);
-            if (!$validate['status']) {
-                $dataView = [
-                    'name' => $_POST['name'],
-                    'email' => $_POST['email'],
-                    'role_type' => isset($_POST['role']) ? $_POST['role'] : '',
-                ];
-                $this->render('create', $dataView);
-            } else {
-                $admin = $validate['admin'];
-                if ($this->model->create($admin)) {
-                    flash("admin_message", ADMIN_CREATED);
-                    redirect_to('/management/search');
-                }
+            return $this->render('create', $dataView);
+        } else {
+            $admin = $validate['admin'];
+            if ($this->model->create($admin)) {
+                flash("admin_message", ADMIN_CREATED);
+                redirect_to('/management/search');
             }
         }
-        $this->render('create', $dataView);
     }
 
     public function edit()
     {
-        $dataView = [];
         if (!isset($_GET['id'])) {
             flash("admin_message", CANT_FOUND_ACC);
             redirect_to('/management/search');
@@ -115,24 +116,26 @@ class AdminController extends BaseController
         } else {
             $dataView['admin'] =  $admin;
         }
-        if (isset($_POST['btn-update-admin'])) {
-            $dataView = [
-                'admin' => $admin,
-                'post' => $_POST,
-                'file' => $_FILES
-            ];
 
-            $validate = $this->adminValidate->ValidateEdit($dataView);
-            if ($validate['status']) {
-
-                $admin = $validate['admin'];
-                if ($this->model->update($admin, $id)) {
-                    flash("admin_message", ADMIN_UPDATED);
-                    redirect_to('/management/search');
-                }
-            }
+        if (empty($_POST)) {
+            return $this->render('edit', $dataView);
         }
-        $this->render('edit', $dataView);
+
+        $validatePostData = [
+            'admin' => $admin,
+            'post' => $_POST,
+            'file' => $_FILES
+        ];
+        $validate = $this->adminValidate->ValidateEdit($validatePostData);
+        if (!$validate['status']) {
+            return $this->render('edit', $dataView);
+        }
+        $admin = $validate['admin'];
+        if ($this->model->update($admin, $id)) {
+            flash("admin_message", ADMIN_UPDATED);
+            redirect_to('/management/search');
+        }
+
     }
 
     public function delete()
@@ -209,33 +212,33 @@ class AdminController extends BaseController
 
     public function create_user()
     {
-        $dataview = [];
-        if (isset($_POST['btn-add-user'])) {
-            $validatePostData = [
-                'post' => $_POST,
-                'file' => $_FILES,
+        if (empty($_POST)) {
+            return $this->render('create_user');
+        }
+        $validatePostData = [
+            'post' => $_POST,
+            'file' => $_FILES,
+        ];
+        $validate = $this->userValidate->ValidateCreate($validatePostData);
+        if (!$validate['status']) {
+            $dataview = [
+                'name' => $_POST['name'],
+                'email' => $_POST['email'],
+                'status' => isset($_POST['status']) ? $_POST['status'] : ''
             ];
-            $validate = $this->userValidate->ValidateCreate($validatePostData);
-            if (!$validate['status']) {
-                $dataview = [
-                    'name' => $_POST['name'],
-                    'email' => $_POST['email'],
-                    'status' => isset($_POST['status']) ? $_POST['status'] : ''
-                ];
-            } else {
-                $user = $validate['user'];
-                if ($this->userModel->create($user)) {
-                    flash("user_message", USER_CREATED);
-                    redirect_to('/management/search-user');
-                }
+            return $this->render('create_user', $dataview);
+        } else {
+            $user = $validate['user'];
+            if ($this->userModel->create($user)) {
+                flash("user_message", USER_CREATED);
+                redirect_to('/management/search-user');
             }
         }
-        $this->render('create_user', $dataview);
+
     }
 
     public function edit_user()
     {
-        $dataView = [];
         if (!isset($_GET['id'])) {
             flash("user_message", CANT_FOUND_ACC);
             redirect_to('/management/search-user');
@@ -248,22 +251,24 @@ class AdminController extends BaseController
         } else {
             $dataView['user'] = $user;
         }
-        if (isset($_POST['btn-update-user'])) {
-            $validatePostData = [
-                'user' => $user,
-                'post' => $_POST,
-                'file' => $_FILES
-            ];
-            $validate = $this->userValidate->ValidateEdit($validatePostData);
-            if ($validate['status']) {
-                $user = $validate['user'];
-                if ($this->userModel->update($user, $id)) {
-                    flash("user_message", USER_UPDATED);
-                    redirect_to('/management/search-user');
-                }
-            }
+        if (empty($_POST)) {
+            return $this->render('edit_user', $dataView);
         }
-        $this->render('edit_user', $dataView);
+        $validatePostData = [
+            'user' => $user,
+            'post' => $_POST,
+            'file' => $_FILES
+        ];
+        $validate = $this->userValidate->ValidateEdit($validatePostData);
+        if (!$validate['status']) {
+           return $this->render('edit_user', $dataView);
+        }
+        $user = $validate['user'];
+        if ($this->userModel->update($user, $id)) {
+            flash("user_message", USER_UPDATED);
+            redirect_to('/management/search-user');
+        }
+
     }
 
     public function delete_user()
@@ -289,12 +294,18 @@ class AdminController extends BaseController
 
     public function check_role()
     {
-        $role = isset($_SESSION['admin']['role_type']) ? $_SESSION['admin']['role_type'] : ADMIN;
         $adminCanNotAccess = ['search', 'create', 'edit', 'delete'];
-        if ($role == ADMIN && in_array($_GET['action'], $adminCanNotAccess)) {
+        if (!$this->isSuperAdmin() && in_array($_GET['action'], $adminCanNotAccess)) {
             flash("user_message", ROLE_ALERT);
             redirect_to('/management/search-user');
         }
+    }
+
+    public function isSuperAdmin(){
+        if(isset($_SESSION['admin']['role_type']) && $_SESSION['admin']['role_type'] == SUPER_ADMIN){
+            return true;
+        }
+        return false;
     }
 
     public function check_page()

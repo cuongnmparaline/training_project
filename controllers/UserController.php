@@ -2,13 +2,14 @@
 require_once('controllers/BaseController.php');
 require_once('vendor/autoload.php');
 require_once ('components/FbLoginComponent.php');
+require_once ('components/validate/UserValidate.php');
 class UserController extends BaseController
 {
     function __construct()
     {
         $this->folder = 'User';
         parent::__construct();
-        $this->ValidationComponent = new ValidationComponent();
+        $this->userValidate = new UserValidate();
         $this->FbLoginComponent = new FbLoginComponent();
     }
 
@@ -22,9 +23,7 @@ class UserController extends BaseController
         if(isset($_SESSION['user']['user_email'])){
             $email = $_SESSION['user']['user_email'];
             $user = $this->model->getUserByEmail($email);
-            $dataView = [
-                'user' => $user
-            ];
+            $dataView['user'] = $user;
         }
        $this->render('profile', $dataView);
     }
@@ -34,29 +33,23 @@ class UserController extends BaseController
             redirect_to('profile');
         }
 
-        if (isset($_POST['btn-login'])) {
-            // step 1. Validate
-            $email = $_POST['email'];
-            $password = md5($_POST['password']);
-            $validate = $this->ValidationComponent->checkLogin($email, $password, 'user');
-            // step 2. check login
-            if ($validate['status'] == false) {
-                $dataView = [
-                    'email' => $email,
-                    'errors' => $validate['errors']
-                ];
-                $this->render('login', $dataView);
-            } else {
-                $_SESSION['user'] = [
-                    'is_user_login' => true,
-                    'user_email' => $email,
-                ];
-                redirect_to("profile");
-            }
+        if (empty($_POST)) {
+            $login_url = $this->FbLoginComponent->getLoginFb();
+            $dataView['login_url'] = $login_url;
+            return $this->render('login', $dataView);
         }
-        $login_url = $this->FbLoginComponent->getLoginFb();
-        $dataView['login_url'] = $login_url;
-        $this->render('login', $dataView);
+        $email = $_POST['email'];
+        $password = md5($_POST['password']);
+        $user = $this->userValidate->checkLogin($email, $password);
+        // step 2. check login
+        if (empty($user)) {
+            return $this->render('login');
+        }
+        $_SESSION['user'] = [
+            'is_user_login' => true,
+            'user_email' => $user->email,
+        ];
+        redirect_to("profile");
     }
 
     public function logout(){

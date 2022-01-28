@@ -50,4 +50,17 @@ class AdminModel extends BaseModel
         return false;
     }
 
+    public function checkLogin($email, $password){
+        $del_cond = DEL_FALSE;
+        $where = "WHERE email = :email AND password = :password AND del_flag = {$del_cond}";
+        $sth = $this->db->prepare("SELECT id, email, role_type
+        FROM $this->table
+        {$where}");
+        $sth->bindValue('email', $email);
+        $sth->bindValue(':password', $password);
+        $sth->execute();
+        $check = $sth->rowCount();
+        return ($check > 0) ? $sth->fetch(PDO::FETCH_OBJ) : false;
+    }
+
 }
