@@ -33,4 +33,10 @@ abstract class BaseController
         require_once 'models/' . $model . '.php';
         return new $model();
     }
+
+    protected function getParams(){
+        $data = !empty($_POST) ? $_POST : '';
+        $data['avatar'] = isset($_FILES) ? $_FILES : '';
+        return $data;
+    }
 }

@@ -92,21 +92,25 @@ abstract class BaseModel implements ModelInterface {
     }
 
     public function create($data){
-        $ins_id = $_SESSION['admin']['admin_id'];
-        $ins_datetime = date(DATE_FORMAT);
+        $ins = array(
+            'ins_id' => isset($_SESSION['admin']['id']) ? $_SESSION['admin']['id'] : 9999,
+            'ins_datetime' => date('Y-m-d H:i:s')
+        );
+        $key = array_merge($data, $ins);
+//        $ins_id = $_SESSION['admin']['admin_id'];
+//        $ins_datetime = date(DATE_FORMAT);
         $key = array_keys($data);
         $fields = implode(', ', $key);
-        $fields = $fields . ", ins_id, ins_datetime";
+//        $fields = $fields . ", ins_id, ins_datetime";
         $values = implode(', :', $key);
-        $values = $values . ", :ins_id, :ins_datetime";
+//        $values = $values . ", :ins_id, :ins_datetime";
         $sth = $this->db->prepare("INSERT INTO $this->table ({$fields})
                     VALUES (:{$values})");
         foreach ($data as $field => $value){
             $sth->bindValue(":$field", $value);
         }
-        $sth->bindValue(":ins_id", $ins_id);
-        $sth->bindValue(":ins_datetime", $ins_datetime);
-
+//        $sth->bindValue(":ins_id", $ins_id);
+//        $sth->bindValue(":ins_datetime", $ins_datetime);
         if($sth->execute()){
             return true;
         }

@@ -4,7 +4,7 @@ require_once ('BaseModel.php');
 
 class UserModel extends BaseModel{
 
-    function __construct()
+    public function __construct()
     {
         $this->table = 'users';
         $this->db = DB::getInstance();

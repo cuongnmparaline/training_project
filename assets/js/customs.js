@@ -36,7 +36,7 @@ $(function () {
         var formData = new FormData();
         formData.append('file', fileToUpload);
         $.ajax({
-            url: '?controller=admin&action=add_avatar',
+            url: '?controller=admin&action=addAvatar',
             type: 'post',
             data: formData,
             contentType: false,

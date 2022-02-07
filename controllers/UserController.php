@@ -5,7 +5,7 @@ require_once ('components/FbLoginComponent.php');
 require_once ('components/validate/UserValidate.php');
 class UserController extends BaseController
 {
-    function __construct()
+    public function __construct()
     {
         $this->folder = 'User';
         parent::__construct();

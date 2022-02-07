@@ -7,7 +7,7 @@ class FbLoginComponent{
         $this->userModel = new UserModel();
     }
 
-    function getLoginFb(){
+    public function getLoginFb(){
         $fb = new \Facebook\Facebook([
             'app_id' => API_ID,
             'app_secret' => APP_SECRET,

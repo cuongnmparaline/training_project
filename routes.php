@@ -5,9 +5,9 @@ ob_start();
 
 date_default_timezone_set("Asia/Ho_Chi_Minh");
 $controllers = array(
-    'admin' => ['search', 'login', 'logout', 'create', 'add_avatar',
-        'search', 'edit', 'delete', 'create_user', 'search_user',
-        'edit_user', 'delete_user'],
+    'admin' => ['search', 'login', 'logout', 'create', 'addAvatar',
+        'search', 'edit', 'delete', 'createUser', 'searchUser',
+        'editUser', 'deleteUser'],
     'pages' => ['home', 'error'],
     'user' => ['index', 'login', 'logout', 'profile']
 ); // Các controllers trong hệ thống và các action có thể gọi ra từ controller đó.

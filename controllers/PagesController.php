@@ -4,7 +4,7 @@ require_once('controllers/BaseController.php');
 
 class PagesController extends BaseController
 {
-    function __construct()
+    public function __construct()
     {
         $this->folder = 'pages';
     }

@@ -2,14 +2,14 @@
 // interface Move
 interface ModelInterface
 {
-    function get($fields, $condition);
+    public function get($fields, $condition);
 
-    function create($data);
+    public function create($data);
 
-    function delete($id);
+    public function delete($id);
 
-    function update($data, $id);
+    public function update($data, $id);
 
-    function getById($fields, $id);
+    public function getById($fields, $id);
 
 }

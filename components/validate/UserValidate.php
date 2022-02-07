@@ -6,62 +6,42 @@ require_once ('models/AdminModel.php');
 class UserValidate extends BaseValidate {
 
     public function validateCreate($data){
-        $result['status'] = false;
-        $status = isset($data['post']['status']) ? $data['post']['status'] : '';
-        $avatar = $this->checkAvatar($data['file']);
-        $name = $this->checkName($data['post']['name']);
-
-        $email = $this->checkEmail($data['post']['email'], 'errorCreate', 'user');
-        $password = $this->checkPassword($data['post']['password']);
-        $this->checkPasswordVerify($data['post']['password'], $data['post']['password_verify']);
+        $validateStatus = false;
+        $status = isset($data['status']) ? $data['status'] : '';
+        $this->checkAvatar($data['avatar']);
+        $this->checkName($data['name']);
+        $this->checkEmail($data['email'], 'errorCreate', 'user');
+        $this->checkPassword($data['password']);
+        $this->checkPasswordVerify($data['password'], $data['password_verify']);
         $this->checkStatus($status);
         if(empty($_SESSION['errorCreate'])){
-            $result = [
-                'status' => true,
-                'user' => [
-                    'name' => $name,
-                    'avatar' => $avatar,
-                    'password' => $password,
-                    'email' => $email,
-                    'status' => $status
-                ]
-            ];
+            $validateStatus = true;
         }
-        return $result;
+        return $validateStatus;
     }
 
     public function validateEdit($data){
-        $result['status'] = false;
-        $status = isset($data['post']['status']) ? $data['post']['status'] : '';
-        $name = $this->checkName($data['post']['name'], 'errorEdit');
+        $validateStatus = false;
+        $status = isset($data['status']) ? $data['status'] : '';
+        $this->checkName($data['name'], 'errorEdit');
         $email = $data['user']['email'];
-        if($email != $data['post']['email']){
-            $email = $this->checkEmail($data['post']['email'], 'errorEdit', 'user');
+        if($email != $data['email']){
+            $this->checkEmail($data['email'], 'errorEdit', 'user');
         }
-        $password = $data['user']['password'];
-        if (!empty($data['post']['password'])) {
-            $password = $this->checkPassword($data['post']['password'], 'errorEdit');
-            $this->checkPasswordVerify($data['post']['password'], $data['post']['password_verify'], 'errorEdit');
+        if (!empty($data['password'])) {
+            $this->checkPassword($data['password'], 'errorEdit');
+            $this->checkPasswordVerify($data['password'], $data['password_verify'], 'errorEdit');
         }
-        $avatar = $data['user']['avatar'];
-        if(!empty($data['file']['file']['name'])){
-            $avatar = $this->checkAvatar($data['file'], 'errorEdit');
+
+        if(!empty($data['avatar']['file']['name'])){
+            $this->checkAvatar($data['avatar'], 'errorEdit');
         }
-        $status = $this->checkStatus($status, 'errorEdit');
+        $this->checkStatus($status, 'errorEdit');
 
         if(empty($_SESSION['errorEdit'])){
-            $result = [
-                'status' => true,
-                'user' => [
-                    'name' => $name,
-                    'avatar' => $avatar,
-                    'password' => $password,
-                    'email' => $email,
-                    'status' => $status
-                ]
-            ];
+            $validateStatus = true;
         }
-        return $result;
+        return $validateStatus;
     }
 
     public function checkStatus($status, $type = 'errorCreate'){

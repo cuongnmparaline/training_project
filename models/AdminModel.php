@@ -4,7 +4,7 @@ require_once "BaseModel.php";
 class AdminModel extends BaseModel
 {
 
-    function __construct()
+    public function __construct()
     {
         $this->table = 'admins';
         $this->db = DB::getInstance();
@@ -29,7 +29,7 @@ class AdminModel extends BaseModel
         return $results;
     }
 
-    function getCurrentAdmin($email, $password)
+    public function getCurrentAdmin($email, $password)
     {
         $where = "WHERE email = :email AND password = :password AND del_flag =:del_flag";
         $sth = $this->db->prepare("SELECT id, role_type, email

@@ -10,7 +10,7 @@ require_once ('components/validate/UserValidate.php');
 
 class AdminController extends BaseController
 {
-    function __construct()
+    public function __construct()
     {
         $this->folder = 'Admin';
         parent::__construct();
@@ -78,19 +78,24 @@ class AdminController extends BaseController
         if (empty($_POST)) {
             return $this->render('create');
         }
-        $validatePostData = [
-            'post' => $_POST,
-            'file' => $_FILES,
-        ];
-        $validate = $this->adminValidate->validateCreate($validatePostData);
-        if (!$validate['status']) {
+        $validatePostData = $this->getParams();
+        $validateStatus = $this->adminValidate->validateCreate($validatePostData);
+        if (!$validateStatus) {
             return $this->render('create', $_POST);
-        } else {
-            $admin = $validate['admin'];
-            if ($this->model->create($admin)) {
-                flash("admin_message", ADMIN_CREATED);
-                redirect_to('/management/search');
-            }
+        }
+        $password = md5($_POST['password']);
+        $upload_dir = IMG_LOCATION;
+        $avatar = $upload_dir . $_FILES['file']['name'];
+        $dataInsertAdmin = [
+            'name' => $_POST['name'],
+            'email' => $_POST['email'],
+            'password' => $password,
+            'role_type' => $_POST['role_type'],
+            'avatar' => $avatar
+        ];
+        if ($this->model->create($dataInsertAdmin)) {
+            flash("admin_message", ADMIN_CREATED);
+            redirect_to('/management/search');
         }
     }
 
@@ -109,21 +114,33 @@ class AdminController extends BaseController
         if (empty($_POST)) {
             return $this->render('edit', $admin);
         }
-        $validatePostData = [
-            'admin' => $admin,
-            'post' => $_POST,
-            'file' => $_FILES
-        ];
-        $validate = $this->adminValidate->validateEdit($validatePostData);
-        if (!$validate['status']) {
+        $validatePostData = $this->getParams();
+        $validatePostData['admin'] = $admin;
+        $validateStatus = $this->adminValidate->validateEdit($validatePostData);
+        if (!$validateStatus) {
             return $this->render('edit', $admin);
+        } else {
+            $password = $admin['password'];
+            $avatar = $admin['avatar'];
+            $upload_dir = IMG_LOCATION;
+            if(!empty($_POST['password'])){
+                $password = md5($_POST['password']);
+            }
+            if(!empty($_FILES['file']['name'])){
+                $avatar = $upload_dir . $_FILES['file']['name'];
+            }
+            $dataEditAdmin = [
+                'name' => $_POST['name'],
+                'email' => $_POST['email'],
+                'password' => $password,
+                'role_type' => $_POST['role_type'],
+                'avatar' => $avatar
+            ];
+            if ($this->model->update($dataEditAdmin, $id)) {
+                flash("admin_message", ADMIN_UPDATED);
+                redirect_to('/management/search');
+            }
         }
-        $admin = $validate['admin'];
-        if ($this->model->update($admin, $id)) {
-            flash("admin_message", ADMIN_UPDATED);
-            redirect_to('/management/search');
-        }
-
     }
 
     public function delete()
@@ -139,7 +156,7 @@ class AdminController extends BaseController
     }
 
     // UserModel Action
-    function add_avatar()
+    public function addAvatar()
     {
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
             // Create file dir
@@ -178,7 +195,7 @@ class AdminController extends BaseController
 
     // UserModel function
 
-    public function search_user()
+    public function searchUser()
     {
         $fields = ['id', 'avatar', 'name', 'email', 'status'];
         $totalUsers = $this->userModel->get($fields);
@@ -196,29 +213,33 @@ class AdminController extends BaseController
         $this->render('search_user', $dataView);
     }
 
-    public function create_user()
+    public function createUser()
     {
         if (empty($_POST)) {
             return $this->render('create_user');
         }
-        $validatePostData = [
-            'post' => $_POST,
-            'file' => $_FILES,
-        ];
-        $validate = $this->userValidate->validateCreate($validatePostData);
-        if (!$validate['status']) {
+        $validatePostData = $this->getParams();
+        $validateStatus = $this->userValidate->validateCreate($validatePostData);
+        if (!$validateStatus) {
             return $this->render('create_user', $_POST);
-        } else {
-            $user = $validate['user'];
-            if ($this->userModel->create($user)) {
-                flash("user_message", USER_CREATED);
-                redirect_to('/management/search-user');
-            }
         }
-
+        $password = md5($_POST['password']);
+        $upload_dir = IMG_LOCATION;
+        $avatar = $upload_dir . $_FILES['file']['name'];
+        $dataInsertUser = [
+            'name' => $_POST['name'],
+            'email' => $_POST['email'],
+            'password' => $password,
+            'status' => $_POST['status'],
+            'avatar' => $avatar
+        ];
+        if ($this->userModel->create($dataInsertUser)) {
+            flash("user_message", USER_CREATED);
+            redirect_to('/management/search-user');
+        }
     }
 
-    public function edit_user()
+    public function editUser()
     {
         if (!isset($_GET['id'])) {
             flash("user_message", CANT_FOUND_ACC);
@@ -233,24 +254,36 @@ class AdminController extends BaseController
         if (empty($_POST)) {
             return $this->render('edit_user', $user);
         }
-        $validatePostData = [
-            'user' => $user,
-            'post' => $_POST,
-            'file' => $_FILES
-        ];
-        $validate = $this->userValidate->validateEdit($validatePostData);
-        if (!$validate['status']) {
+        $validatePostData = $this->getParams();
+        $validatePostData['user'] = $user;
+        $validateStatus = $this->userValidate->validateEdit($validatePostData);
+        if (!$validateStatus) {
            return $this->render('edit_user', $user);
         }
-        $user = $validate['user'];
-        if ($this->userModel->update($user, $id)) {
+        $password = $user['password'];
+        $avatar = $user['avatar'];
+        $upload_dir = IMG_LOCATION;
+        if(!empty($_POST['password'])){
+            $password = md5($_POST['password']);
+        }
+        if(!empty($_FILES['file']['name'])){
+            $avatar = $upload_dir . $_FILES['file']['name'];
+        }
+        $dataEditUser = [
+            'name' => $_POST['name'],
+            'email' => $_POST['email'],
+            'password' => $password,
+            'status' => $_POST['status'],
+            'avatar' => $avatar
+        ];
+        if ($this->userModel->update($dataEditUser, $id)) {
             flash("user_message", USER_UPDATED);
             redirect_to('/management/search-user');
         }
 
     }
 
-    public function delete_user()
+    public function deleteUser()
     {
         if (!isset($_GET['id'])) {
             flash('user_message', ST_WRONG, 'alert alert-danger');

@@ -4,67 +4,47 @@ require_once ('components/validate/BaseValidate.php');
 class AdminValidate extends BaseValidate {
 
     public function validateCreate($data){
-        $result['status'] = false;
-        $avatar = $this->checkAvatar($data['file']);
-        $name = $this->checkName($data['post']['name']);
-        $email = $this->checkEmail($data['post']['email']);
-        $password = $this->checkPassword($data['post']['password']);
-        $this->checkPasswordVerify($data['post']['password'], $data['post']['password_verify']);
-        $role = isset($data['post']['role_type']) ? $data['post']['role_type'] : '';
+        $validateStatus = false;
+        $this->checkAvatar($data['avatar']);
+        $this->checkName($data['name']);
+        $this->checkEmail($data['email']);
+        $this->checkPassword($data['password']);
+        $this->checkPasswordVerify($data['password'], $data['password_verify']);
+        $role = isset($data['role_type']) ? $data['role_type'] : '';
         $this->checkRole($role);
         if(empty($_SESSION['errorCreate'])){
-            $result = [
-                'status' => true,
-                'admin' => [
-                    'name' => $name,
-                    'avatar' => $avatar,
-                    'password' => $password,
-                    'email' => $email,
-                    'role_type' => $role
-                ]
-            ];
+            $validateStatus = true;
         }
-        return $result;
+        return $validateStatus;
     }
 
     public function validateEdit($data){
-        $result['status'] = false;
-        $role = isset($data['post']['role_type']) ? $data['post']['role_type'] : '';
-        $name = $this->checkName($data['post']['name'], 'errorEdit');
+        $validateStatus = false;
+        $role = isset($data['role_type']) ? $data['role_type'] : '';
+        $this->checkName($data['name'], 'errorEdit');
         $email = $data['admin']['email'];
-        if($email != $data['post']['email']){
-            $email = $this->checkEmail($data['post']['email'], 'errorEdit');
+        if($email != $data['email']){
+             $this->checkEmail($data['email'], 'errorEdit');
         }
-        $password = $data['admin']['password'];
-        if (!empty($data['post']['password'])) {
-            $password = $this->checkPassword($data['post']['password'], 'errorEdit');
-            $this->checkPasswordVerify($data['post']['password'], $data['post']['password_verify'], 'errorEdit');
+        $data['admin']['password'];
+        if (!empty($data['password'])) {
+            $this->checkPassword($data['password'], 'errorEdit');
+            $this->checkPasswordVerify($data['password'], $data['password_verify'], 'errorEdit');
         }
-        $avatar = $data['admin']['avatar'];
-        if(!empty($data['file']['file']['name'])){
-            $avatar = $this->checkAvatar($data['file'], 'errorEdit');
+
+        if(!empty($data['avatar']['file']['name'])){
+            $this->checkAvatar($data['avatar'], 'errorEdit');
         }
-        $role = $this->checkRole($role, 'errorEdit');
+        $this->checkRole($role, 'errorEdit');
 
         if(empty($_SESSION['errorEdit'])){
-            $result = [
-                'status' => true,
-                'admin' => [
-                    'name' => $name,
-                    'avatar' => $avatar,
-                    'password' => $password,
-                    'email' => $email,
-                    'role_type' => $role
-                ]
-            ];
+            $validateStatus = true;
         }
-
-        return $result;
+        return $validateStatus;
     }
 
     public function checkRole($role, $type = 'errorCreate'){
         if (empty($role)) {
-            die('okoeke');
             flash_error( $type, 'role', ROLE_BLANK);
         }
 
