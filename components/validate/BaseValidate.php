@@ -4,7 +4,6 @@ abstract class BaseValidate{
 
     abstract public function validateCreate($data);
     abstract public function validateEdit($data);
-//    abstract public function checkLogin($email, $password);
 
     public function __construct()
     {
@@ -42,12 +41,10 @@ abstract class BaseValidate{
         if (!$this->is_email($email)) {
             flash_error($errorType, 'email', EMAIL_VALIDATE);
         }
-        if($typeModel == 'user'){
-            if ($this->userModel->checkMailExisted($email)) {
-                flash_error($errorType, 'email', EMAIL_EXISTED);
-            }
+        if($typeModel == 'user' && $this->userModel->checkMailExisted($email)){
+            flash_error($errorType, 'email', EMAIL_EXISTED);
         }
-        if ($this->adminModel->checkMailExisted($email)) {
+        if($typeModel == 'admin' && $this->adminModel->checkMailExisted($email)){
             flash_error($errorType, 'email', EMAIL_EXISTED);
         }
         return $email;
