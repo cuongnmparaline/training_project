@@ -79,7 +79,10 @@ abstract class BaseModel implements ModelInterface {
     }
 
     public function delete($id){
-        $sth = $this->db->prepare("UPDATE $this->table SET del_flag = 1 WHERE id = :id");
+        $del_cond = DEL_TRUE;
+        $set_cond = "SET del_flag = $del_cond";
+        $where = "WHERE id = :id";
+        $sth = $this->db->prepare("UPDATE $this->table $set_cond $where");
         $sth->bindValue(':id', $id);
         if($sth->execute()){
             return true;
