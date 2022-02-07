@@ -1,10 +1,57 @@
 <?php
 
 abstract class BaseValidate{
-    abstract public function checkEmail($email, $type);
+
     abstract public function validateCreate($data);
     abstract public function validateEdit($data);
-    abstract public function checkLogin($email, $password);
+//    abstract public function checkLogin($email, $password);
+
+    public function __construct()
+    {
+        $this->adminModel = new AdminModel();
+        $this->userModel = new UserModel();
+    }
+
+    public function checkLogin($email, $password, $typeModel = 'admin'){
+        if (empty($email)) {
+            flash_error('errorLogin', 'email', EMAIL_BLANK);
+        }elseif (!$this->is_email($email)) {
+            flash_error('errorLogin', 'email', EMAIL_VALIDATE);
+        }
+        // Check password
+        if (empty($password)) {
+            flash_error('errorLogin', 'password', PASS_BLANK);
+        } elseif (!$this->is_password($password)) {
+            flash_error('errorLogin', 'password', PASS_VALIDATE);
+        }
+        if($typeModel == 'user'){
+            $account = $this->userModel->checkLogin($email, md5($password));
+        } else {
+            $account = $this->adminModel->checkLogin($email,md5($password));
+        }
+        if(empty($account)){
+            flash_error('errorLogin', 'account', ACCOUNT_INCORRECT);
+        }
+        if(empty($_SESSION['errorLogin'])){
+            return $account;
+        }
+        return false;
+    }
+
+    protected function checkEmail($email, $errorType = 'errorCreate', $typeModel = 'admin'){
+        if (!$this->is_email($email)) {
+            flash_error($errorType, 'email', EMAIL_VALIDATE);
+        }
+        if($typeModel == 'user'){
+            if ($this->userModel->checkMailExisted($email)) {
+                flash_error($errorType, 'email', EMAIL_EXISTED);
+            }
+        }
+        if ($this->adminModel->checkMailExisted($email)) {
+            flash_error($errorType, 'email', EMAIL_EXISTED);
+        }
+        return $email;
+    }
 
     protected function checkAvatar($file , $type = 'errorCreate'){
         if (empty($file['file']['name'])) {
@@ -55,7 +102,7 @@ abstract class BaseValidate{
 
     public function is_email($email){
         $pattern = "/^[A-Za-z0-9_.]{6,32}@([a-zA-Z0-9]{2,12})(.[a-zA-Z]{2,12})+$/";
-        if (!preg_match($pattern, $_POST['email'], $matchs)) {
+        if (!preg_match($pattern, $email, $matchs)) {
             return false;
         } else {
             return true;
@@ -64,7 +111,7 @@ abstract class BaseValidate{
 
     protected function is_password($password){
         $partten = "/^([A-Z]){1}([\w_\.!@#$%^&*()]+){5,31}$/";
-        if (!preg_match($partten, $_POST['password'], $matchs)) {
+        if (!preg_match($partten, $password, $matchs)) {
             return false;
         } else {
             return true;

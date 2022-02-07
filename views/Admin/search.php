@@ -1,6 +1,7 @@
 
 <?php
 require_once('views/layouts/header.php');
+
 ?>
 <div id="main-content-wp" class="list-product-page">
     <div class="wrap clearfix">
@@ -8,9 +9,9 @@ require_once('views/layouts/header.php');
             <div class="form-search" id="form-search">
                 <form action="management/search" method="GET" enctype="multipart/form-data">
                     <label for="name">Name</label>
-                    <input type="text" name="name" id="name" value="<?php if(isset($name)) echo $name?>"> <br> <br>
+                    <input type="text" name="name" id="name" value="<?php if(isset($getData['name'])) echo $getData['name']?>"> <br> <br>
                     <label for="email">Email</label>
-                    <input type="text" name="email" id="email" value="<?php if(isset($email)) echo $email?>"> <br> <br>
+                    <input type="text" name="email" id="email" value="<?php if(isset($getData['email'])) echo $getData['email']?>"> <br> <br>
                     <a href="management/search" class="btn btn-primary">Reset</a>
                     <input type="submit" id="search-button" name="btn-search" class="btn btn-success" value="Search" />
                 </form>
@@ -21,6 +22,7 @@ require_once('views/layouts/header.php');
                 <div class="section-detail">
                     <div class="table-responsive">
                         <nav aria-label="Page navigation example">
+                            <?php $page = isset($getData['page_id']) ? $getData['page_id'] : 1; ?>
                             <?= str_pagging($page, $totalNumberPage, 'admin'); ?>
                         </nav>
                         <table class="table" id="admin-table">

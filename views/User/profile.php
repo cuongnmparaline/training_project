@@ -52,27 +52,27 @@
             <div class="section">
                 <div class="section-detail">
                     <?php
-                        if(!empty($user)){
+                        if(!empty($id)){
                             ?>
                             <table class="table">
                                 <thead>
                                 <tr>
                                     <td scope="col">ID</td>
-                                    <td scope="col"><?= $user['id']?></td>
+                                    <td scope="col"><?= $id?></td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
                                     <td scope="col">Avatar</td>
-                                    <td scope="col"><img src="<?= $user['avatar']?>" alt="" width="100px"></a></td>
+                                    <td scope="col"><img src="<?= $avatar?>" alt="" width="100px"></a></td>
                                 </tr>
                                 <tr>
                                     <td scope="col">Name</td>
-                                    <td scope="col"><?= $user['name']?></td>
+                                    <td scope="col"><?= $name?></td>
                                 </tr>
                                 <tr>
                                     <td scope="col">Email</td>
-                                    <td scope="col"><?= $user['email']?></td>
+                                    <td scope="col"><?= $email?></td>
                                 </tr>
                                 </tbody>
                             </table>

@@ -31,14 +31,12 @@ class AdminModel extends BaseModel
 
     function getCurrentAdmin($email, $password)
     {
-        $del_cond = DEL_FALSE;
-        $where = "WHERE email = :email AND password = :password AND del_flag = {$del_cond}";
+        $where = "WHERE email = :email AND password = :password AND del_flag =:del_flag";
         $sth = $this->db->prepare("SELECT id, role_type, email
-            FROM $this->table
-            WHERE email = :email AND password = :password");
-
+            FROM $this->table {$where}");
         $sth->bindValue('email', $email);
         $sth->bindValue('password', $password);
+        $sth->bindValue('del_flag', DEL_FALSE);
         if (!$sth->execute()) {
             return false;
         }
@@ -51,13 +49,13 @@ class AdminModel extends BaseModel
     }
 
     public function checkLogin($email, $password){
-        $del_cond = DEL_FALSE;
-        $where = "WHERE email = :email AND password = :password AND del_flag = {$del_cond}";
+        $where = "WHERE email = :email AND password = :password AND del_flag =:del_flag";
         $sth = $this->db->prepare("SELECT id, email, role_type
         FROM $this->table
         {$where}");
         $sth->bindValue('email', $email);
         $sth->bindValue(':password', $password);
+        $sth->bindValue(':del_flag', DEL_FALSE);
         $sth->execute();
         $check = $sth->rowCount();
         return ($check > 0) ? $sth->fetch(PDO::FETCH_OBJ) : false;

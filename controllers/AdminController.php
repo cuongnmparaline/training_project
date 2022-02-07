@@ -29,9 +29,8 @@ class AdminController extends BaseController
            return $this->render('login');
         }
         $email = isset($_POST['email']) ? $_POST['email'] : '';
-        $password = isset($_POST['password']) ? md5($_POST['password']) : '';
-
-        $admin = $this->adminValidate->checkLogin($email, $password);
+        $password = isset($_POST['password']) ? ($_POST['password']) : '';
+        $admin = $this->adminValidate->checkLogin($email, $password, 'admin');
         // step 2. check login
         if (empty($admin)) {
             flash_error('errorLogin', 'account', ST_WRONG);
@@ -67,9 +66,7 @@ class AdminController extends BaseController
         $listAdmin = $this->model->pagging($conditionSearch);
         $dataView = [
             'admins' => $listAdmin,
-            'name' => isset($_GET['name']) ? $_GET['name'] : "",
-            'email' => isset($_GET['email']) ? $_GET['email'] : "",
-            'page' => isset($_GET['page_id']) ? $_GET['page_id'] : 1,
+            'getData' => isset($_GET) ? $_GET : [],
             'totalNumberPage' => $totalNumberPage
         ];
         // step 2. set data to view
@@ -85,14 +82,9 @@ class AdminController extends BaseController
             'post' => $_POST,
             'file' => $_FILES,
         ];
-        $validate = $this->adminValidate->ValidateCreate($validatePostData);
+        $validate = $this->adminValidate->validateCreate($validatePostData);
         if (!$validate['status']) {
-            $dataView = [
-                'name' => $_POST['name'],
-                'email' => $_POST['email'],
-                'role_type' => isset($_POST['role']) ? $_POST['role'] : '',
-            ];
-            return $this->render('create', $dataView);
+            return $this->render('create', $_POST);
         } else {
             $admin = $validate['admin'];
             if ($this->model->create($admin)) {
@@ -113,22 +105,18 @@ class AdminController extends BaseController
         $admin = $this->model->getById($fields, $id);
         if (empty($admin)) {
             flash("error_message", CANT_FOUND_ACC);
-        } else {
-            $dataView['admin'] =  $admin;
         }
-
         if (empty($_POST)) {
-            return $this->render('edit', $dataView);
+            return $this->render('edit', $admin);
         }
-
         $validatePostData = [
             'admin' => $admin,
             'post' => $_POST,
             'file' => $_FILES
         ];
-        $validate = $this->adminValidate->ValidateEdit($validatePostData);
+        $validate = $this->adminValidate->validateEdit($validatePostData);
         if (!$validate['status']) {
-            return $this->render('edit', $dataView);
+            return $this->render('edit', $admin);
         }
         $admin = $validate['admin'];
         if ($this->model->update($admin, $id)) {
@@ -201,9 +189,7 @@ class AdminController extends BaseController
         $listUser = $this->userModel->pagging($conditionSearch);
         $dataView = [
             'users' => $listUser,
-            'name' => isset($_GET['name']) ? $_GET['name'] : "",
-            'email' => isset($_GET['email']) ? $_GET['email'] : "",
-            'page' => isset($_GET['page_id']) ? $_GET['page_id'] : 1,
+            'getData' => isset($_GET) ? $_GET : [],
             'totalNumberPage' => $totalNumberPage
         ];
         // step 2. set data to view
@@ -219,14 +205,9 @@ class AdminController extends BaseController
             'post' => $_POST,
             'file' => $_FILES,
         ];
-        $validate = $this->userValidate->ValidateCreate($validatePostData);
+        $validate = $this->userValidate->validateCreate($validatePostData);
         if (!$validate['status']) {
-            $dataview = [
-                'name' => $_POST['name'],
-                'email' => $_POST['email'],
-                'status' => isset($_POST['status']) ? $_POST['status'] : ''
-            ];
-            return $this->render('create_user', $dataview);
+            return $this->render('create_user', $_POST);
         } else {
             $user = $validate['user'];
             if ($this->userModel->create($user)) {
@@ -248,20 +229,18 @@ class AdminController extends BaseController
         $user = $this->userModel->getById($fields, $id);
         if (empty($user)) {
             flash("error_message", CANT_FOUND_ACC);
-        } else {
-            $dataView['user'] = $user;
         }
         if (empty($_POST)) {
-            return $this->render('edit_user', $dataView);
+            return $this->render('edit_user', $user);
         }
         $validatePostData = [
             'user' => $user,
             'post' => $_POST,
             'file' => $_FILES
         ];
-        $validate = $this->userValidate->ValidateEdit($validatePostData);
+        $validate = $this->userValidate->validateEdit($validatePostData);
         if (!$validate['status']) {
-           return $this->render('edit_user', $dataView);
+           return $this->render('edit_user', $user);
         }
         $user = $validate['user'];
         if ($this->userModel->update($user, $id)) {

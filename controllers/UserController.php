@@ -18,14 +18,12 @@ class UserController extends BaseController
         if(isset($_SESSION['facebook_id'])){
             $facebook_id = $_SESSION['facebook_id'];
             $user = $this->model->getUserByFbId($facebook_id);
-            $dataView['user'] = $user;
         }
         if(isset($_SESSION['user']['user_email'])){
             $email = $_SESSION['user']['user_email'];
             $user = $this->model->getUserByEmail($email);
-            $dataView['user'] = $user;
         }
-       $this->render('profile', $dataView);
+       $this->render('profile', $user);
     }
 
     public function login(){
@@ -39,8 +37,8 @@ class UserController extends BaseController
             return $this->render('login', $dataView);
         }
         $email = $_POST['email'];
-        $password = md5($_POST['password']);
-        $user = $this->userValidate->checkLogin($email, $password);
+        $password = $_POST['password'];
+        $user = $this->userValidate->checkLogin($email, $password, 'user');
         // step 2. check login
         if (empty($user)) {
             return $this->render('login');

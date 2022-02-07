@@ -11,7 +11,6 @@ abstract class BaseModel implements ModelInterface {
 
     public function get($fields, $condition = [])
     {
-        $del_cond = DEL_FALSE;
         $orderBy = '';
         $pagging = '';
         $name = isset($condition['name']) ? $condition['name'] : '';
@@ -26,11 +25,14 @@ abstract class BaseModel implements ModelInterface {
         if(isset($condition['order']) && isset($condition['sort'])){
             $orderBy = "ORDER BY {$condition['order']} {$condition['sort']}";
         }
-        $where = "WHERE email LIKE '%{$name}%' AND del_flag = {$del_cond}
-         OR name LIKE '%{$email}%' AND del_flag = {$del_cond} {$orderBy} {$pagging}";
+        $where = "WHERE email LIKE :email AND del_flag =:del_flag
+         OR name LIKE :name AND del_flag =:del_flag {$orderBy} {$pagging}";
         $fields = implode(', ', $fields);
         $sth = $this->db->prepare("SELECT $fields
         FROM $this->table {$where}");
+        $sth->bindValue(':email', "%$email%");
+        $sth->bindValue(':name', "%$name%");
+        $sth->bindValue(':del_flag', DEL_FALSE);
         if($sth->execute()){
             return $sth->fetchAll(PDO::FETCH_ASSOC);
         }
@@ -39,7 +41,6 @@ abstract class BaseModel implements ModelInterface {
 
     public function getById($fields, $id)
     {
-        $del_cond = DEL_FALSE;
         $where = "WHERE id = :id AND del_flag = :del_cond";
         $fields = implode(', ', $fields);
         $sth = $this->db->prepare(
@@ -48,7 +49,7 @@ abstract class BaseModel implements ModelInterface {
             {$where}"
         );
         $sth->bindValue('id', $id);
-        $sth->bindValue('del_cond', $del_cond);
+        $sth->bindValue('del_cond', DEL_FALSE);
         if($sth->execute()){
             return $sth->fetch(PDO::FETCH_ASSOC);
         }
@@ -79,11 +80,11 @@ abstract class BaseModel implements ModelInterface {
     }
 
     public function delete($id){
-        $del_cond = DEL_TRUE;
-        $set_cond = "SET del_flag = $del_cond";
+        $set_cond = "SET del_flag =:del_flag";
         $where = "WHERE id = :id";
         $sth = $this->db->prepare("UPDATE $this->table $set_cond $where");
         $sth->bindValue(':id', $id);
+        $sth->bindValue(':del_flag', DEL_TRUE);
         if($sth->execute()){
             return true;
         }
@@ -113,26 +114,26 @@ abstract class BaseModel implements ModelInterface {
     }
 
     public function checkLogin($email, $password){
-        $del_cond = DEL_FALSE;
-        $where = "WHERE email = :email AND password = :password AND del_flag = {$del_cond}";
+        $where = "WHERE email = :email AND password = :password AND del_flag =:del_flag";
         $sth = $this->db->prepare("SELECT id, email, role_type
         FROM $this->table
         {$where}");
         $sth->bindValue('email', $email);
         $sth->bindValue(':password', $password);
+        $sth->bindValue(':del_flag', DEL_FALSE);
         $sth->execute();
         $check = $sth->rowCount();
         return ($check > 0) ? $sth->fetch(PDO::FETCH_OBJ) : false;
     }
 
     function checkMailExisted($email){
-        $del_cond = DEL_FALSE;
-        $where = "WHERE email = :email AND del_flag = {$del_cond}";
+        $where = "WHERE email = :email AND del_flag =:del_flag";
         $sth = $this->db->prepare(
             "SELECT email
             FROM $this->table {$where}
             ");
         $sth->bindParam('email', $email);
+        $sth->bindValue('del_flag', DEL_FALSE);
         $sth->execute();
         $check = $sth->rowCount();
         return ($check > 0) ? true : false;

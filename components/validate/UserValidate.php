@@ -1,21 +1,17 @@
 <?php
 require_once ('components/validate/BaseValidate.php');
 require_once ('models/UserModel.php');
+require_once ('models/AdminModel.php');
 
 class UserValidate extends BaseValidate {
 
-    public function __construct()
-    {
-        $this->userModel = new UserModel();
-    }
-
-    public function ValidateCreate($data){
-        unset($_SESSION['errorCreate']);
+    public function validateCreate($data){
         $result['status'] = false;
         $status = isset($data['post']['status']) ? $data['post']['status'] : '';
         $avatar = $this->checkAvatar($data['file']);
         $name = $this->checkName($data['post']['name']);
-        $email = $this->checkEmail($data['post']['email']);
+
+        $email = $this->checkEmail($data['post']['email'], 'errorCreate', 'user');
         $password = $this->checkPassword($data['post']['password']);
         $this->checkPasswordVerify($data['post']['password'], $data['post']['password_verify']);
         $this->checkStatus($status);
@@ -34,12 +30,14 @@ class UserValidate extends BaseValidate {
         return $result;
     }
 
-    public function ValidateEdit($data){
-        unset($_SESSION['errorEdit']);
+    public function validateEdit($data){
         $result['status'] = false;
         $status = isset($data['post']['status']) ? $data['post']['status'] : '';
         $name = $this->checkName($data['post']['name'], 'errorEdit');
-        $email = $this->checkEmail($data['post']['email'], 'errorEdit');
+        $email = $data['user']['email'];
+        if($email != $data['post']['email']){
+            $email = $this->checkEmail($data['post']['email'], 'errorEdit', 'user');
+        }
         $password = $data['user']['password'];
         if (!empty($data['post']['password'])) {
             $password = $this->checkPassword($data['post']['password'], 'errorEdit');
@@ -64,39 +62,6 @@ class UserValidate extends BaseValidate {
             ];
         }
         return $result;
-    }
-
-    public function checkLogin($email, $password){
-        if (empty($email)) {
-            flash_error('errorLogin', 'email', EMAIL_BLANK);
-        }elseif (!$this->is_email($email)) {
-            flash_error('errorLogin', 'email', EMAIL_VALIDATE);
-        }
-        // Check password
-        if (empty($password)) {
-            flash_error('errorLogin', 'password', PASS_BLANK);
-        } elseif (!$this->is_password($password)) {
-            flash_error('errorLogin', 'password', EMAIL_BLANK);
-        }
-        $user = $this->userModel->checkLogin($email,$password);
-        if(empty($user)){
-            flash_error('errorLogin', 'account', ACCOUNT_INCORRECT);
-        }
-        if(empty($result['errors'])){
-            return $user;
-        }
-        return false;
-    }
-
-    public function checkEmail($email, $type = 'errorCreate')
-    {
-        if (!$this->is_email($email)) {
-            flash_error($type, 'email', EMAIL_VALIDATE);
-        }
-        if ($this->userModel->checkMailExisted($email)) {
-            flash_error('$type', 'email', EMAIL_EXISTED);
-        }
-        return $email;
     }
 
     public function checkStatus($status, $type = 'errorCreate'){

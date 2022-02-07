@@ -34,9 +34,9 @@ require_once ('views/layouts/header.php');
                         <input type="password" name="password_verify" id="password_verify">
                         <?=flash_error('errorCreate', 'passwordVerify')?>
                         <label for="role">Role*</label> <br>
-                        <input type="radio" id="super_admin" name="role" value="1" <?php if(!empty($role_type) && $role_type == 1) echo "checked" ?>>
+                        <input type="radio" id="super_admin" name="role_type" value="1" <?php if(!empty($role_type) && $role_type == 1) echo "checked" ?>>
                         <label for="super_admin" class="role">Super Admin</label>
-                        <input type="radio" class="role" id="admin" name="role" value="2"<?php if(!empty($role_type) && $role_type == 2) echo "checked" ?>>
+                        <input type="radio" class="role" id="admin" name="role_type" value="2"<?php if(!empty($role_type) && $role_type == 2) echo "checked" ?>>
                         <label for="admin" class="role">Admin</label> <br>
                         <?=flash_error('errorCreate', 'role')?>
                         <br>
