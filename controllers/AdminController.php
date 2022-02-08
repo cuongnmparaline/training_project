@@ -31,7 +31,7 @@ class AdminController extends BaseController
         $email = isset($_POST['email']) ? $_POST['email'] : '';
         $password = isset($_POST['password']) ? ($_POST['password']) : '';
         $admin = $this->adminValidate->checkLogin($email, $password, 'admin');
-        // step 2. check login
+
         if (empty($admin)) {
             flash_error('errorLogin', 'account', ST_WRONG);
             return $this->render('login');
@@ -42,6 +42,7 @@ class AdminController extends BaseController
             'admin_id' => $admin->id,
             'role_type' => $admin->role_type
         ];
+
         if($this->isSuperAdmin()){
             redirect_to('search');
         } else {
@@ -69,7 +70,6 @@ class AdminController extends BaseController
             'getData' => isset($_GET) ? $_GET : [],
             'totalNumberPage' => $totalNumberPage
         ];
-        // step 2. set data to view
         $this->render('search', $dataView);
     }
 
@@ -119,28 +119,29 @@ class AdminController extends BaseController
         $validateStatus = $this->adminValidate->validateEdit($validatePostData);
         if (!$validateStatus) {
             return $this->render('edit', $admin);
-        } else {
-            $password = $admin['password'];
-            $avatar = $admin['avatar'];
-            $upload_dir = IMG_LOCATION;
-            if(!empty($_POST['password'])){
-                $password = md5($_POST['password']);
-            }
-            if(!empty($_FILES['file']['name'])){
-                $avatar = $upload_dir . $_FILES['file']['name'];
-            }
-            $dataEditAdmin = [
-                'name' => $_POST['name'],
-                'email' => $_POST['email'],
-                'password' => $password,
-                'role_type' => $_POST['role_type'],
-                'avatar' => $avatar
-            ];
-            if ($this->model->update($dataEditAdmin, $id)) {
-                flash("admin_message", ADMIN_UPDATED);
-                redirect_to('/management/search');
-            }
         }
+
+        $password = $admin['password'];
+        $avatar = $admin['avatar'];
+        $upload_dir = IMG_LOCATION;
+        if(!empty($_POST['password'])){
+            $password = md5($_POST['password']);
+        }
+        if(!empty($_FILES['file']['name'])){
+            $avatar = $upload_dir . $_FILES['file']['name'];
+        }
+        $dataEditAdmin = [
+            'name' => $_POST['name'],
+            'email' => $_POST['email'],
+            'password' => $password,
+            'role_type' => $_POST['role_type'],
+            'avatar' => $avatar
+        ];
+        if ($this->model->update($dataEditAdmin, $id)) {
+            flash("admin_message", ADMIN_UPDATED);
+            redirect_to('/management/search');
+        }
+
     }
 
     public function delete()
@@ -155,7 +156,6 @@ class AdminController extends BaseController
         redirect_to('/management/search');
     }
 
-    // UserModel Action
     public function addAvatar()
     {
         if ($_SERVER['REQUEST_METHOD'] == "POST") {

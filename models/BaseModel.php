@@ -58,21 +58,25 @@ abstract class BaseModel implements ModelInterface {
 
     public function update($data, $id)
     {
-        $upd_id = $_SESSION['admin']['admin_id'];
-        $upd_datetime = date(DATE_FORMAT);
+        $ins = array(
+            'upd_id' => isset($_SESSION['admin']['admin_id']) ? $_SESSION['admin']['admin_id'] : 9999,
+            'upd_datetime' => date(DATE_FORMAT)
+        );
+        if(!in_array('upd_id', $data) && !in_array('upd_datetime', $data)){
+            $data = array_merge($data, $ins);
+        }
         $key = array_keys($data);
         $setValue = "";
         foreach ($key as $field){
             $setValue = $setValue."$field = :$field, ";
         }
-        $setValue = $setValue . " upd_id = :upd_id, upd_datetime = :upd_datetime";
+        $setValue = substr($setValue, 0, -2);
         $sth = $this->db->prepare("UPDATE $this->table SET {$setValue} WHERE id = :id");
         $sth->bindValue(':id', $id);
-        $sth->bindValue(':upd_id', $upd_id);
-        $sth->bindValue(':upd_datetime', $upd_datetime);
         foreach ($data as $field => $value){
             $sth->bindValue(":$field", $value);
         }
+        $sth->debugDumpParams();
         if($sth->execute()){
             return true;
         }
@@ -93,24 +97,20 @@ abstract class BaseModel implements ModelInterface {
 
     public function create($data){
         $ins = array(
-            'ins_id' => isset($_SESSION['admin']['id']) ? $_SESSION['admin']['id'] : 9999,
-            'ins_datetime' => date('Y-m-d H:i:s')
+            'ins_id' => isset($_SESSION['admin']['admin_id']) ? $_SESSION['admin']['admin_id'] : 9999,
+            'ins_datetime' => date(DATE_FORMAT)
         );
-        $key = array_merge($data, $ins);
-//        $ins_id = $_SESSION['admin']['admin_id'];
-//        $ins_datetime = date(DATE_FORMAT);
+        if(!in_array('ins_id', $data) && !in_array('ins_datetime', $data)){
+            $data = array_merge($data, $ins);
+        }
         $key = array_keys($data);
         $fields = implode(', ', $key);
-//        $fields = $fields . ", ins_id, ins_datetime";
         $values = implode(', :', $key);
-//        $values = $values . ", :ins_id, :ins_datetime";
         $sth = $this->db->prepare("INSERT INTO $this->table ({$fields})
                     VALUES (:{$values})");
         foreach ($data as $field => $value){
             $sth->bindValue(":$field", $value);
         }
-//        $sth->bindValue(":ins_id", $ins_id);
-//        $sth->bindValue(":ins_datetime", $ins_datetime);
         if($sth->execute()){
             return true;
         }

@@ -16,7 +16,7 @@ define("DB_NAME", "account_manager");
 
 ### BASE URL
 
-define("BASE_URL", "https://paralinetraining.com");
+define("BASE_URL", "https://d026-14-248-83-33.ngrok.io");
 
 
 ## Dateime

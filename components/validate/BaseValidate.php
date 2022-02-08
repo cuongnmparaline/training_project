@@ -14,13 +14,13 @@ abstract class BaseValidate{
     public function checkLogin($email, $password, $typeModel = 'admin'){
         if (empty($email)) {
             flash_error('errorLogin', 'email', EMAIL_BLANK);
-        }elseif (!$this->is_email($email)) {
+        }elseif (!$this->isEmail($email)) {
             flash_error('errorLogin', 'email', EMAIL_VALIDATE);
         }
         // Check password
         if (empty($password)) {
             flash_error('errorLogin', 'password', PASS_BLANK);
-        } elseif (!$this->is_password($password)) {
+        } elseif (!$this->isPassword($password)) {
             flash_error('errorLogin', 'password', PASS_VALIDATE);
         }
         if($typeModel == 'user'){
@@ -38,7 +38,7 @@ abstract class BaseValidate{
     }
 
     protected function checkEmail($email, $errorType = 'errorCreate', $typeModel = 'admin'){
-        if (!$this->is_email($email)) {
+        if (!$this->isEmail($email)) {
             flash_error($errorType, 'email', EMAIL_VALIDATE);
         }
         if($typeModel == 'user' && $this->userModel->checkMailExisted($email)){
@@ -83,7 +83,7 @@ abstract class BaseValidate{
         if (empty($password)) {
             flash_error($type, 'password', PASS_BLANK);
         }
-        if (!$this->is_password($password)) {
+        if (!$this->isPassword($password)) {
             flash_error($type, 'password', PASS_VALIDATE);
         }
         return md5($password);
@@ -97,7 +97,7 @@ abstract class BaseValidate{
     }
 
 
-    protected function is_email($email){
+    protected function isEmail($email){
         $pattern = "/^[A-Za-z0-9_.]{6,32}@([a-zA-Z0-9]{2,12})(.[a-zA-Z]{2,12})+$/";
         if (!preg_match($pattern, $email, $matchs)) {
             return false;
@@ -106,7 +106,7 @@ abstract class BaseValidate{
         }
     }
 
-    protected function is_password($password){
+    protected function isPassword($password){
         $partten = "/^([A-Z]){1}([\w_\.!@#$%^&*()]+){5,31}$/";
         if (!preg_match($partten, $password, $matchs)) {
             return false;
