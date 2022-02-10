@@ -110,6 +110,7 @@ class AdminController extends BaseController
         $admin = $this->model->getById($fields, $id);
         if (empty($admin)) {
             flash("error_message", CANT_FOUND_ACC);
+            return $this->render('edit');
         }
         if (empty($_POST)) {
             return $this->render('edit', $admin);
@@ -248,8 +249,10 @@ class AdminController extends BaseController
         $id = (int)$_GET['id'];
         $fields = ['id', 'avatar', 'name', 'password', 'email', 'status'];
         $user = $this->userModel->getById($fields, $id);
+
         if (empty($user)) {
             flash("error_message", CANT_FOUND_ACC);
+            return $this->render('edit_user');
         }
         if (empty($_POST)) {
             return $this->render('edit_user', $user);
