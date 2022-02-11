@@ -11,12 +11,12 @@ define("APP_SECRET", "2c68a5f3c1882b39c5b713e184891817");
 define("DB_HOST", "localhost");
 define("DB_USER", "root");
 define("DB_PASS", "");
-define("DB_NAME", "account_manager");
+define("DB_NAME", "phptraining.com");
 
 
 ### BASE URL
 
-define("BASE_URL", "https://d026-14-248-83-33.ngrok.io");
+define("BASE_URL", "https://phptraining.pro");
 
 
 ## Dateime

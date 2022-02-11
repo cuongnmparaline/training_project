@@ -110,6 +110,7 @@ abstract class BaseModel implements ModelInterface {
         foreach ($data as $field => $value){
             $sth->bindValue(":$field", $value);
         }
+        $sth->debugDumpParams();
         if($sth->execute()){
             return true;
         }

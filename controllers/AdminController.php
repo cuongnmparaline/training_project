@@ -181,7 +181,6 @@ class AdminController extends BaseController
             // Conclude
             if (empty($error)) {
                 if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
-                    $flag = true;
                     echo json_encode(array('status' => 'true','file_path' => $target_file));
                 } else {
                     echo json_encode(array('status' => 'error'));
