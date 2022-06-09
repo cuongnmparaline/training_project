@@ -3,42 +3,45 @@ RewriteEngine On
 #### Module AdminModel
 
 # Search admin
-rewriteRule ^management$ ?controller=admin&action=search
-rewriteRule ^management/search/([0-9]+)$ ?controller=admin&action=search&page_id=$1
-rewriteRule ^management/search$ index.php?controller=admin&action=search [QSA,L]
-
-# Create admin
-rewriteRule ^management/create$ ?controller=admin&action=create
-
-# Edit admin
-rewriteRule ^management/edit/([0-9]+)$ ?controller=admin&action=edit&id=$1
-
-
-# Delete admin
-rewriteRule ^management/delete/([0-9]+)$ ?controller=admin&action=delete&id=$1
-
-# Search user
-rewriteRule ^management/search-user/([0-9]+)$ ?controller=admin&action=searchUser&page_id=$1
-rewriteRule ^management/search-user$ index.php?controller=admin&action=searchUser [QSA,L]
-
-# Create user
-rewriteRule ^management/create-user$ ?controller=admin&action=createUser
-
-# Edit user
-rewriteRule ^management/edit-user/([0-9]+)$ ?controller=admin&action=editUser&id=$1
-
-# Delete user
-rewriteRule ^management/delete-user/([0-9]+)$ ?controller=admin&action=deleteUser&id=$1
-
+#rewriteRule ^$ ?controller=admin&action=search
+#rewriteRule ^$ ?controller=home&action=index
+rewriteRule ^home$ ?controller=home&action=index
+#rewriteRule ^search$ index.php?controller=admin&action=search [QSA,L]
 
 # Dang nhap
-rewriteRule ^management/login$ ?controller=admin&action=login
+rewriteRule ^login$ ?controller=account&action=login
 
 #Dang xuat
-rewriteRule ^management/logout$ ?controller=admin&action=logout
+rewriteRule ^logout$ ?controller=account&action=logout
 
+## Create admin
+#rewriteRule ^management/create$ ?controller=admin&action=create
+#
+## Edit admin
+#rewriteRule ^management/edit/([0-9]+)$ ?controller=admin&action=edit&id=$1
+#
+#
+## Delete admin
+#rewriteRule ^management/delete/([0-9]+)$ ?controller=admin&action=delete&id=$1
+#
+## Search user
+#rewriteRule ^management/search-user/([0-9]+)$ ?controller=admin&action=searchUser&page_id=$1
+#rewriteRule ^management/search-user$ index.php?controller=admin&action=searchUser [QSA,L]
+#
+## Create user
+#rewriteRule ^management/create-user$ ?controller=admin&action=createUser
+#
+## Edit user
+#rewriteRule ^management/edit-user/([0-9]+)$ ?controller=admin&action=editUser&id=$1
+#
+## Delete user
+#rewriteRule ^management/delete-user/([0-9]+)$ ?controller=admin&action=deleteUser&id=$1
+#
+#
 
-#### Module UserModel
-rewriteRule  ^login$ ?controller=user&action=login
-rewriteRule  ^logout$ ?controller=user&action=logout
-rewriteRule  ^profile$ ?controller=user&action=profile
+#
+#
+##### Module UserModel
+#rewriteRule  ^login$ ?controller=user&action=login
+#rewriteRule  ^logout$ ?controller=user&action=logout
+#rewriteRule  ^profile$ ?controller=user&action=profile

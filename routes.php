@@ -5,6 +5,8 @@ ob_start();
 
 date_default_timezone_set("Asia/Ho_Chi_Minh");
 $controllers = array(
+    'account' => ['login', 'logout'],
+    'home' => ['index'],
     'admin' => ['search', 'login', 'logout', 'create', 'addAvatar',
         'search', 'edit', 'delete', 'createUser', 'searchUser',
         'editUser', 'deleteUser'],
@@ -18,17 +20,10 @@ if (!array_key_exists($controller, $controllers) || !in_array($action, $controll
     $controller = 'pages';
     $action = 'error';
 }
-if($controller == 'admin'){
-    if(!isset($_SESSION['admin']['is_admin_login']) && $action != 'login'){
-        redirect_to('/management/login');
-    }
-}
-//
-if($controller == 'user'){
-    if(!isset($_SESSION['user']['is_user_login']) && $action != 'login'){
-        redirect_to('/login');
-    }
-}
+
+//if(!isset($_SESSION['account']['is_login']) && $action != 'login'){
+//    redirect_to('login');
+//}
 
 // Nhúng file định nghĩa controller vào để có thể dùng được class định nghĩa trong file đó
 include_once('controllers/' . $controller . 'Controller.php');

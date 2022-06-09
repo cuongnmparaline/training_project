@@ -46,6 +46,7 @@ class AdminController extends BaseController
         if($this->isSuperAdmin()){
             redirect_to('search');
         } else {
+            die('okoke');
             redirect_to('search-user');
         }
     }

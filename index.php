@@ -19,5 +19,4 @@ if (isset($_GET['controller'])) {
     $controller = 'user';
     $action = 'profile';
 }
-
 require_once('routes.php');

@@ -7,35 +7,10 @@ abstract class BaseValidate{
 
     public function __construct()
     {
-        $this->adminModel = new AdminModel();
+        $this->accountModel = new AccountModel();
         $this->userModel = new UserModel();
     }
 
-    public function checkLogin($email, $password, $typeModel = 'admin'){
-        if (empty($email)) {
-            flash_error('errorLogin', 'email', EMAIL_BLANK);
-        }elseif (!$this->isEmail($email)) {
-            flash_error('errorLogin', 'email', EMAIL_VALIDATE);
-        }
-        // Check password
-        if (empty($password)) {
-            flash_error('errorLogin', 'password', PASS_BLANK);
-        } elseif (!$this->isPassword($password)) {
-            flash_error('errorLogin', 'password', PASS_VALIDATE);
-        }
-        if($typeModel == 'user'){
-            $account = $this->userModel->checkLogin($email, md5($password));
-        } else {
-            $account = $this->adminModel->checkLogin($email,md5($password));
-        }
-        if(empty($account)){
-            flash_error('errorLogin', 'account', ACCOUNT_INCORRECT);
-        }
-        if(empty($_SESSION['errorLogin'])){
-            return $account;
-        }
-        return false;
-    }
 
     protected function checkEmail($email, $errorType = 'errorCreate', $typeModel = 'admin'){
         if (!$this->isEmail($email)) {

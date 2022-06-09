@@ -23,7 +23,7 @@ function flash($name = '', $message = '', $class = 'alert alert-success'){
     }
 }
 
-function flash_error($type = '', $name = '', $message = '', $class = 'error'){
+function flash_error($type = '', $name = '', $message = '', $class = 'danger'){
     if(!empty($name)){
         //No message, create it
         if(!empty($message) && empty($_SESSION[$type][$name])){
@@ -39,7 +39,8 @@ function flash_error($type = '', $name = '', $message = '', $class = 'error'){
         //Message exists, display it
         elseif(!empty($_SESSION[$type][$name]) && empty($message)){
             $class = !empty($_SESSION[$type][$name.'_class']) ? $_SESSION[$type][$name.'_class'] : 'success';
-            echo "<p class='{$class}'>{$_SESSION[$type][$name]}</p>";
+            echo "<div class='alert alert-{$class} alert-dismissible'>{$_SESSION[$type][$name]}</div>";
+//            echo "<p class='{$class}'>{$_SESSION[$type][$name]}</p>";
             unset($_SESSION[$type][$name]);
             unset($_SESSION[$type][$name.'_class']);
         }
