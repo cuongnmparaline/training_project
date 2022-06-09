@@ -22,7 +22,6 @@ class HomeController extends BaseController
 
     public function index()
     {
-        die('okoeke');
 //        $fields = ['id', 'hinh_anh', 'ho', 'ten', 'email', 'quyen'];
 //        $totalAdmins = $this->model->get($fields);
 //        $numPerPage = NUM_PER_PAGE;
@@ -35,7 +34,7 @@ class HomeController extends BaseController
 //            'getData' => isset($_GET) ? $_GET : [],
 //            'totalNumberPage' => $totalNumberPage
 //        ];
-//        $this->render('search', $dataView);
+        $this->render('index');
     }
 
     public function create()

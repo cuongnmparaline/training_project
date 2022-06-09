@@ -1,65 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Account manager</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <base href="<?=BASE_URL?>">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
-    <link href="assets/css/bootstrap/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    <link href="assets/css/bootstrap/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
-    <link href="assets/reset.css" rel="stylesheet" type="text/css"/>
-    <link href="assets/css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
-    <link href="assets/style.css" rel="stylesheet" type="text/css"/>
-    <link href="assets/responsive.css" rel="stylesheet" type="text/css"/>
-    <link rel="stylesheet" href="public/login.css">
-    <script src="assets/js/jquery-2.2.4.min.js" type="text/javascript"></script>
-    <script src="assets/js/customs.js" type="text/javascript"></script>
-    <script src="assets/js/bootstrap/bootstrap.min.js" type="text/javascript"></script>
-    <script src="assets/js/plugins/ckeditor/ckeditor.js" type="text/javascript"></script>
-    <script src="assets/js/main.js" type="text/javascript"></script>
-    <script src="assets/js/app.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="assets/dist/images/logo.jpg" type="image/x-icon"/>
+    <title>ĐỀ TÀI THỰC TẬP | QUẢN LÝ NHÂN SỰ</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="assets/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="assets/bower_components/font-awesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="assets/bower_components/Ionicons/css/ionicons.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="assets/bower_components/bootstrap-daterangepicker/daterangepicker.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="assets/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+    <!-- bootstrap datepicker -->
+    <link rel="stylesheet" href="assets/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="assets/plugins/iCheck/all.css">
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="assets/bower_components/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css">
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="assets/plugins/timepicker/bootstrap-timepicker.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="assets/bower_components/select2/dist/css/select2.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="assets/dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="assets/dist/css/skins/_all-skins.min.css">
 
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Google Font -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
+<style>
+    .example-modal .modal {
+        position: relative;
+        top: auto;
+        bottom: auto;
+        right: auto;
+        left: auto;
+        display: block;
+        z-index: 1;
+    }
 
-<body>
-<div id="site">
-    <div id="container">
-        <div id="header-wp">
-            <div class="wp-inner clearfix">
-                <a href="/management" title="" id="logo" class="fl-left">ACCOUNT MANAGEMENT</a>
-                <ul id="main-menu" class="fl-left">
-                    <?php if($this->isSuperAdmin()){
-                        ?>
-                        <li>
-                            <a <?php if(isset($_SESSION['current_page']) && $_SESSION['current_page'] == 'search') echo "class='active'";?> href="management/search" title="">Admin Management</a>
-                            <ul class="sub-menu">
-                                <li>
-                                    <a href="management/search" title="">Search</a>
-                                </li>
-                                <li>
-                                    <a href="management/create" title="">Create</a>
-                                </li>
-                            </ul>
-                        </li>
-                    <?php
-                    }?>
-                    <li>
-                        <a <?php if(isset($_SESSION['current_page']) && $_SESSION['current_page'] == 'search_user') echo "class='active'";?> href="management/search-user" title="">User Management</a>
-                        <ul class="sub-menu">
-                            <li>
-                                <a href="management/search-user" title="">Search</a>
-                            </li>
-                            <li>
-                                <a href="management/create-user" title="">Create</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="management/logout" title="">Log out</a>
-                    </li>
-                </ul>
-
-            </div>
-        </div>
+    .example-modal .modal {
+        background: transparent !important;
+    }
+</style>

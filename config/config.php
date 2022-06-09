@@ -16,7 +16,7 @@ define("DB_NAME", "quanly_nhansu");
 
 ### BASE URL
 
-define("BASE_URL", "https://paraline.quanlynhansu.pro");
+define("BASE_URL", "https://paraline.quanlynhansu.pro/");
 
 
 ## Dateime
