@@ -34,6 +34,7 @@ class AccountController extends BaseController
         }
         $_SESSION['account'] = [
             'is_login' => true,
+            'account_email' => $admin->email,
             'account_name' => $admin->ho." ".$admin->ten,
             'admin_id' => $admin->id,
             'role_type' => $admin->quyen

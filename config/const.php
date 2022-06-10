@@ -1,10 +1,16 @@
 <?php
 
-define('SUPER_ADMIN', 1);
-define('ADMIN', 2);
+define('ADMIN', 1);
+define('STAFF', 0);
 
 define("DEL_FALSE", 0);
 define("DEL_TRUE", 1);
+
+define("WORKING", 1);
+define("RETIRED", 0);
+
+define("MALE", 1);
+define("FEMALE", 0);
 
 define("MAX_FILE_SIZE" ,5242880);
 

@@ -2,16 +2,20 @@ RewriteEngine On
 
 #### Module AdminModel
 
-# Search admin
-#rewriteRule ^$ ?controller=admin&action=search
-#rewriteRule ^$ ?controller=home&action=index
+# Home
+rewriteRule ^$ ?controller=home&action=index [QSA,L]
 rewriteRule ^home$ ?controller=home&action=index
-#rewriteRule ^search$ index.php?controller=admin&action=search [QSA,L]
+rewriteRule ^home/ds-nhanvien$ ?controller=home&action=listEmployee
+rewriteRule ^home/ds-taikhoan$ ?controller=home&action=listAccount
 
-# Dang nhap
+# Employee
+rewriteRule ^nhan-vien$ ?controller=employee&action=index
+rewriteRule ^nhan-vien/phong-ban$ ?controller=employee&action=department
+
+# Login
 rewriteRule ^login$ ?controller=account&action=login
 
-#Dang xuat
+# Logout
 rewriteRule ^logout$ ?controller=account&action=logout
 
 ## Create admin

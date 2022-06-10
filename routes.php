@@ -6,7 +6,8 @@ ob_start();
 date_default_timezone_set("Asia/Ho_Chi_Minh");
 $controllers = array(
     'account' => ['login', 'logout'],
-    'home' => ['index'],
+    'home' => ['index', 'listEmployee', 'listAccount'],
+    'employee' => ['index', 'department'],
     'admin' => ['search', 'login', 'logout', 'create', 'addAvatar',
         'search', 'edit', 'delete', 'createUser', 'searchUser',
         'editUser', 'deleteUser'],

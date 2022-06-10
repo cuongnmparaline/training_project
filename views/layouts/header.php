@@ -1,10 +1,14 @@
+<?php
+    $accountInfo = getAccountInfo($_SESSION['account']['account_email']);
+?>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
+    <base href="<?=BASE_URL?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" href="assets/dist/images/logo.jpg" type="image/x-icon"/>
-    <title>ĐỀ TÀI THỰC TẬP | QUẢN LÝ NHÂN SỰ</title>
+    <title>BÀI TẬP LỚN | QUẢN LÝ NHÂN SỰ</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->

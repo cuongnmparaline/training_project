@@ -6,6 +6,7 @@ require_once ('helpers/message.php');
 require_once ('helpers/url.php');
 require_once('config/config.php');
 require_once('config/const.php');
+require_once('components/common.php');
 
 
 if (isset($_GET['controller'])) {

@@ -1,22 +1,22 @@
 <?php
 
-function set_role($role){
-    if(!empty($role)){
-        switch ($role) {
-            case 1:
-                return "Super Admin";
-    break;
-            case 2:
-                return "Admin";
-    break;
-            default:
-                return "Not found";
-        }
+function setRole($role)
+{
+    switch ($role) {
+        case 1:
+            return "Quản trị viên";
+            break;
+        case 0:
+            return "Nhân viên";
+            break;
+        default:
+            return "";
     }
 }
 
-function set_status($status){
-    if(!empty($status)){
+function set_status($status)
+{
+    if (!empty($status)) {
         switch ($status) {
             case 1:
                 return "Active";
@@ -28,5 +28,24 @@ function set_status($status){
                 return "Not found";
         }
     }
+}
+
+function setGender($gender)
+{
+    switch ($gender) {
+        case 1:
+            return "Nam";
+            break;
+        case 0:
+            return "Nữ";
+            break;
+        default:
+            return "";
+    }
+}
+
+function getFullName($firstName, $lastName)
+{
+    return $firstName . " " . $lastName;
 }
 

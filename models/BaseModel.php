@@ -9,6 +9,16 @@ abstract class BaseModel implements ModelInterface {
         $this->db = DB::getInstance();
     }
 
+    public function getAll(){
+        $where = "WHERE del_flag =:del_flag";
+        $sth = $this->db->prepare("SELECT *
+        FROM $this->table {$where}");
+        $sth->bindValue(':del_flag', DEL_FALSE);
+        if($sth->execute()){
+            return $sth->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }
+
     public function get($fields, $condition = [])
     {
         $orderBy = '';
