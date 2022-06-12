@@ -27,6 +27,7 @@ define("VERIFY_INCORRECT", "Password verify is not match");
 define("ST_WRONG", "Có gì đó sai sai!");
 define("CANT_FOUND_ACC", "Can not found account!");
 define("CANT_FOUND_DEPARTMENT", "Không thể tìm thấy phòng ban!");
+define("CANT_FOUND_EDUCATION", "Không thể tìm thấy trình độ!");
 
 
 # Department Success notification

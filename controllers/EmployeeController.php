@@ -124,4 +124,39 @@ class EmployeeController extends BaseController
         }
     }
 
+    public function editEducation(){
+        if (!isset($_GET['id'])) {
+            flash("error_message", CANT_FOUND_EDUCATION);
+            redirect_to('nhan-vien/trinh-do');
+        }
+
+        $id = (int)$_GET['id'];
+
+        $education = $this->educationModel->getById($id);
+        if (empty($education)) {
+            flash("error_message", CANT_FOUND_EDUCATION);
+            redirect_to('nhan-vien/trinh-do');
+        }
+        if (empty($_POST)) {
+            return $this->render('education/editEducation', $education);
+        }
+
+        $validatePostData = $this->getParams();
+        $validateStatus = $this->departmentValidate->validateEdit($validatePostData);
+        if (!$validateStatus) {
+            return $this->render('education/editEducation', $education);
+        }
+
+        $dataEditAdmin = [
+            'ma_phong_ban' => $_POST['departmentCode'],
+            'ten_phong_ban' => $_POST['name'],
+            'ghi_chu' => $_POST['description'],
+        ];
+
+        if ($this->departmentModel->update($dataEditAdmin, $id)) {
+            flash("success_message", DEPARTMENT_UPDATED);
+            redirect_to('/nhan-vien/phong-ban');
+        }
+    }
+
 }

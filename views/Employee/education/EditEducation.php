@@ -8,12 +8,12 @@ require_once('views/layouts/sidebar.php');
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Phòng ban
+            Trình độ
         </h1>
         <ol class="breadcrumb">
             <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-            <li><a href="phong-ban.php?p=staff&a=room">Phòng ban</a></li>
-            <li class="active">Chỉnh sửa phòng ban</li>
+            <li><a href="trinh-do.php?p=staff&a=level">Trình độ</a></li>
+            <li class="active">Chỉnh sửa trình độ</li>
         </ol>
     </section>
 
@@ -23,7 +23,7 @@ require_once('views/layouts/sidebar.php');
             <div class="col-xs-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Chỉnh sửa phòng ban</h3>
+                        <h3 class="box-title">Chỉnh sửa trình độ</h3>
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
@@ -31,30 +31,30 @@ require_once('views/layouts/sidebar.php');
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
+
                         <form action="" method="POST">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Mã phòng ban: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" name="departmentCode" value="<?php echo $ma_phong_ban ?>" readonly>
+                                        <label for="exampleInputEmail1">Mã trình độ: </label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" name="positionCode" value="<?= $ma_trinh_do ?>" readonly>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Tên phòng ban: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên phòng ban" value="<?php echo $ten_phong_ban; ?>" name="name">
+                                        <label for="exampleInputEmail1">Tên trình độ: </label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên trình độ" name="titleLevel" value="<?= $ten_trinh_do ?>">
                                     </div>
-                                    <?=flash_error('errorEdit', 'name')?>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Mô tả: </label>
-                                        <textarea id="editor1" rows="10" cols="80" name="description"><?php echo $ghi_chu ?>
+                                        <textarea id="editor1" rows="10" cols="80" name="description"><?= $ghi_chu ?>
                       </textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Người sửa: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" value="<?=getInsertedName($nguoi_tao)?>" name="personEdit" readonly>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" value="<?=getInsertedName($nguoi_tao)?>" name="personCreate" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Ngày sửa: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo date('d-m-Y H:i:s'); ?>" name="dateEdit" readonly>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo date('d-m-Y H:i:s'); ?>" name="dateCreate" readonly>
                                     </div>
                                     <!-- /.form-group -->
                                     <button type="submit" class="btn btn-warning" name="save"><i class="fa fa-save"></i> Lưu lại </button>
