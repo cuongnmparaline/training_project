@@ -1,12 +1,13 @@
 <?php
 
 require_once('models/AccountModel.php');
+require_once('helpers/account.php');
 
 if (!function_exists('getAccountInfo')) {
-    function getAccountInfo($email)
+    function getAccountInfo($id)
     {
         $accountModel = new AccountModel();
-        return $accountModel->getAccountInfo($email);
+        return $accountModel->getById($id);
     }
 }
 
@@ -22,6 +23,17 @@ if (!function_exists('getPage')) {
     }
 }
 
+if (!function_exists('getInsertedName')) {
+    function getInsertedName($id)
+    {
+        if(!empty($id)){
+            $account = getAccountInfo($id);
+            return getFullName($account['ho'], $account['ten']);
+        }
+        return  "";
+    }
+}
+
 if (!function_exists('generateCode')) {
     function generateCode($type)
     {
@@ -29,8 +41,11 @@ if (!function_exists('generateCode')) {
             case 'department':
                 return "MPB" . time();
                 break;
-            case 2:
-                return "Banned";
+            case 'position':
+                return "MCV";
+                break;
+            case 'education':
+                return "MTD" . time();
                 break;
             default:
                 return "Not found";

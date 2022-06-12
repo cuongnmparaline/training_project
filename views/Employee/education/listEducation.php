@@ -15,12 +15,12 @@ require_once('views/layouts/sidebar.php');
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" name="idRoom">
-                        Bạn có thực sự muốn xóa phòng ban này?
+                        <input type="hidden" name="idLevel">
+                        Bạn có thực sự muốn xóa trình độ này?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
-                        <button type="submit" class="btn btn-primary" name="delete">Xóa</button>
+                        <a href="" class="btn btn-primary deleteButton">Xóa</a>
                     </div>
                 </form>
             </div>
@@ -32,54 +32,61 @@ require_once('views/layouts/sidebar.php');
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Phòng ban
+                Trình độ
             </h1>
             <ol class="breadcrumb">
-                <li><a href="home"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-                <li><a href="nhan-vien/phong-ban">Phòng ban</a></li>
-                <li class="active">Tạo phòng ban</li>
+                <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+                <li><a href="trinh-do.php?p=staff&a=level">Trình độ</a></li>
+                <li class="active">Thêm trình độ</li>
             </ol>
         </section>
+
+        <!-- Main content -->
         <section class="content">
             <div class="row">
                 <div class="col-xs-12">
                     <div class="box box-primary">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Tạo phòng ban</h3>
+                            <h3 class="box-title">Thêm trình độ</h3>
                             <div class="box-tools pull-right">
                                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                 <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
                             </div>
                         </div>
+                        <!-- /.box-header -->
                         <div class="box-body">
+                            <?php flash('success_message'); ?>
+                            <?php flash_error('error_message'); ?>
                             <form action="" method="POST">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1">Mã phòng ban: </label>
-                                            <input type="text" class="form-control" id="exampleInputEmail1" name="roomCode" value="<?= generateCode('department')?>>" readonly>
+                                            <label for="exampleInputEmail1">Mã trình độ: </label>
+                                            <input type="text" class="form-control" id="exampleInputEmail1" name="positionCode" value="<?= generateCode('education')?>" readonly>
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1">Tên phòng ban: </label>
-                                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên phòng ban" name="roomName">
+                                            <label for="exampleInputEmail1">Tên trình độ: </label>
+                                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên trình độ" name="name">
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Mô tả: </label>
                                             <textarea id="editor1" rows="10" cols="80" name="description">
-                                        </textarea>
+                                            </textarea>
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Người tạo: </label>
-                                            <input type="text" class="form-control" id="exampleInputEmail1" value="<?=getFullName($accountInfo->ho, $accountInfo->ten)?>" name="personCreate" readonly>
+                                            <input type="text" class="form-control" id="exampleInputEmail1" value="<?=getFullName($accountInfo['ho'], $accountInfo['ten'])?>" name="personCreate" readonly>
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Ngày tạo: </label>
-                                            <input type="text" class="form-control" id="exampleInputEmail1" value="<?= date('d-m-Y H:i:s'); ?>" name="dateCreate" readonly>
+                                            <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo date('d-m-Y H:i:s'); ?>" name="dateCreate" readonly>
                                         </div>
-                                        <button type='submit' class='btn btn-primary' name='save'><i class='fa fa-plus'></i> Tạo phòng ban</button>
-
+                                        <!-- /.form-group -->
+                                        <button type='submit' class='btn btn-primary' name='save'><i class='fa fa-plus'></i> Thêm trình độ</button>
                                     </div>
+                                    <!-- /.col -->
                                 </div>
+                                <!-- /.row -->
                             </form>
                         </div>
                         <!-- /.box-body -->
@@ -87,7 +94,7 @@ require_once('views/layouts/sidebar.php');
                     <!-- /.box -->
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">Danh sách phòng ban</h3>
+                            <h3 class="box-title">Danh sách trình độ</h3>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -96,8 +103,8 @@ require_once('views/layouts/sidebar.php');
                                     <thead>
                                     <tr>
                                         <th>STT</th>
-                                        <th>Mã Phòng</th>
-                                        <th>Tên phòng</th>
+                                        <th>Mã trình độ</th>
+                                        <th>Tên trình độ</th>
                                         <th>Mô tả</th>
                                         <th>Người tạo</th>
                                         <th>Ngày tạo</th>
@@ -110,26 +117,23 @@ require_once('views/layouts/sidebar.php');
                                     <tbody>
                                     <?php
                                     $count = 1;
-                                    foreach ($departments as $department)
+                                    foreach ($educations as $education)
                                     {
                                         ?>
                                         <tr>
                                             <td><?php echo $count; ?></td>
-                                            <td><?php echo $department['ma_phong_ban']; ?></td>
-                                            <td><?php echo $department['ten_phong_ban']; ?></td>
-                                            <td><?php echo $department['ghi_chu']; ?></td>
-                                            <td><?php echo $department['nguoi_tao']; ?></td>
-                                            <td><?php echo $department['ngay_tao']; ?></td>
-                                            <td><?php echo $department['nguoi_sua']; ?></td>
-                                            <td><?php echo $department['ngay_sua']; ?></td>
+                                            <td><?php echo $education['ma_trinh_do']; ?></td>
+                                            <td><?php echo $education['ten_trinh_do']; ?></td>
+                                            <td><?php echo $education['ghi_chu']; ?></td>
+                                            <td><?php echo getInsertedName($education['nguoi_tao']) ?></td>
+                                            <td><?php echo $education['ngay_tao']; ?></td>
+                                            <td><?php echo getInsertedName($education['nguoi_sua']); ?></td>
+                                            <td><?php echo $education['ngay_sua']; ?></td>
                                             <th>
-                                                <form method='POST'>
-                                                    <input type='hidden' value="<?= $department['id'] ?>" name='idRoom'/>
-                                                    <button type='submit' class='btn bg-orange btn-flat'  name='edit'><i class='fa fa-edit'></i></button>
-                                                </form>
+                                                <a href="/nhan-vien/trinh-do/<?=$education['id']?>" class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
                                             </th>
                                             <th>
-                                                <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="<?= $department['id'] ?>"><i class='fa fa-trash'></i></button>
+                                                <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="/nhan-vien/xoa-trinh-do/<?=$education['id']?>"><i class='fa fa-trash'></i></button>
                                             </th>
                                         </tr>
                                         <?php

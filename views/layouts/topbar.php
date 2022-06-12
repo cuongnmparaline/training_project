@@ -19,8 +19,8 @@
                 <ul class="nav navbar-nav">
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <img src="<?= IMG_LOCATION .'account/'.$accountInfo->hinh_anh?>" class="user-image" alt="User Image">
-                            <span class="hidden-xs"><?= getFullName($accountInfo->ho, $accountInfo->ten) ?></span>
+                            <img src="<?= IMG_LOCATION .'account/'.$accountInfo['hinh_anh']?>" class="user-image" alt="User Image">
+                            <span class="hidden-xs"><?= getFullName($accountInfo['ho'], $accountInfo['ten']) ?></span>
                         </a>
                         <ul class="dropdown-menu">
                             <!-- User image -->

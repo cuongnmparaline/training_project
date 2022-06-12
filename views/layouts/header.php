@@ -1,5 +1,5 @@
 <?php
-    $accountInfo = getAccountInfo($_SESSION['account']['account_email']);
+    $accountInfo = getAccountInfo($_SESSION['account']['account_id']);
 ?>
 <!DOCTYPE html>
 <html>

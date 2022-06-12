@@ -10,6 +10,6 @@ interface ModelInterface
 
     public function update($data, $id);
 
-    public function getById($fields, $id);
+    public function getById($id);
 
 }

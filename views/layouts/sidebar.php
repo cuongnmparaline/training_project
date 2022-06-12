@@ -8,14 +8,14 @@ $page = getPage();
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="<?= IMG_LOCATION .'account/'.$accountInfo->hinh_anh?>" class="img-circle" alt="User Image">
+                <img src="<?= IMG_LOCATION .'account/'.$accountInfo['hinh_anh']?>" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
                 <p>
-                    <?= getFullName($accountInfo->ho, $accountInfo->ten) ?>
+                    <?= getFullName($accountInfo['ho'], $accountInfo['ten']) ?>
                 </p>
                 <a href="#"><i class="fa fa-circle text-success"></i>
-                    <?=setRole($accountInfo->quyen)?>
+                    <?=setRole($accountInfo['quyen'])?>
                 </a>
             </div>
         </div>
@@ -56,8 +56,8 @@ $page = getPage();
                 </a>
                 <ul class="treeview-menu">
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'department') ? 'active' : '' ?>"><a href="nhan-vien/phong-ban"><i class="fa fa-circle-o"></i> Phòng ban</a></li>
-                    <li class=""><a href="chuc-vu.php?p=staff&a=position"><i class="fa fa-circle-o"></i> Chức vụ</a></li>
-                    <li class=""><a href="trinh-do.php?p=staff&a=level"><i class="fa fa-circle-o"></i> Trình độ</a></li>
+                    <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'position') ? 'active' : '' ?>"><a href="nhan-vien/chuc-vu"><i class="fa fa-circle-o"></i> Chức vụ</a></li>
+                    <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'education') ? 'active' : '' ?>"><a href="nhan-vien/trinh-do"><i class="fa fa-circle-o"></i> Trình độ</a></li>
                     <li class=""><a href="chuyen-mon.php?p=staff&a=specialize"><i class="fa fa-circle-o"></i> Chuyên môn</a></li>
                     <li class=""><a href="bang-cap.php?p=staff&a=certificate"><i class="fa fa-circle-o"></i> Bằng cấp</a></li>
                     <li class=""><a href="loai-nhan-vien.php?p=staff&a=employee-type"><i class="fa fa-circle-o"></i> Loại nhân viên</a></li>

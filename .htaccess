@@ -10,7 +10,17 @@ rewriteRule ^home/ds-taikhoan$ ?controller=home&action=listAccount
 
 # Employee
 rewriteRule ^nhan-vien$ ?controller=employee&action=index
-rewriteRule ^nhan-vien/phong-ban$ ?controller=employee&action=department
+
+
+#Department
+rewriteRule ^nhan-vien/phong-ban$ ?controller=employee&action=department [QSA,L]
+rewriteRule ^nhan-vien/phong-ban/([0-9]+)$ ?controller=employee&action=editDepartment&id=$1
+rewriteRule ^nhan-vien/xoa-phong-ban/([0-9]+)$ ?controller=employee&action=deleteDepartment&id=$1
+
+#Education
+rewriteRule ^nhan-vien/trinh-do$ ?controller=employee&action=education [QSA,L]
+rewriteRule ^nhan-vien/trinh-do/([0-9]+)$ ?controller=employee&action=editEducation&id=$1
+rewriteRule ^nhan-vien/xoa-trinh-do/([0-9]+)$ ?controller=employee&action=deleteEducation&id=$1
 
 # Login
 rewriteRule ^login$ ?controller=account&action=login

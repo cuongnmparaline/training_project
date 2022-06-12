@@ -49,30 +49,26 @@ abstract class BaseModel implements ModelInterface {
         return false;
     }
 
-    public function getById($fields, $id)
+    public function getById($id)
     {
-        $where = "WHERE id = :id AND del_flag = :del_cond";
-        $fields = implode(', ', $fields);
-        $sth = $this->db->prepare(
-            "SELECT $fields
-            FROM $this->table
-            {$where}"
-        );
+        $where = "WHERE id = :id AND del_flag =:del_flag";
+        $sth = $this->db->prepare("SELECT *
+        FROM $this->table
+        {$where}");
         $sth->bindValue('id', $id);
-        $sth->bindValue('del_cond', DEL_FALSE);
-        if($sth->execute()){
-            return $sth->fetch(PDO::FETCH_ASSOC);
-        }
-        return false;
+        $sth->bindValue(':del_flag', DEL_FALSE);
+        $sth->execute();
+        $check = $sth->rowCount();
+        return ($check > 0) ? $sth->fetch(PDO::FETCH_ASSOC) : false;
     }
 
     public function update($data, $id)
     {
         $ins = array(
-            'upd_id' => isset($_SESSION['admin']['admin_id']) ? $_SESSION['admin']['admin_id'] : 9999,
-            'upd_datetime' => date(DATE_FORMAT)
+            'nguoi_sua' => isset($_SESSION['account']['account_id']) ? $_SESSION['account']['account_id'] : 9999,
+            'ngay_sua' => date(DATE_FORMAT)
         );
-        if(!in_array('upd_id', $data) && !in_array('upd_datetime', $data)){
+        if(!in_array('nguoi_sua', $data) && !in_array('ngay_sua', $data)){
             $data = array_merge($data, $ins);
         }
         $key = array_keys($data);
@@ -106,10 +102,10 @@ abstract class BaseModel implements ModelInterface {
 
     public function create($data){
         $ins = array(
-            'ins_id' => isset($_SESSION['admin']['admin_id']) ? $_SESSION['admin']['admin_id'] : 9999,
-            'ins_datetime' => date(DATE_FORMAT)
+            'nguoi_tao' => isset($_SESSION['account']['account_id']) ? $_SESSION['account']['account_id'] : 9999,
+            'ngay_tao' => date(DATE_FORMAT)
         );
-        if(!in_array('ins_id', $data) && !in_array('ins_datetime', $data)){
+        if(!in_array('nguoi_tao', $data) && !in_array('ngay_tao', $data)){
             $data = array_merge($data, $ins);
         }
         $key = array_keys($data);
@@ -120,7 +116,7 @@ abstract class BaseModel implements ModelInterface {
         foreach ($data as $field => $value){
             $sth->bindValue(":$field", $value);
         }
-        $sth->debugDumpParams();
+
         if($sth->execute()){
             return true;
         }

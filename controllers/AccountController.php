@@ -36,7 +36,7 @@ class AccountController extends BaseController
             'is_login' => true,
             'account_email' => $admin->email,
             'account_name' => $admin->ho." ".$admin->ten,
-            'admin_id' => $admin->id,
+            'account_id' => $admin->id,
             'role_type' => $admin->quyen
         ];
         redirect_to('home');

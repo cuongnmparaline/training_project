@@ -9,7 +9,7 @@ abstract class BaseController
         $this->model = $this->autoloadModel();
     }
 
-    protected function render($file, $data = array())
+    protected function render($file, $data = [])
     {
         $view_file = 'views/' . $this->folder . '/' . $file . '.php';
         if (is_file($view_file)) {
@@ -19,7 +19,7 @@ abstract class BaseController
             $content = ob_get_clean();
             require_once('views/layouts/application.php');
         } else {
-            header('Location: search.php?controller=pages&action=error');
+            header('Location: ?controller=pages&action=error');
         }
     }
 

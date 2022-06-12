@@ -4,9 +4,9 @@
 
 
 #### Validate error
-define("EMAIL_BLANK", "Email can not be blank");
-define("PASS_BLANK", "Password can not be blank");
-define("NAME_BLANK", "Name can not be blank");
+define("EMAIL_BLANK", "Email không được để trống");
+define("PASS_BLANK", "Mật khẩu không được để trống");
+define("NAME_BLANK", "Tên không được để trống");
 define("ROLE_BLANK", "You have to choose admin role");
 define("AVATAR_BLANK", "Please upload your avatar");
 define("PASS_VERIFY_BLANK", "Please verify your password");
@@ -24,11 +24,22 @@ define("ACCOUNT_INCORRECT", "Incorrect email or password");
 define("VERIFY_INCORRECT", "Password verify is not match");
 
 
-define("ST_WRONG", "Something wrong happened!");
+define("ST_WRONG", "Có gì đó sai sai!");
 define("CANT_FOUND_ACC", "Can not found account!");
+define("CANT_FOUND_DEPARTMENT", "Không thể tìm thấy phòng ban!");
 
 
-# Success notification
+# Department Success notification
+define("DEPARTMENT_REMOVED", "Xóa bỏ phòng ban thành công!");
+define("DEPARTMENT_CREATED", "Tạo mới phòng ban thành công!");
+define("DEPARTMENT_UPDATED", "Cập nhập phòng ban thành công!");
+
+# Education Success notification
+define("EDUCATION_REMOVED", "Xóa bỏ trình độ thành công!");
+define("EDUCATION_CREATED", "Tạo mới trình độ thành công!");
+define("EDUCATION_UPDATED", "Cập nhập trình độ thành công!");
+
+
 define("ADMIN_REMOVED", "Admin was removed successfully!");
 define("ADMIN_CREATED", "Admin was created successfully!");
 define("ADMIN_UPDATED", "Admin was updated successfully!");

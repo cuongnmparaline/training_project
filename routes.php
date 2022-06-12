@@ -7,7 +7,7 @@ date_default_timezone_set("Asia/Ho_Chi_Minh");
 $controllers = array(
     'account' => ['login', 'logout'],
     'home' => ['index', 'listEmployee', 'listAccount'],
-    'employee' => ['index', 'department'],
+    'employee' => ['index', 'department', 'editDepartment', 'deleteDepartment', 'education', 'editEducation', 'deleteEducation'],
     'admin' => ['search', 'login', 'logout', 'create', 'addAvatar',
         'search', 'edit', 'delete', 'createUser', 'searchUser',
         'editUser', 'deleteUser'],
@@ -22,9 +22,12 @@ if (!array_key_exists($controller, $controllers) || !in_array($action, $controll
     $action = 'error';
 }
 
-//if(!isset($_SESSION['account']['is_login']) && $action != 'login'){
-//    redirect_to('login');
-//}
+if(!isset($_SESSION['account']['is_login']) && $action != 'login'){
+    redirect_to('login');
+}
+//var_dump($controller);
+//var_dump($action);
+//die;
 
 // Nhúng file định nghĩa controller vào để có thể dùng được class định nghĩa trong file đó
 include_once('controllers/' . $controller . 'Controller.php');
