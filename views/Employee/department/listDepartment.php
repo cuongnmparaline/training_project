@@ -53,7 +53,7 @@ require_once('views/layouts/sidebar.php');
                         </div>
                         <div class="box-body">
                             <?php flash('success_message'); ?>
-                            <?php flash_error('error_message'); ?>
+                            <?php flash('error_message'); ?>
                             <form action="" method="POST">
                                 <div class="row">
                                     <div class="col-md-12">
@@ -63,12 +63,13 @@ require_once('views/layouts/sidebar.php');
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Tên phòng ban: </label>
-                                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên phòng ban" name="name">
+                                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên phòng ban" name="name" value="<?= isset($post['name']) ? $post['name'] : ''?>">
                                         </div>
                                         <?=flash_error('errorCreate', 'name')?>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Mô tả: </label>
                                             <textarea id="editor1" rows="10" cols="80" name="description">
+                                                <?= isset($post['description']) ? $post['description'] : ''?>
                                         </textarea>
                                         </div>
                                         <div class="form-group">

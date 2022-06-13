@@ -15,8 +15,8 @@ require_once('views/layouts/sidebar.php');
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" name="idLevel">
-                        Bạn có thực sự muốn xóa trình độ này?
+                        <input type="hidden" name="idSpecial">
+                        Bạn có thực sự muốn xóa chuyên môn này?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
@@ -32,12 +32,12 @@ require_once('views/layouts/sidebar.php');
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Trình độ
+                Chuyên môn
             </h1>
             <ol class="breadcrumb">
                 <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-                <li><a href="trinh-do.php?p=staff&a=level">Trình độ</a></li>
-                <li class="active">Thêm trình độ</li>
+                <li><a href="chuyen-mon.php?p=staff&a=specialize">Chuyên môn</a></li>
+                <li class="active">Thêm chuyên môn</li>
             </ol>
         </section>
 
@@ -47,7 +47,7 @@ require_once('views/layouts/sidebar.php');
                 <div class="col-xs-12">
                     <div class="box box-primary">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Thêm trình độ</h3>
+                            <h3 class="box-title">Thêm chuyên môn</h3>
                             <div class="box-tools pull-right">
                                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                 <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
@@ -61,19 +61,18 @@ require_once('views/layouts/sidebar.php');
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1">Mã trình độ: </label>
-                                            <input type="text" class="form-control" id="exampleInputEmail1" name="educationCode" value="<?= generateCode('education')?>" readonly>
+                                            <label for="exampleInputEmail1">Mã chuyên môn: </label>
+                                            <input type="text" class="form-control" id="exampleInputEmail1" name="techniqueCode" value="<?= generateCode('technique')?>" readonly>
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1">Tên trình độ: </label>
-                                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên trình độ" name="name" value="<?= isset($post['name']) ? $post['name'] : ''?>">
+                                            <label for="exampleInputEmail1">Tên chuyên môn: </label>
+                                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên chuyên môn" name="name">
                                         </div>
                                         <?=flash_error('errorCreate', 'name')?>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Mô tả: </label>
                                             <textarea id="editor1" rows="10" cols="80" name="description">
-                                                <?= isset($post['description']) ? $post['description'] : ''?>
-                                            </textarea>
+                             </textarea>
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Người tạo: </label>
@@ -84,7 +83,7 @@ require_once('views/layouts/sidebar.php');
                                             <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo date('d-m-Y H:i:s'); ?>" name="dateCreate" readonly>
                                         </div>
                                         <!-- /.form-group -->
-                                        <button type='submit' class='btn btn-primary' name='save'><i class='fa fa-plus'></i> Thêm trình độ</button>
+                                        <button type='submit' class='btn btn-primary' name='save'><i class='fa fa-plus'></i> Thêm chuyên môn</button>
                                     </div>
                                     <!-- /.col -->
                                 </div>
@@ -96,7 +95,7 @@ require_once('views/layouts/sidebar.php');
                     <!-- /.box -->
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">Danh sách trình độ</h3>
+                            <h3 class="box-title">Danh sách chuyên môn</h3>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -105,8 +104,8 @@ require_once('views/layouts/sidebar.php');
                                     <thead>
                                     <tr>
                                         <th>STT</th>
-                                        <th>Mã trình độ</th>
-                                        <th>Tên trình độ</th>
+                                        <th>Mã chuyên môn</th>
+                                        <th>Tên chuyên môn</th>
                                         <th>Mô tả</th>
                                         <th>Người tạo</th>
                                         <th>Ngày tạo</th>
@@ -119,23 +118,23 @@ require_once('views/layouts/sidebar.php');
                                     <tbody>
                                     <?php
                                     $count = 1;
-                                    foreach ($educations as $education)
+                                    foreach ($techniques as $technique)
                                     {
                                         ?>
                                         <tr>
                                             <td><?php echo $count; ?></td>
-                                            <td><?php echo $education['ma_trinh_do']; ?></td>
-                                            <td><?php echo $education['ten_trinh_do']; ?></td>
-                                            <td><?php echo $education['ghi_chu']; ?></td>
-                                            <td><?php echo getInsertedName($education['nguoi_tao']) ?></td>
-                                            <td><?php echo $education['ngay_tao']; ?></td>
-                                            <td><?php echo getInsertedName($education['nguoi_sua']); ?></td>
-                                            <td><?php echo $education['ngay_sua']; ?></td>
+                                            <td><?php echo $technique['ma_chuyen_mon']; ?></td>
+                                            <td><?php echo $technique['ten_chuyen_mon']; ?></td>
+                                            <td><?php echo $technique['ghi_chu']; ?></td>
+                                            <td><?php echo getInsertedName($technique['nguoi_tao']); ?></td>
+                                            <td><?php echo $technique['ngay_tao']; ?></td>
+                                            <td><?php echo getInsertedName($technique['nguoi_sua']); ?></td>
+                                            <td><?php echo $technique['ngay_sua']; ?></td>
                                             <th>
-                                                <a href="/nhan-vien/trinh-do/<?=$education['id']?>" class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
+                                                <a href="/nhan-vien/chuyen-mon/<?=$technique['id']?>" class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
                                             </th>
                                             <th>
-                                                <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="/nhan-vien/xoa-trinh-do/<?=$education['id']?>"><i class='fa fa-trash'></i></button>
+                                                <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="/nhan-vien/xoa-chuyen-mon/<?=$technique['id']?>"><i class='fa fa-trash'></i></button>
                                             </th>
                                         </tr>
                                         <?php

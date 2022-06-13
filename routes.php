@@ -7,7 +7,10 @@ date_default_timezone_set("Asia/Ho_Chi_Minh");
 $controllers = array(
     'account' => ['login', 'logout'],
     'home' => ['index', 'listEmployee', 'listAccount'],
-    'employee' => ['index', 'department', 'editDepartment', 'deleteDepartment', 'education', 'editEducation', 'deleteEducation'],
+    'employee' => ['index', 'department', 'editDepartment', 'deleteDepartment', 'education', 'editEducation', 'deleteEducation',
+        'position', 'editPosition', 'deletePosition',
+        'technique', 'editTechnique', 'deleteTechnique',
+    ],
     'admin' => ['search', 'login', 'logout', 'create', 'addAvatar',
         'search', 'edit', 'delete', 'createUser', 'searchUser',
         'editUser', 'deleteUser'],

@@ -15,8 +15,8 @@ require_once('views/layouts/sidebar.php');
                         </button>
                     </div>
                     <div class="modal-body">
-                        <input type="hidden" name="idLevel">
-                        Bạn có thực sự muốn xóa trình độ này?
+                        <input type="hidden" name="idPosition">
+                        Bạn có thực sự muốn xóa chức vụ này?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
@@ -32,12 +32,12 @@ require_once('views/layouts/sidebar.php');
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Trình độ
+                Chức vụ
             </h1>
             <ol class="breadcrumb">
                 <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-                <li><a href="trinh-do.php?p=staff&a=level">Trình độ</a></li>
-                <li class="active">Thêm trình độ</li>
+                <li><a href="chuc-vu.php?p=staff&a=position">Chức vụ</a></li>
+                <li class="active">Thêm chức vụ</li>
             </ol>
         </section>
 
@@ -47,7 +47,7 @@ require_once('views/layouts/sidebar.php');
                 <div class="col-xs-12">
                     <div class="box box-primary">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Thêm trình độ</h3>
+                            <h3 class="box-title">Thêm chức vụ</h3>
                             <div class="box-tools pull-right">
                                 <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                 <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
@@ -61,19 +61,24 @@ require_once('views/layouts/sidebar.php');
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1">Mã trình độ: </label>
-                                            <input type="text" class="form-control" id="exampleInputEmail1" name="educationCode" value="<?= generateCode('education')?>" readonly>
+                                            <label for="exampleInputEmail1">Mã chức vụ: </label>
+                                            <input type="text" class="form-control" id="exampleInputEmail1" name="positionCode" value="<?= generateCode('position') ?>" readonly>
                                         </div>
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1">Tên trình độ: </label>
-                                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên trình độ" name="name" value="<?= isset($post['name']) ? $post['name'] : ''?>">
+                                            <label for="exampleInputEmail1">Tên chức vụ: </label>
+                                            <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên chức vụ" name="name" value="<?= isset($post['name']) ? $post['name'] : ''?>">
                                         </div>
                                         <?=flash_error('errorCreate', 'name')?>
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Lương ngày: </label>
+                                            <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Nhập lương/ngày" name="salary" value="<?= isset($post['salary']) ? $post['salary'] : ''?>">
+                                        </div>
+                                        <?=flash_error('errorCreate', 'salary')?>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Mô tả: </label>
                                             <textarea id="editor1" rows="10" cols="80" name="description">
                                                 <?= isset($post['description']) ? $post['description'] : ''?>
-                                            </textarea>
+                                        </textarea>
                                         </div>
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Người tạo: </label>
@@ -96,7 +101,7 @@ require_once('views/layouts/sidebar.php');
                     <!-- /.box -->
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">Danh sách trình độ</h3>
+                            <h3 class="box-title">Danh sách chức vụ</h3>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -105,8 +110,9 @@ require_once('views/layouts/sidebar.php');
                                     <thead>
                                     <tr>
                                         <th>STT</th>
-                                        <th>Mã trình độ</th>
-                                        <th>Tên trình độ</th>
+                                        <th>Mã chức vụ</th>
+                                        <th>Tên chức vụ</th>
+                                        <th>Lương ngày</th>
                                         <th>Mô tả</th>
                                         <th>Người tạo</th>
                                         <th>Ngày tạo</th>
@@ -119,23 +125,24 @@ require_once('views/layouts/sidebar.php');
                                     <tbody>
                                     <?php
                                     $count = 1;
-                                    foreach ($educations as $education)
+                                    foreach ($positions as $position)
                                     {
                                         ?>
                                         <tr>
                                             <td><?php echo $count; ?></td>
-                                            <td><?php echo $education['ma_trinh_do']; ?></td>
-                                            <td><?php echo $education['ten_trinh_do']; ?></td>
-                                            <td><?php echo $education['ghi_chu']; ?></td>
-                                            <td><?php echo getInsertedName($education['nguoi_tao']) ?></td>
-                                            <td><?php echo $education['ngay_tao']; ?></td>
-                                            <td><?php echo getInsertedName($education['nguoi_sua']); ?></td>
-                                            <td><?php echo $education['ngay_sua']; ?></td>
+                                            <td><?php echo $position['ma_chuc_vu']; ?></td>
+                                            <td><?php echo $position['ten_chuc_vu']; ?></td>
+                                            <td><?php echo number_format($position['luong_ngay']). "vnđ"; ?></td>
+                                            <td><?php echo $position['ghi_chu']; ?></td>
+                                            <td><?php echo getInsertedName($position['nguoi_tao']) ?></td>
+                                            <td><?php echo $position['ngay_tao']; ?></td>
+                                            <td><?php echo getInsertedName($position['nguoi_sua']); ?></td>
+                                            <td><?php echo $position['ngay_sua']; ?></td>
                                             <th>
-                                                <a href="/nhan-vien/trinh-do/<?=$education['id']?>" class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
+                                                <a href="/nhan-vien/chuc-vu/<?=$position['id']?>" class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
                                             </th>
                                             <th>
-                                                <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="/nhan-vien/xoa-trinh-do/<?=$education['id']?>"><i class='fa fa-trash'></i></button>
+                                                <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="/nhan-vien/xoa-chuc-vu/<?=$position['id']?>"><i class='fa fa-trash'></i></button>
                                             </th>
                                         </tr>
                                         <?php

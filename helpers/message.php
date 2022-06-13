@@ -40,7 +40,6 @@ function flash_error($type = '', $name = '', $message = '', $class = 'danger'){
         elseif(!empty($_SESSION[$type][$name]) && empty($message)){
             $class = !empty($_SESSION[$type][$name.'_class']) ? $_SESSION[$type][$name.'_class'] : 'success';
             echo "<div class='alert alert-{$class} alert-dismissible'>{$_SESSION[$type][$name]}</div>";
-//            echo "<p class='{$class}'>{$_SESSION[$type][$name]}</p>";
             unset($_SESSION[$type][$name]);
             unset($_SESSION[$type][$name.'_class']);
         }

@@ -42,10 +42,13 @@ if (!function_exists('generateCode')) {
                 return "MPB" . time();
                 break;
             case 'position':
-                return "MCV";
+                return "MCV" . time();
                 break;
             case 'education':
                 return "MTD" . time();
+                break;
+            case 'technique':
+                return "MCM" . time();
                 break;
             default:
                 return "Not found";

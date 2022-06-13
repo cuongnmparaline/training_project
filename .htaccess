@@ -22,6 +22,17 @@ rewriteRule ^nhan-vien/trinh-do$ ?controller=employee&action=education [QSA,L]
 rewriteRule ^nhan-vien/trinh-do/([0-9]+)$ ?controller=employee&action=editEducation&id=$1
 rewriteRule ^nhan-vien/xoa-trinh-do/([0-9]+)$ ?controller=employee&action=deleteEducation&id=$1
 
+#Postion
+rewriteRule ^nhan-vien/chuc-vu$ ?controller=employee&action=position
+rewriteRule ^nhan-vien/chuc-vu/([0-9]+)$ ?controller=employee&action=editPosition&id=$1
+rewriteRule ^nhan-vien/xoa-chuc-vu/([0-9]+)$ ?controller=employee&action=deletePosition&id=$1
+
+#Technique
+rewriteRule ^nhan-vien/chuyen-mon$ ?controller=employee&action=technique
+rewriteRule ^nhan-vien/chuyen-mon/([0-9]+)$ ?controller=employee&action=editTechnique&id=$1
+rewriteRule ^nhan-vien/xoa-chuyen-mon/([0-9]+)$ ?controller=employee&action=deleteTechnique&id=$1
+
+
 # Login
 rewriteRule ^login$ ?controller=account&action=login
 

@@ -37,12 +37,13 @@ require_once('views/layouts/sidebar.php');
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Mã trình độ: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" name="positionCode" value="<?= $ma_trinh_do ?>" readonly>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" name="educationCode" value="<?= $ma_trinh_do ?>" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Tên trình độ: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên trình độ" name="titleLevel" value="<?= $ten_trinh_do ?>">
+                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên trình độ" name="name" value="<?= $ten_trinh_do ?>">
                                     </div>
+                                    <?=flash_error('errorEdit', 'name')?>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Mô tả: </label>
                                         <textarea id="editor1" rows="10" cols="80" name="description"><?= $ghi_chu ?>

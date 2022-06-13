@@ -54,6 +54,15 @@ abstract class BaseValidate{
         return $name;
     }
 
+    protected function checkSalary($salary , $type = 'errorCreate'){
+        if(empty($salary)){
+            flash_error($type, 'salary', SALARY_BLANK);
+        } elseif (!$this->isNumber($salary)) {
+            flash_error($type, 'salary', SALARY_VALIDATE);
+        }
+        return $salary;
+    }
+
     protected function checkPassword($password, $type = 'errorCreate'){
         if (empty($password)) {
             flash_error($type, 'password', PASS_BLANK);
@@ -90,4 +99,12 @@ abstract class BaseValidate{
         }
     }
 
+    protected function isNumber($number){
+        $partten = "/^[0-9]+$/";
+        if (!preg_match($partten, $number, $matchs)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

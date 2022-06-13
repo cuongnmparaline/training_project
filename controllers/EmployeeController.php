@@ -7,8 +7,9 @@ require_once('models/DepartmentModel.php');
 require_once('models/EducationModel.php');
 require_once('models/EmployeeModel.php');
 require_once('models/PositionModel.php');
-require_once('components/validate/employee/DepartmentValidate.php');
-require_once('components/validate/employee/EducationValidate.php');
+require_once('models/TechniqueModel.php');
+require_once('components/validate/employee/BaseEmployeeValidate.php');
+require_once('components/validate/employee/PositionValidate.php');
 
 class EmployeeController extends BaseController
 {
@@ -20,8 +21,9 @@ class EmployeeController extends BaseController
         $this->educationModel = new EducationModel();
         $this->employeeModel = new EmployeeModel();
         $this->positionModel = new PositionModel();
-        $this->departmentValidate = new DepartmentValidate();
-        $this->educationValidate = new EducationValidate();
+        $this->techniqueModel = new TechniqueModel();
+        $this->baseEmployeeValidate = new BaseEmployeeValidate();
+        $this->positionValidate = new PositionValidate();
     }
 
     public function index()
@@ -38,52 +40,52 @@ class EmployeeController extends BaseController
         }
 
         $validatePostData = $this->getParams();
-        $validateStatus = $this->departmentValidate->validateCreate($validatePostData);
+        $validateStatus = $this->baseEmployeeValidate->validateCreate($validatePostData);
         if (!$validateStatus) {
-            return $this->render('department/listDepartment', $_POST);
+            return $this->render('department/listDepartment', ['departments' => $departments, 'post' => $_POST]);
         }
-        $dataInsertAdmin = [
+        $dataInsertDepartment = [
             'ma_phong_ban' => $_POST['departmentCode'],
             'ten_phong_ban' => $_POST['name'],
             'ghi_chu' => $_POST['description'],
         ];
 
-        if ($this->departmentModel->create($dataInsertAdmin)) {
+        if ($this->departmentModel->create($dataInsertDepartment)) {
             flash("success_message", DEPARTMENT_CREATED);
-            redirect_to('/nhan-vien/phong-ban');
+            return redirect_to('/nhan-vien/phong-ban');
         }
     }
 
     public function editDepartment(){
         if (!isset($_GET['id'])) {
-            flash("error_message", CANT_FOUND_DEPARTMENT);
-            redirect_to('nhan-vien/phong-ban');
+            flash("error_message", CANT_FOUND_DEPARTMENT, 'alert alert-danger');
+            redirect_to('/nhan-vien/phong-ban');
         }
 
         $id = (int)$_GET['id'];
 
         $department = $this->departmentModel->getById($id);
         if (empty($department)) {
-            flash("error_message", CANT_FOUND_DEPARTMENT);
-            redirect_to('nhan-vien/phong-ban');
+            flash("error_message", CANT_FOUND_DEPARTMENT, 'alert alert-danger');
+            redirect_to('/nhan-vien/phong-ban');
         }
         if (empty($_POST)) {
             return $this->render('department/editDepartment', $department);
         }
 
         $validatePostData = $this->getParams();
-        $validateStatus = $this->departmentValidate->validateEdit($validatePostData);
+        $validateStatus = $this->baseEmployeeValidate->validateEdit($validatePostData);
         if (!$validateStatus) {
             return $this->render('department/editDepartment', $department);
         }
 
-        $dataEditAdmin = [
+        $dataEditDepartment = [
             'ma_phong_ban' => $_POST['departmentCode'],
             'ten_phong_ban' => $_POST['name'],
             'ghi_chu' => $_POST['description'],
         ];
 
-        if ($this->departmentModel->update($dataEditAdmin, $id)) {
+        if ($this->departmentModel->update($dataEditDepartment, $id)) {
             flash("success_message", DEPARTMENT_UPDATED);
             redirect_to('/nhan-vien/phong-ban');
         }
@@ -91,13 +93,13 @@ class EmployeeController extends BaseController
 
     public function deleteDepartment(){
         if (!isset($_GET['id'])) {
-            flash('error_message', ST_WRONG);
+            flash('error_message', ST_WRONG, 'alert alert-danger');
         }
         $id = $_GET['id'];
         if ($this->departmentModel->delete($id)) {
             flash('success_message', DEPARTMENT_REMOVED);
         }
-        redirect_to('/nhan-vien/phong-ban');
+        return redirect_to('/nhan-vien/phong-ban');
     }
 
     public function education(){
@@ -108,17 +110,17 @@ class EmployeeController extends BaseController
         }
 
         $validatePostData = $this->getParams();
-        $validateStatus = $this->departmentValidate->validateCreate($validatePostData);
+        $validateStatus = $this->baseEmployeeValidate->validateCreate($validatePostData);
         if (!$validateStatus) {
-            return $this->render('department/listDepartment', $_POST);
+            return $this->render('department/listDepartment', ['educations' => $educations, 'post' => $_POST]);
         }
-        $dataInsertAdmin = [
-            'ma_trinh_do' => $_POST['positionCode'],
+        $dataInsertEducation = [
+            'ma_trinh_do' => $_POST['educationCode'],
             'ten_trinh_do' => $_POST['name'],
             'ghi_chu' => $_POST['description'],
         ];
 
-        if ($this->educationModel->create($dataInsertAdmin)) {
+        if ($this->educationModel->create($dataInsertEducation)) {
             flash("success_message", EDUCATION_CREATED);
             redirect_to('/nhan-vien/trinh-do');
         }
@@ -126,37 +128,189 @@ class EmployeeController extends BaseController
 
     public function editEducation(){
         if (!isset($_GET['id'])) {
-            flash("error_message", CANT_FOUND_EDUCATION);
-            redirect_to('nhan-vien/trinh-do');
+            flash("error_message", CANT_FOUND_EDUCATION, 'alert alert-danger');
+            return redirect_to('nhan-vien/trinh-do');
         }
 
         $id = (int)$_GET['id'];
 
         $education = $this->educationModel->getById($id);
         if (empty($education)) {
-            flash("error_message", CANT_FOUND_EDUCATION);
-            redirect_to('nhan-vien/trinh-do');
+            flash("error_message", CANT_FOUND_EDUCATION, 'alert alert-danger');
+            return redirect_to('/nhan-vien/trinh-do');
         }
         if (empty($_POST)) {
             return $this->render('education/editEducation', $education);
         }
 
         $validatePostData = $this->getParams();
-        $validateStatus = $this->departmentValidate->validateEdit($validatePostData);
+        $validateStatus = $this->baseEmployeeValidate->validateEdit($validatePostData);
         if (!$validateStatus) {
             return $this->render('education/editEducation', $education);
         }
 
-        $dataEditAdmin = [
-            'ma_phong_ban' => $_POST['departmentCode'],
-            'ten_phong_ban' => $_POST['name'],
+        $dataEditEducation = [
+            'ma_trinh_do' => $_POST['educationCode'],
+            'ten_trinh_do' => $_POST['name'],
             'ghi_chu' => $_POST['description'],
         ];
 
-        if ($this->departmentModel->update($dataEditAdmin, $id)) {
-            flash("success_message", DEPARTMENT_UPDATED);
-            redirect_to('/nhan-vien/phong-ban');
+        if ($this->educationModel->update($dataEditEducation, $id)) {
+            flash("success_message", EDUCATION_UPDATED);
+            redirect_to('/nhan-vien/trinh-do');
         }
     }
 
+    public function deleteEducation(){
+        if (!isset($_GET['id'])) {
+            flash('error_message', ST_WRONG);
+        }
+        $id = $_GET['id'];
+        if ($this->educationModel->delete($id)) {
+            flash('success_message', EDUCATION_REMOVED);
+        }
+        return redirect_to('/nhan-vien/trinh-do');
+    }
+
+    public function position(){
+        $positions = $this->positionModel->getAll();
+        if(!isset($_POST['save'])){
+            return $this->render('position/listPosition', ['positions' => $positions]);
+        }
+
+
+        $validatePostData = $this->getParams();
+        $validateStatus = $this->positionValidate->validateCreate($validatePostData);
+        if (!$validateStatus) {
+            return $this->render('position/listPosition', ['positions' => $positions, 'post' => $_POST]);
+        }
+        $dataInsertPosition = [
+            'ma_chuc_vu' => $_POST['positionCode'],
+            'ten_chuc_vu' => $_POST['name'],
+            'luong_ngay' => $_POST['salary'],
+            'ghi_chu' => $_POST['description'],
+        ];
+
+        if ($this->positionModel->create($dataInsertPosition)) {
+            flash("success_message", POSITION_CREATED);
+            return redirect_to('/nhan-vien/chuc-vu');
+        }
+    }
+
+    public function editPosition(){
+        if (!isset($_GET['id'])) {
+            flash("error_message", CANT_FOUND_POSITION, 'alert alert-danger');
+            return redirect_to('/nhan-vien/chuc-vu');
+        }
+
+        $id = (int)$_GET['id'];
+
+        $position = $this->positionModel->getById($id);
+        if (empty($position)) {
+            flash("error_message", CANT_FOUND_POSITION, 'alert alert-danger');
+            return redirect_to('/nhan-vien/chuc-vu');
+        }
+
+        if (empty($_POST)) {
+            return $this->render('position/editPosition', $position);
+        }
+
+        $validatePostData = $this->getParams();
+        $validateStatus = $this->positionValidate->validateEdit($validatePostData);
+        if (!$validateStatus) {
+            return $this->render('position/editPosition', $position);
+        }
+
+        $dataEditPosition = [
+            'ma_chuc_vu' => $_POST['positionCode'],
+            'ten_chuc_vu' => $_POST['name'],
+            'luong_ngay' => $_POST['salary'],
+            'ghi_chu' => $_POST['description'],
+        ];
+
+        if ($this->positionModel->update($dataEditPosition, $id)) {
+            flash("success_message", POSITION_UPDATED);
+            return redirect_to('/nhan-vien/chuc-vu');
+        }
+    }
+
+    public function deletePosition(){
+        if (!isset($_GET['id'])) {
+            flash('error_message', ST_WRONG);
+        }
+        $id = $_GET['id'];
+        if ($this->positionModel->delete($id)) {
+            flash('success_message', POSITION_REMOVED);
+        }
+        return redirect_to('/nhan-vien/chuc-vu');
+    }
+
+    public function technique(){
+        $techniques = $this->techniqueModel->getAll();
+        if(!isset($_POST['save'])){
+            return $this->render('technique/listTechnique', ['techniques' => $techniques]);
+        }
+
+        $validatePostData = $this->getParams();
+        $validateStatus = $this->baseEmployeeValidate->validateCreate($validatePostData);
+        if (!$validateStatus) {
+            return $this->render('technique/listTechnique', ['techniques' => $techniques, 'post' => $_POST]);
+        }
+        $dataInsertTechnique = [
+            'ma_chuyen_mon' => $_POST['techniqueCode'],
+            'ten_chuyen_mon' => $_POST['name'],
+            'ghi_chu' => $_POST['description'],
+        ];
+
+        if ($this->techniqueModel->create($dataInsertTechnique)) {
+            flash("success_message", TECHNIQUE_CREATED);
+            redirect_to('/nhan-vien/chuyen-mon');
+        }
+    }
+
+    public function editTechnique(){
+        if (!isset($_GET['id'])) {
+            flash("error_message", CANT_FOUND_TECHNIQUE, 'alert alert-danger');
+            return redirect_to('nhan-vien/chuyen-mon');
+        }
+
+        $id = (int)$_GET['id'];
+
+        $technique = $this->techniqueModel->getById($id);
+        if (empty($technique)) {
+            flash("error_message", CANT_FOUND_TECHNIQUE, 'alert alert-danger');
+            return redirect_to('/nhan-vien/chuyen-mon');
+        }
+        if (empty($_POST)) {
+            return $this->render('technique/editTechnique', $technique);
+        }
+
+        $validatePostData = $this->getParams();
+        $validateStatus = $this->baseEmployeeValidate->validateEdit($validatePostData);
+        if (!$validateStatus) {
+            return $this->render('technique/editTechnique', $technique);
+        }
+
+        $dataEditTechnique = [
+            'ma_chuyen_mon' => $_POST['techniqueCode'],
+            'ten_chuyen_mon' => $_POST['name'],
+            'ghi_chu' => $_POST['description'],
+        ];
+
+        if ($this->techniqueModel->update($dataEditTechnique, $id)) {
+            flash("success_message", TECHNIQUE_UPDATED);
+            redirect_to('/nhan-vien/chuyen-mon');
+        }
+    }
+
+    public function deleteTechnique(){
+        if (!isset($_GET['id'])) {
+            flash('error_message', ST_WRONG);
+        }
+        $id = $_GET['id'];
+        if ($this->techniqueModel->delete($id)) {
+            flash('success_message', TECHNIQUE_REMOVED);
+        }
+        return redirect_to('/nhan-vien/chuyen-mon');
+    }
 }
