@@ -5,13 +5,21 @@
 
 #### Validate error
 define("EMAIL_BLANK", "Email không được để trống");
-define("PASS_BLANK", "Mật khẩu không được để trống");
 define("NAME_BLANK", "Tên không được để trống");
-define("SALARY_BLANK", "Lương không được để trống");
-define("ROLE_BLANK", "You have to choose admin role");
-define("AVATAR_BLANK", "Please upload your avatar");
-define("PASS_VERIFY_BLANK", "Please verify your password");
-define("STATUS_BLANK", "You have to choose user status");
+define("MARRIAGE_BLANK", "Tình trạng hôn nhân không được để trống");
+define("IDENTIFY_BLANK", "Chứng minh nhân dân không được để trống");
+define("IDENTIFY_TIME_BLANK", "Ngày cấp không được để trống");
+define("IDENTIFY_PLACE_BLANK", "Nơi cấp không được để trống");
+define("NATIONALITY_BLANK", "Quốc tịch không được để trống");
+define("ETHNIC_BLANK", "Dân tộc không được để trống");
+define("TYPE_BLANK", "Loại nhân viên không được để trống");
+define("DEGREE_BLANK", "Bằng cấp không được để trống");
+define("GENDER_BLANK", "Giới tính không được để trống");
+define("RESIDENCE_BLANK", "Hộ khẩu không được để trống");
+define("STATUS_BLANK", "Trạng thái không được để trống");
+define("DEPARTMENT_BLANK", "Phòng ban không được để trống");
+define("POSITION_BLANK", "Chức vụ không được để trống");
+define("EDUCATION_BLANK", "Trình độ không được để trống");
 define("EMAIL_EXISTED", "Email is existed");
 
 
@@ -32,6 +40,8 @@ define("CANT_FOUND_DEPARTMENT", "Không thể tìm thấy phòng ban!");
 define("CANT_FOUND_EDUCATION", "Không thể tìm thấy trình độ!");
 define("CANT_FOUND_POSITION", "Không thể tìm thấy chức vụ!");
 define("CANT_FOUND_TECHNIQUE", "Không thể tìm thấy chuyên môn!");
+define("CANT_FOUND_DEGREE", "Không thể tìm thấy bằng cấp!");
+define("CANT_FOUND_TYPE", "Không thể tìm thấy loại nhân viên!");
 
 
 # Department Success notification
@@ -54,10 +64,19 @@ define("TECHNIQUE_REMOVED", "Xóa bỏ chuyên môn thành công!");
 define("TECHNIQUE_CREATED", "Tạo mới chuyên môn thành công!");
 define("TECHNIQUE_UPDATED", "Cập nhập chuyên môn thành công!");
 
+# Degree Success notification
+define("DEGREE_REMOVED", "Xóa bỏ bằng cấp thành công!");
+define("DEGREE_CREATED", "Tạo mới bằng cấp thành công!");
+define("DEGREE_UPDATED", "Cập nhập bằng cấp thành công!");
 
-define("ADMIN_REMOVED", "Admin was removed successfully!");
-define("ADMIN_CREATED", "Admin was created successfully!");
-define("ADMIN_UPDATED", "Admin was updated successfully!");
+# Type Success notification
+define("TYPE_REMOVED", "Xóa bỏ loại nhân viên thành công!");
+define("TYPE_CREATED", "Tạo mới loại nhân viên thành công!");
+define("TYPE_UPDATED", "Cập nhập loại nhân viên thành công!");
+
+define("EMPLOYEE_REMOVED", "Xóa nhân viên thành công!");
+define("EMPLOYEE_CREATED", "Tạo mới nhân viên thành công!");
+define("EMPLOYEE_UPDATED", "Chỉnh sửa nhân viên thành công!");
 
 define("USER_REMOVED", "User was removed successfully!");
 define("USER_CREATED", "User was created successfully!");

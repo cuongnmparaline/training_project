@@ -7,15 +7,15 @@ date_default_timezone_set("Asia/Ho_Chi_Minh");
 $controllers = array(
     'account' => ['login', 'logout'],
     'home' => ['index', 'listEmployee', 'listAccount'],
-    'employee' => ['index', 'department', 'editDepartment', 'deleteDepartment', 'education', 'editEducation', 'deleteEducation',
+    'employee' => ['index', 'create', 'edit',
+        'department', 'editDepartment', 'deleteDepartment',
+        'education', 'editEducation', 'deleteEducation',
         'position', 'editPosition', 'deletePosition',
         'technique', 'editTechnique', 'deleteTechnique',
+        'degree', 'editDegree', 'deleteDegree',
+        'type', 'editType', 'deleteType',
     ],
-    'admin' => ['search', 'login', 'logout', 'create', 'addAvatar',
-        'search', 'edit', 'delete', 'createUser', 'searchUser',
-        'editUser', 'deleteUser'],
     'pages' => ['home', 'error'],
-    'user' => ['index', 'login', 'logout', 'profile']
 ); // Các controllers trong hệ thống và các action có thể gọi ra từ controller đó.
 
 // Nếu các tham số nhận được từ URL không hợp lệ (không thuộc list controller và action có thể gọi

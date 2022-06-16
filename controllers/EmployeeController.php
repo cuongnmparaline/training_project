@@ -3,11 +3,18 @@ require_once('controllers/BaseController.php');
 require_once('helpers/message.php');
 require_once('helpers/account.php');
 require_once('helpers/employee.php');
-require_once('models/DepartmentModel.php');
-require_once('models/EducationModel.php');
-require_once('models/EmployeeModel.php');
-require_once('models/PositionModel.php');
-require_once('models/TechniqueModel.php');
+require_once('models/employee/DepartmentModel.php');
+require_once('models/employee/EducationModel.php');
+require_once('models/employee/EmployeeModel.php');
+require_once('models/employee/PositionModel.php');
+require_once('models/employee/TechniqueModel.php');
+require_once('models/employee/DegreeModel.php');
+require_once('models/employee/TypeModel.php');
+require_once('models/employee/NationalityModel.php');
+require_once('models/employee/EthnicModel.php');
+require_once('models/employee/ReligionModel.php');
+require_once('models/employee/MarriageModel.php');
+require_once('components/validate/EmployeeValidate.php');
 require_once('components/validate/employee/BaseEmployeeValidate.php');
 require_once('components/validate/employee/PositionValidate.php');
 
@@ -16,12 +23,20 @@ class EmployeeController extends BaseController
     public function __construct()
     {
         $this->folder = 'Employee';
-        parent::__construct();
+//        parent::__construct();
         $this->departmentModel = new DepartmentModel();
         $this->educationModel = new EducationModel();
         $this->employeeModel = new EmployeeModel();
         $this->positionModel = new PositionModel();
         $this->techniqueModel = new TechniqueModel();
+        $this->degreeModel = new DegreeModel();
+        $this->typeModel = new TypeModel();
+        $this->nationalityModel = new NationalityModel();
+        $this->ethnicModel = new EthnicModel();
+        $this->religionModel = new ReligionModel();
+        $this->marriageModel = new MarriageModel();
+        $this->marriageModel = new MarriageModel();
+        $this->employeeValidate = new EmployeeValidate();
         $this->baseEmployeeValidate = new BaseEmployeeValidate();
         $this->positionValidate = new PositionValidate();
     }
@@ -30,6 +45,74 @@ class EmployeeController extends BaseController
     {
         $employee = $this->employeeModel->getAll();
         $this->render('index', ['employees' => $employee]);
+    }
+
+    public function create()
+    {
+        $dataView = [
+            'departments' => $this->departmentModel->getAll(),
+            'educations' => $this->educationModel->getAll(),
+            'employees' => $this->employeeModel->getAll(),
+            'positions' => $this->positionModel->getAll(),
+            'techniques' => $this->techniqueModel->getAll(),
+            'degrees' => $this->degreeModel->getAll(),
+            'types' => $this->typeModel->getAll(),
+            'nationalities' => $this->nationalityModel->getAll(),
+            'ethnics' => $this->ethnicModel->getAll(),
+            'religions' => $this->religionModel->getAll(),
+            'marriages' => $this->marriageModel->getAll(),
+        ];
+        if (empty($_POST)) {
+            return $this->render('create', $dataView);
+        }
+
+        $validatePostData = $this->getParams();
+
+        $validateStatus = $this->employeeValidate->validateCreate($validatePostData);
+        if (!$validateStatus) {
+            $dataView['post'] = $_POST;
+            return $this->render('create', $dataView);
+        }
+        $imageName = '';
+        if(!empty($_FILES['avatar']['name'])){
+            $target_dir = IMG_LOCATION . 'employee/';
+            $path = $_FILES['avatar']['name'];
+            $ext = pathinfo($path, PATHINFO_EXTENSION);
+            $imageName = time() . "." . $ext;
+            $target_file = $target_dir . $imageName;
+        }
+
+        $dataInsertEmployee = [
+            'ma_nv' => isset($_POST['employeeCode']) ? $_POST['employeeCode'] : '',
+            'ten_nv' => isset($_POST['name']) ? $_POST['name'] : '',
+            'biet_danh' => isset($_POST['nickName']) ? $_POST['nickName'] : '',
+            'hon_nhan_id' => isset($_POST['marriage']) ? $_POST['marriage'] : '',
+            'so_cmnd' => isset($_POST['identify']) ? $_POST['identify'] : '',
+            'ngay_cap_cmnd' => isset($_POST['identify_time']) ? $_POST['identify_time'] : '',
+            'noi_cap_cmnd' => isset($_POST['identify_place']) ? $_POST['identify_place'] : '',
+            'quoc_tich_id' => isset($_POST['nationality']) ? $_POST['nationality'] : '',
+            'ton_giao_id' => isset($_POST['religion']) ? $_POST['religion'] : '',
+            'dan_toc_id' => isset($_POST['ethnic']) ? $_POST['ethnic'] : '',
+            'loai_nv_id' => isset($_POST['type']) ? $_POST['type'] : '',
+            'bang_cap_id' => isset($_POST['degree']) ? $_POST['degree'] : '',
+            'trang_thai' => isset($_POST['status']) ? $_POST['status'] : '',
+            'hinh_anh' => isset($imageName) ? $imageName : '',
+            'gioi_tinh' => isset($_POST['gender']) ? $_POST['gender'] : '',
+            'ngay_sinh' => isset($_POST['birthday']) ? $_POST['birthday'] : '',
+            'noi_sinh' => isset($_POST['placeOfBirth']) ? $_POST['placeOfBirth'] : '',
+            'nguyen_quan' => isset($_POST['domicile']) ? $_POST['domicile'] : '',
+            'ho_khau' => isset($_POST['residence']) ? $_POST['residence'] : '',
+            'tam_tru' => isset($_POST['tabernacle']) ? $_POST['tabernacle'] : '',
+            'phong_ban_id' => isset($_POST['department']) ? $_POST['department'] : '',
+            'chuc_vu_id' => isset($_POST['position']) ? $_POST['position'] : '',
+            'trinh_do_id' => isset($_POST['education']) ? $_POST['education'] : '',
+            'chuyen_mon_id' => isset($_POST['technique']) ? $_POST['technique'] : '',
+        ];
+        if ($this->employeeModel->create($dataInsertEmployee)) {
+            move_uploaded_file($_FILES["avatar"]["tmp_name"], $target_file);
+            flash("success_message", EMPLOYEE_CREATED);
+            return redirect_to('/nhan-vien');
+        }
     }
 
     public function department(){
@@ -312,5 +395,143 @@ class EmployeeController extends BaseController
             flash('success_message', TECHNIQUE_REMOVED);
         }
         return redirect_to('/nhan-vien/chuyen-mon');
+    }
+
+    public function degree(){
+        $degrees = $this->degreeModel->getAll();
+        if(!isset($_POST['save'])){
+            return $this->render('degree/listDegree', ['degrees' => $degrees]);
+        }
+
+        $validatePostData = $this->getParams();
+        $validateStatus = $this->baseEmployeeValidate->validateCreate($validatePostData);
+        if (!$validateStatus) {
+            return $this->render('degree/listDegree', ['degrees' => $degrees, 'post' => $_POST]);
+        }
+        $dataInsertDegree = [
+            'ma_bang_cap' => $_POST['degreeCode'],
+            'ten_bang_cap' => $_POST['name'],
+            'ghi_chu' => $_POST['description'],
+        ];
+
+        if ($this->degreeModel->create($dataInsertDegree)) {
+            flash("success_message", DEGREE_CREATED);
+            redirect_to('/nhan-vien/bang-cap');
+        }
+    }
+
+    public function editDegree(){
+        if (!isset($_GET['id'])) {
+            flash("error_message", CANT_FOUND_TECHNIQUE, 'alert alert-danger');
+            return redirect_to('nhan-vien/chuyen-mon');
+        }
+
+        $id = (int)$_GET['id'];
+
+        $degree = $this->degreeModel->getById($id);
+        if (empty($degree)) {
+            flash("error_message", CANT_FOUND_DEGREE, 'alert alert-danger');
+            return redirect_to('/nhan-vien/bang-cap');
+        }
+        if (empty($_POST)) {
+            return $this->render('degree/editDegree', $degree);
+        }
+
+        $validatePostData = $this->getParams();
+        $validateStatus = $this->baseEmployeeValidate->validateEdit($validatePostData);
+        if (!$validateStatus) {
+            return $this->render('technique/editDegree', $degree);
+        }
+
+        $dataEditDegree = [
+            'ma_bang_cap' => $_POST['degreeCode'],
+            'ten_bang_cap' => $_POST['name'],
+            'ghi_chu' => $_POST['description'],
+        ];
+
+        if ($this->degreeModel->update($dataEditDegree, $id)) {
+            flash("success_message", DEGREE_UPDATED);
+            redirect_to('/nhan-vien/bang-cap');
+        }
+    }
+
+    public function deleteDegree(){
+        if (!isset($_GET['id'])) {
+            flash('error_message', ST_WRONG);
+        }
+        $id = $_GET['id'];
+        if ($this->degreeModel->delete($id)) {
+            flash('success_message', DEGREE_REMOVED);
+        }
+        return redirect_to('/nhan-vien/bang-cap');
+    }
+
+    public function type(){
+        $types = $this->typeModel->getAll();
+        if(!isset($_POST['save'])){
+            return $this->render('type/listType', ['types' => $types]);
+        }
+
+        $validatePostData = $this->getParams();
+        $validateStatus = $this->baseEmployeeValidate->validateCreate($validatePostData);
+        if (!$validateStatus) {
+            return $this->render('type/listType', ['types' => $types, 'post' => $_POST]);
+        }
+        $dataInsertType = [
+            'ma_loai_nv' => $_POST['typeCode'],
+            'ten_loai_nv' => $_POST['name'],
+            'ghi_chu' => $_POST['description'],
+        ];
+
+        if ($this->typeModel->create($dataInsertType)) {
+            flash("success_message", DEGREE_CREATED);
+            redirect_to('/nhan-vien/loai');
+        }
+    }
+
+    public function editType(){
+        if (!isset($_GET['id'])) {
+            flash("error_message", CANT_FOUND_TYPE, 'alert alert-danger');
+            return redirect_to('nhan-vien/chuyen-mon');
+        }
+
+        $id = (int)$_GET['id'];
+
+        $type = $this->typeModel->getById($id);
+        if (empty($type)) {
+            flash("error_message", CANT_FOUND_TYPE, 'alert alert-danger');
+            return redirect_to('/nhan-vien/loai');
+        }
+        if (empty($_POST)) {
+            return $this->render('type/editType', $type);
+        }
+
+        $validatePostData = $this->getParams();
+        $validateStatus = $this->baseEmployeeValidate->validateEdit($validatePostData);
+        if (!$validateStatus) {
+            return $this->render('type/editType', $type);
+        }
+
+        $dataEditType = [
+            'ma_loai_nv' => $_POST['typeCode'],
+            'ten_loai_nv' => $_POST['name'],
+            'ghi_chu' => $_POST['description'],
+        ];
+
+        if ($this->typeModel->update($dataEditType, $id)) {
+            flash("success_message", TYPE_UPDATED);
+            redirect_to('/nhan-vien/loai');
+        }
+    }
+
+    public function deleteType(){
+        if (!isset($_GET['id'])) {
+            flash('error_message', ST_WRONG);
+        }
+        $id = $_GET['id'];
+        if ($this->typeModel->delete($id)) {
+            flash('success_message', TYPE_REMOVED);
+        }
+        return redirect_to('/nhan-vien/loai');
     }
 }

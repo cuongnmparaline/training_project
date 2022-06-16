@@ -1,5 +1,5 @@
 <?php
-require_once "BaseModel.php";
+require_once "models/BaseModel.php";
 
 class SalaryModel extends BaseModel
 {

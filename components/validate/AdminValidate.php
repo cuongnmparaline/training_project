@@ -7,7 +7,11 @@ class AdminValidate extends BaseValidate {
         $validateStatus = false;
         $this->checkAvatar($data['avatar']);
         $this->checkName($data['name']);
-        $this->checkEmail($data['email']);
+        $this->checkEmpty($data['marriage'], 'marriage', MARRIAGE_BLANK, 'errorCreate');
+        $this->checkEmpty($data['identify'], 'identify', MARRIAGE_BLANK, 'errorCreate');
+        $this->checkEmpty($data['marriage'], 'marriage', MARRIAGE_BLANK, 'errorCreate');
+        $this->checkEmpty($data['marriage'], 'marriage', MARRIAGE_BLANK, 'errorCreate');
+        $this->checkEmpty($data['marriage'], 'marriage', MARRIAGE_BLANK, 'errorCreate');
         $this->checkPassword($data['password']);
         $this->checkPasswordVerify($data['password'], $data['password_verify']);
         $role = isset($data['role_type']) ? $data['role_type'] : '';

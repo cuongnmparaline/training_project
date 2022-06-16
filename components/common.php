@@ -38,6 +38,9 @@ if (!function_exists('generateCode')) {
     function generateCode($type)
     {
         switch ($type) {
+            case 'employee':
+                return "MNV" . time();
+                break;
             case 'department':
                 return "MPB" . time();
                 break;
@@ -49,6 +52,12 @@ if (!function_exists('generateCode')) {
                 break;
             case 'technique':
                 return "MCM" . time();
+                break;
+            case 'degree':
+                return "MBC" . time();
+                break;
+            case 'type':
+                return "LNV" . time();
                 break;
             default:
                 return "Not found";

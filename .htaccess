@@ -10,6 +10,8 @@ rewriteRule ^home/ds-taikhoan$ ?controller=home&action=listAccount
 
 # Employee
 rewriteRule ^nhan-vien$ ?controller=employee&action=index
+rewriteRule ^nhan-vien/them-moi$ ?controller=employee&action=create
+rewriteRule ^nhan-vien/([0-9]+)$ ?controller=employee&action=edit&id=$1
 
 
 #Department
@@ -31,6 +33,16 @@ rewriteRule ^nhan-vien/xoa-chuc-vu/([0-9]+)$ ?controller=employee&action=deleteP
 rewriteRule ^nhan-vien/chuyen-mon$ ?controller=employee&action=technique
 rewriteRule ^nhan-vien/chuyen-mon/([0-9]+)$ ?controller=employee&action=editTechnique&id=$1
 rewriteRule ^nhan-vien/xoa-chuyen-mon/([0-9]+)$ ?controller=employee&action=deleteTechnique&id=$1
+
+#Degree
+rewriteRule ^nhan-vien/bang-cap$ ?controller=employee&action=degree
+rewriteRule ^nhan-vien/bang-cap/([0-9]+)$ ?controller=employee&action=editDegree&id=$1
+rewriteRule ^nhan-vien/xoa-bang-cap/([0-9]+)$ ?controller=employee&action=deleteDegree&id=$1
+
+#Type
+rewriteRule ^nhan-vien/loai$ ?controller=employee&action=type
+rewriteRule ^nhan-vien/loai/([0-9]+)$ ?controller=employee&action=editType&id=$1
+rewriteRule ^nhan-vien/xoa-loai/([0-9]+)$ ?controller=employee&action=deleteType&id=$1
 
 
 # Login

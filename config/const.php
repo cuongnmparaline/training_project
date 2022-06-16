@@ -26,5 +26,6 @@ define("NUM_PER_PAGE", 3);
 ## Upload
 
 define("IMG_LOCATION", "assets/images/");
+define("IMG_EMPLOYEE_DEFAULT", "assets/images/employee/demo-3x4.jpg");
 
 

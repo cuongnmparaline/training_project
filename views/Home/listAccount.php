@@ -82,28 +82,10 @@ require_once('views/layouts/sidebar.php');
                                             <td><?php echo number_format($account['truy_cap']); ?></td>
                                             <td><?php echo $account['so_dt']; ?></td>
                                             <th>
-                                                <?php
-                                                if($account['quyen'] == 1)
-                                                {
-                                                    echo "<span class='label label-primary'>Quản trị viên</span>";
-                                                }
-                                                else
-                                                {
-                                                    echo "<span class='label label-info'>Nhân viên</span>";
-                                                }
-                                                ?>
+                                                <?= setRole($account['quyen'])?>
                                             </th>
                                             <th>
-                                                <?php
-                                                if($account['trang_thai'] == 1)
-                                                {
-                                                    echo "<span class='label label-success'>Đang hoạt động</span>";
-                                                }
-                                                else
-                                                {
-                                                    echo "<span class='label label-danger'>Ngưng hoạt động</span>";
-                                                }
-                                                ?>
+                                               <?= setAccountStatus($account['trang_thai'])?>
                                             </th>
                                             <th>
                                                 <form method='POST'>
@@ -113,7 +95,6 @@ require_once('views/layouts/sidebar.php');
                                             </th>
                                             <th>
                                                 <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever='".$account['id']."'><i class='fa fa-trash'></i></button>
-                                                <button type='button' class='btn bg-maroon btn-flat' disabled><i class='fa fa-trash'></i></button>
                                             </th>
                                         </tr>
                                         <?php

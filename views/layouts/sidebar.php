@@ -59,9 +59,9 @@ $page = getPage();
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'position') ? 'active' : '' ?>"><a href="nhan-vien/chuc-vu"><i class="fa fa-circle-o"></i> Chức vụ</a></li>
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'education') ? 'active' : '' ?>"><a href="nhan-vien/trinh-do"><i class="fa fa-circle-o"></i> Trình độ</a></li>
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'technique') ? 'active' : '' ?>"><a href="nhan-vien/chuyen-mon"><i class="fa fa-circle-o"></i> Chuyên môn</a></li>
-                    <li class=""><a href="bang-cap.php?p=staff&a=certificate"><i class="fa fa-circle-o"></i> Bằng cấp</a></li>
-                    <li class=""><a href="loai-nhan-vien.php?p=staff&a=employee-type"><i class="fa fa-circle-o"></i> Loại nhân viên</a></li>
-                    <li class=""><a href="them-nhan-vien.php?p=staff&a=add-staff"><i class="fa fa-circle-o"></i> Thêm mới nhân viên</a></li>
+                    <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'degree') ? 'active' : '' ?>"><a href="nhan-vien/bang-cap"><i class="fa fa-circle-o"></i> Bằng cấp</a></li>
+                    <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'type') ? 'active' : '' ?>"><a href="nhan-vien/loai"><i class="fa fa-circle-o"></i> Loại nhân viên</a></li>
+                    <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'create') ? 'active' : '' ?>"><a href="nhan-vien/them-moi"><i class="fa fa-circle-o"></i> Thêm mới nhân viên</a></li>
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'index') ? 'active' : '' ?>"><a href="nhan-vien"><i class="fa fa-circle-o"></i> Danh sách nhân viên</a></li>
                 </ul>
             </li>

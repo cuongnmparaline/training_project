@@ -26,9 +26,6 @@ abstract class BaseValidate{
     }
 
     protected function checkAvatar($file , $type = 'errorCreate'){
-        if (empty($file['file']['name'])) {
-            flash_error($type, 'avatar', AVATAR_BLANK);
-        }
 
         $type_file = pathinfo($file['file']['name'], PATHINFO_EXTENSION);
         $type_fileAllow = array('png', 'jpg', 'jpeg', 'gif');
@@ -105,6 +102,12 @@ abstract class BaseValidate{
             return false;
         } else {
             return true;
+        }
+    }
+
+    public function checkEmpty($data, $field, $message, $type){
+        if (empty($data)) {
+            flash_error($type, $field, $message);
         }
     }
 }

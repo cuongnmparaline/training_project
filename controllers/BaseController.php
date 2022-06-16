@@ -5,7 +5,6 @@ abstract class BaseController
     protected $folder;
     public function __construct()
     {
-        $this->userModel = new UserModel;
         $this->model = $this->autoloadModel();
     }
 
