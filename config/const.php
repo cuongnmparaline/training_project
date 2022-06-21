@@ -25,6 +25,11 @@ define("NUM_PER_PAGE", 3);
 
 ## Upload
 
+## Salary
+
+define("BONUS_DAY", 25);
+define("WORKING_TIME", 8);
+
 define("IMG_LOCATION", "assets/images/");
 define("IMG_EMPLOYEE_DEFAULT", "assets/images/employee/demo-3x4.jpg");
 

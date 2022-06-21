@@ -6,6 +6,8 @@
 #### Validate error
 define("EMAIL_BLANK", "Email không được để trống");
 define("NAME_BLANK", "Tên không được để trống");
+define("EMPLOYEE_BLANK", "Vui lòng chọn nhân viên");
+define("WORKING_DAY_BLANK", "Số ngày công không được để trống");
 define("MARRIAGE_BLANK", "Tình trạng hôn nhân không được để trống");
 define("IDENTIFY_BLANK", "Chứng minh nhân dân không được để trống");
 define("IDENTIFY_TIME_BLANK", "Ngày cấp không được để trống");
@@ -24,7 +26,9 @@ define("EMAIL_EXISTED", "Email is existed");
 
 
 
-define("EMAIL_VALIDATE", "Wrong email format, try again");
+define("WORKING_DAY_VALIDATE", "Ngày công phải là số và nhỏ hơn 31");
+define("ADVANCE_VALIDATE", "Khoản tạm ứng phải nhỏ hơn 2/3 lương tháng");
+
 define("PASS_VALIDATE", "Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter");
 define("NAME_VALIDATE", "Name must be 0 to 128 characters");
 define("SALARY_VALIDATE", "Lương phải là số");
@@ -78,9 +82,10 @@ define("EMPLOYEE_REMOVED", "Xóa nhân viên thành công!");
 define("EMPLOYEE_CREATED", "Tạo mới nhân viên thành công!");
 define("EMPLOYEE_UPDATED", "Chỉnh sửa nhân viên thành công!");
 
-define("USER_REMOVED", "User was removed successfully!");
-define("USER_CREATED", "User was created successfully!");
-define("USER_UPDATED", "User was updated successfully!");
+define("SALARY_REMOVED", "Xóa lương thành công!");
+define("SALARY_CREATED", "Tạo mới lương thành công!");
+define("SALARY_UPDATED", "Chỉnh sửa lương thành công!");
+
 
 define("ROLE_ALERT", "Only Super AdminModel could access AdminModel Management! You are in UserModel Management");
 

@@ -85,6 +85,8 @@ require_once('views/layouts/sidebar.php');
                         <h3 class="box-title">Danh sách nhân viên</h3>
                     </div>
                     <!-- /.box-header -->
+                    <?php flash('success_message'); ?>
+                    <?php flash('error_message'); ?>
                     <div class="box-body">
                         <div class="table-responsive">
                             <table id="example1" class="table table-bordered table-striped">

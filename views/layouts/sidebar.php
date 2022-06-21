@@ -59,13 +59,13 @@ $page = getPage();
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'position') ? 'active' : '' ?>"><a href="nhan-vien/chuc-vu"><i class="fa fa-circle-o"></i> Chức vụ</a></li>
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'education') ? 'active' : '' ?>"><a href="nhan-vien/trinh-do"><i class="fa fa-circle-o"></i> Trình độ</a></li>
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'technique') ? 'active' : '' ?>"><a href="nhan-vien/chuyen-mon"><i class="fa fa-circle-o"></i> Chuyên môn</a></li>
-                    <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'degree') ? 'active' : '' ?>"><a href="nhan-vien/bang-cap"><i class="fa fa-circle-o"></i> Bằng cấp</a></li>
+                    <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'degree') ? 'active' : '' ?>"><a href="nhan-vien/ba                                                                                                                                                                                                  ng-cap"><i class="fa fa-circle-o"></i> Bằng cấp</a></li>
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'type') ? 'active' : '' ?>"><a href="nhan-vien/loai"><i class="fa fa-circle-o"></i> Loại nhân viên</a></li>
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'create') ? 'active' : '' ?>"><a href="nhan-vien/them-moi"><i class="fa fa-circle-o"></i> Thêm mới nhân viên</a></li>
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'index') ? 'active' : '' ?>"><a href="nhan-vien"><i class="fa fa-circle-o"></i> Danh sách nhân viên</a></li>
                 </ul>
             </li>
-            <li class="treeview">
+            <li class="<?=($page['controller'] == 'salary') ? 'active' : '' ?> treeview">
                 <a href="#">
                     <i class="fa fa-money"></i>
                     <span>Quản lý lương</span>
@@ -74,8 +74,8 @@ $page = getPage();
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class=""><a href="bang-luong.php?p=salary&a=salary"><i class="fa fa-circle-o"></i> Bảng tính lương</a></li>
-                    <li class=""><a href="tinh-luong.php?p=salary&a=calculator"><i class="fa fa-circle-o"></i> Tính lương</a></li>
+                    <li class="<?=($page['controller'] == 'salary' && $page['action'] == 'index') ? 'active' : '' ?>"><a href="luong/bang-luong"><i class="fa fa-circle-o"></i> Bảng tính lương</a></li>
+                    <li class="<?=($page['controller'] == 'salary' && $page['action'] == 'calculate') ? 'active' : '' ?>"><a href="luong/tinh-luong"><i class="fa fa-circle-o"></i> Tính lương</a></li>
                 </ul>
             </li>
             <li class="treeview">

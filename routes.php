@@ -15,6 +15,7 @@ $controllers = array(
         'degree', 'editDegree', 'deleteDegree',
         'type', 'editType', 'deleteType',
     ],
+    'salary' => ['index', 'calculate', 'calculateAllowance'],
     'pages' => ['home', 'error'],
 ); // Các controllers trong hệ thống và các action có thể gọi ra từ controller đó.
 

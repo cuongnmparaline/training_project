@@ -59,6 +59,9 @@ if (!function_exists('generateCode')) {
             case 'type':
                 return "LNV" . time();
                 break;
+            case 'salary':
+                return "ML" . time();
+                break;
             default:
                 return "Not found";
         }

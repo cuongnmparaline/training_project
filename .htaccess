@@ -25,24 +25,31 @@ rewriteRule ^nhan-vien/trinh-do/([0-9]+)$ ?controller=employee&action=editEducat
 rewriteRule ^nhan-vien/xoa-trinh-do/([0-9]+)$ ?controller=employee&action=deleteEducation&id=$1
 
 #Postion
-rewriteRule ^nhan-vien/chuc-vu$ ?controller=employee&action=position
+rewriteRule ^nhan-vien/chuc-vu$ ?controller=employee&action=position [QSA,L]
 rewriteRule ^nhan-vien/chuc-vu/([0-9]+)$ ?controller=employee&action=editPosition&id=$1
 rewriteRule ^nhan-vien/xoa-chuc-vu/([0-9]+)$ ?controller=employee&action=deletePosition&id=$1
 
 #Technique
-rewriteRule ^nhan-vien/chuyen-mon$ ?controller=employee&action=technique
+rewriteRule ^nhan-vien/chuyen-mon$ ?controller=employee&action=technique [QSA,L]
 rewriteRule ^nhan-vien/chuyen-mon/([0-9]+)$ ?controller=employee&action=editTechnique&id=$1
 rewriteRule ^nhan-vien/xoa-chuyen-mon/([0-9]+)$ ?controller=employee&action=deleteTechnique&id=$1
 
 #Degree
-rewriteRule ^nhan-vien/bang-cap$ ?controller=employee&action=degree
+rewriteRule ^nhan-vien/bang-cap$ ?controller=employee&action=degree [QSA,L]
 rewriteRule ^nhan-vien/bang-cap/([0-9]+)$ ?controller=employee&action=editDegree&id=$1
 rewriteRule ^nhan-vien/xoa-bang-cap/([0-9]+)$ ?controller=employee&action=deleteDegree&id=$1
 
 #Type
-rewriteRule ^nhan-vien/loai$ ?controller=employee&action=type
+rewriteRule ^nhan-vien/loai$ ?controller=employee&action=type [QSA,L]
 rewriteRule ^nhan-vien/loai/([0-9]+)$ ?controller=employee&action=editType&id=$1
 rewriteRule ^nhan-vien/xoa-loai/([0-9]+)$ ?controller=employee&action=deleteType&id=$1
+
+#Type
+rewriteRule ^luong/bang-luong$ ?controller=salary&action=index [QSA,L]
+rewriteRule ^luong/tinh-luong$ ?controller=salary&action=calculate
+rewriteRule ^luong/tinh-phu-cap$ ?controller=salary&action=calculateAllowance
+rewriteRule ^bang-luong/([0-9]+)$ ?controller=salary&action=detail&id=$1
+#rewriteRule ^nhan-vien/xoa-loai/([0-9]+)$ ?controller=employee&action=deleteType&id=$1
 
 
 # Login

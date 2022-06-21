@@ -10,7 +10,7 @@ abstract class BaseModel implements ModelInterface {
     }
 
     public function getAll(){
-        $where = "WHERE del_flag =:del_flag";
+        $where = "WHERE del_flag =:del_flag ORDER BY id DESC";
         $sth = $this->db->prepare("SELECT *
         FROM $this->table {$where}");
         $sth->bindValue(':del_flag', DEL_FALSE);
