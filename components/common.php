@@ -1,6 +1,9 @@
 <?php
 
 require_once('models/AccountModel.php');
+require_once('models/employee/EmployeeModel.php');
+require_once('models/employee/PositionModel.php');
+require_once('models/DetailTeamModel.php');
 require_once('helpers/account.php');
 
 if (!function_exists('getAccountInfo')) {
@@ -10,6 +13,23 @@ if (!function_exists('getAccountInfo')) {
         return $accountModel->getById($id);
     }
 }
+
+if (!function_exists('getEmployeeInfo')) {
+    function getEmployeeInfo($id)
+    {
+        $employeeModel = new EmployeeModel();
+        return $employeeModel->getById($id);
+    }
+}
+
+if (!function_exists('getPositionInfo')) {
+    function getPositionInfo($id)
+    {
+        $positionModel = new PositionModel();
+        return $positionModel->getById($id);
+    }
+}
+
 
 if (!function_exists('getPage')) {
     function getPage()
@@ -62,8 +82,51 @@ if (!function_exists('generateCode')) {
             case 'salary':
                 return "ML" . time();
                 break;
+            case 'bussiness':
+                return "MCT" . time();
+                break;
+            case 'team':
+                return "GRP" . time();
+                break;
             default:
                 return "Not found";
         }
     }
 }
+
+if (!function_exists('getEmployeeNameById')) {
+    function getEmployeeNameById($id)
+    {
+        if(!empty($id)){
+            $account = getEmployeeInfo($id);
+            return $account['ten_nv'];
+        }
+        return  "";
+    }
+}
+
+if (!function_exists('getEmployeePositionById')) {
+    function getEmployeePositionById($id)
+    {
+        if(!empty($id)){
+            $positionModel = new PositionModel();
+            $position = $positionModel->getByEmployeeId($id);
+            return $position['ten_chuc_vu'];
+        }
+        return  "";
+    }
+}
+
+if (!function_exists('getNumberEmployeeByTeamId')) {
+    function getNumberEmployeeByTeamId($teamCode)
+    {
+        if(!empty($teamCode)){
+            $detailTeam = new DetailTeamModel();
+            $teams = $detailTeam->getNumEmployeeByTeamCode($teamCode);
+            return $teams['numberEmployee'];
+        }
+        return  "";
+    }
+}
+
+

@@ -16,6 +16,8 @@ $controllers = array(
         'type', 'editType', 'deleteType',
     ],
     'salary' => ['index', 'calculate', 'calculateAllowance'],
+    'bussiness' => ['index', 'create', 'delete'],
+    'team' => ['index', 'create', 'delete', 'edit', 'detail'],
     'pages' => ['home', 'error'],
 ); // Các controllers trong hệ thống và các action có thể gọi ra từ controller đó.
 

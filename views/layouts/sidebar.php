@@ -78,7 +78,7 @@ $page = getPage();
                     <li class="<?=($page['controller'] == 'salary' && $page['action'] == 'calculate') ? 'active' : '' ?>"><a href="luong/tinh-luong"><i class="fa fa-circle-o"></i> Tính lương</a></li>
                 </ul>
             </li>
-            <li class="treeview">
+            <li class="<?=($page['controller'] == 'bussiness') ? 'active' : '' ?> treeview">
                 <a href="#">
                     <i class="fa fa-files-o"></i>
                     <span>Quản lý công tác</span>
@@ -87,11 +87,11 @@ $page = getPage();
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class=""><a href="cong-tac.php?p=collaborate&a=add-collaborate"><i class="fa fa-circle-o"></i> Tạo công tác</a></li>
-                    <li class=""><a href="danh-sach-cong-tac.php?p=collaborate&a=list-collaborate"><i class="fa fa-circle-o"></i> Danh sách công tác</a></li>
+                    <li class="<?=($page['controller'] == 'bussiness' && $page['action'] == 'create') ? 'active' : '' ?>"><a href="tao-cong-tac"><i class="fa fa-circle-o"></i> Tạo công tác</a></li>
+                    <li class="<?=($page['controller'] == 'bussiness' && $page['action'] == 'index') ? 'active' : '' ?>"><a href="cong-tac"><i class="fa fa-circle-o"></i> Danh sách công tác</a></li>
                 </ul>
             </li>
-            <li class="treeview">
+            <li class="<?=($page['controller'] == 'team') ? 'active' : '' ?> treeview">
                 <a href="#">
                     <i class="fa fa-users"></i> <span>Nhóm nhân viên</span>
                     <span class="pull-right-container">
@@ -99,8 +99,8 @@ $page = getPage();
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class=""><a href="tao-nhom.php?p=group&a=add-group"><i class="fa fa-circle-o"></i> Tạo nhóm</a></li>
-                    <li class=""><a href="danh-sach-nhom.php?p=group&a=list-group"><i class="fa fa-circle-o"></i> Danh sách nhóm</a></li>
+                    <li class="<?=($page['controller'] == 'team' && $page['action'] == 'create') ? 'active' : '' ?>"><a href="tao-nhom"><i class="fa fa-circle-o"></i> Tạo nhóm</a></li>
+                    <li class="<?=($page['controller'] == 'team' && $page['action'] == 'index') ? 'active' : '' ?>"><a href="nhom"><i class="fa fa-circle-o"></i> Danh sách nhóm</a></li>
                 </ul>
             </li>
             <li class="treeview">

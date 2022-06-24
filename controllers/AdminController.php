@@ -1,4 +1,3 @@
-
 <?php
 require_once('controllers/BaseController.php');
 require_once('helpers/message.php');

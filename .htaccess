@@ -51,6 +51,16 @@ rewriteRule ^luong/tinh-phu-cap$ ?controller=salary&action=calculateAllowance
 rewriteRule ^bang-luong/([0-9]+)$ ?controller=salary&action=detail&id=$1
 #rewriteRule ^nhan-vien/xoa-loai/([0-9]+)$ ?controller=employee&action=deleteType&id=$1
 
+#Bussiness
+rewriteRule ^cong-tac$ ?controller=bussiness&action=index [QSA,L]
+rewriteRule ^tao-cong-tac$ ?controller=bussiness&action=create
+rewriteRule ^cong-tac/xoa-cong-tac/([0-9]+)$ ?controller=bussiness&action=delete&id=$1
+
+#Team
+rewriteRule ^nhom$ ?controller=team&action=index [QSA,L]
+rewriteRule ^tao-nhom$ ?controller=team&action=create
+rewriteRule ^nhom/chi-tiet-nhom/([0-9]+)$ ?controller=team&action=detail&id=$1
+rewriteRule ^nhom/xoa-nhom/([0-9]+)$ ?controller=team&action=delete&id=$1
 
 # Login
 rewriteRule ^login$ ?controller=account&action=login

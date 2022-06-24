@@ -5,7 +5,9 @@
 
 #### Validate error
 define("EMAIL_BLANK", "Email không được để trống");
+define("PASS_BLANK", "Mật khẩu không được để trống");
 define("NAME_BLANK", "Tên không được để trống");
+define("SALARY_BLANK", "Lương không được để trống");
 define("EMPLOYEE_BLANK", "Vui lòng chọn nhân viên");
 define("WORKING_DAY_BLANK", "Số ngày công không được để trống");
 define("MARRIAGE_BLANK", "Tình trạng hôn nhân không được để trống");
@@ -24,14 +26,18 @@ define("POSITION_BLANK", "Chức vụ không được để trống");
 define("EDUCATION_BLANK", "Trình độ không được để trống");
 define("EMAIL_EXISTED", "Email is existed");
 
-
+define("DAY_START_BLANK", "Ngày bắt đầu không được để trống");
+define("DAY_END_BLANK", "Ngày kết thúc không được để trống");
+define("LOCATION_BLANK", "Địa điểm không được để trống");
 
 define("WORKING_DAY_VALIDATE", "Ngày công phải là số và nhỏ hơn 31");
 define("ADVANCE_VALIDATE", "Khoản tạm ứng phải nhỏ hơn 2/3 lương tháng");
 
 define("PASS_VALIDATE", "Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter");
+define("EMAIL_VALIDATE", "Email bao gồm chữ, số và ký tự, độ dài từ 6 đến 32 ký tự");
 define("NAME_VALIDATE", "Name must be 0 to 128 characters");
 define("SALARY_VALIDATE", "Lương phải là số");
+define("POSITION_EMPLOYEE_VALIDATE", "Nhân viên này đang có lịch công tác vào những ngày này");
 
 
 define("ACCOUNT_INCORRECT", "Incorrect email or password");
@@ -86,6 +92,13 @@ define("SALARY_REMOVED", "Xóa lương thành công!");
 define("SALARY_CREATED", "Tạo mới lương thành công!");
 define("SALARY_UPDATED", "Chỉnh sửa lương thành công!");
 
+define("BUSSINESS_REMOVED", "Xóa công tác thành công!");
+define("BUSSINESS_CREATED", "Tạo mới công tác hành công!");
+define("BUSSINESS_UPDATED", "Chỉnh sửa công tác thành công!");
+
+define("TEAM_REMOVED", "Xóa nhóm thành công!");
+define("TEAM_CREATED", "Tạo mới nhóm hành công!");
+define("TEAM_UPDATED", "Chỉnh sửa nhóm thành công!");
 
 define("ROLE_ALERT", "Only Super AdminModel could access AdminModel Management! You are in UserModel Management");
 

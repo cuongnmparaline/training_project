@@ -44,7 +44,7 @@ require_once('views/layouts/sidebar.php');
                                                 <option value="">--- Chọn nhân viên ---</option>
                                                 <?php
                                                 foreach ($employees as $employee) { ?>
-                                                    <option value="<?= $employee['id'] ?>"><?=$employee['ma_nv'] . ' - ' . $employee['ten_nv'] ?></option>
+                                                    <option <?= (isset($post['employee']) && $post['employee'] == $employee['id']) ? "selected='selected'" : ''?> value="<?= $employee['id'] ?>"><?=$employee['ma_nv'] . ' - ' . $employee['ten_nv'] ?></option>
                                                     <?php
                                                 }
                                                 ?>

@@ -20,7 +20,7 @@ require_once('views/layouts/sidebar.php');
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
-                        <button type="submit" class="btn btn-primary" name="delete">Xóa</button>
+                        <a href="" class="btn btn-primary deleteButton">Xóa</a>
                     </div>
                 </form>
             </div>
