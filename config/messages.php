@@ -56,6 +56,7 @@ define("CANT_FOUND_POSITION", "Không thể tìm thấy chức vụ!");
 define("CANT_FOUND_TECHNIQUE", "Không thể tìm thấy chuyên môn!");
 define("CANT_FOUND_DEGREE", "Không thể tìm thấy bằng cấp!");
 define("CANT_FOUND_TYPE", "Không thể tìm thấy loại nhân viên!");
+define("CANT_FOUND_TEAM", "Không thể tìm thấy nhóm");
 
 
 # Department Success notification
@@ -107,6 +108,9 @@ define("BUSSINESS_UPDATED", "Chỉnh sửa công tác thành công!");
 define("TEAM_REMOVED", "Xóa nhóm thành công!");
 define("TEAM_CREATED", "Tạo mới nhóm hành công!");
 define("TEAM_UPDATED", "Chỉnh sửa nhóm thành công!");
+define("EMPLOYEE_ADDED", "Thêm nhân viên mới vào nhóm thành công!");
+define("EMPLOYEE_MOVED", "Nhân viên đã bị xóa khỏi nhóm thành công!");
+
 
 define("ROLE_ALERT", "Only Super AdminModel could access AdminModel Management! You are in UserModel Management");
 

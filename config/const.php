@@ -6,6 +6,9 @@ define('STAFF', 0);
 define("DEL_FALSE", 0);
 define("DEL_TRUE", 1);
 
+define("IS_REWARD", 1);
+define("IS_DISCIPLINE", 0);
+
 define("WORKING", 1);
 define("RETIRED", 0);
 

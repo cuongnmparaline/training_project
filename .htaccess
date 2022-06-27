@@ -61,7 +61,16 @@ rewriteRule ^cong-tac/xoa-cong-tac/([0-9]+)$ ?controller=bussiness&action=delete
 rewriteRule ^nhom$ ?controller=team&action=index [QSA,L]
 rewriteRule ^tao-nhom$ ?controller=team&action=create
 rewriteRule ^nhom/chi-tiet-nhom/([0-9]+)$ ?controller=team&action=detail&id=$1
+rewriteRule ^nhom/chi-tiet-nhom/([0-9]+)/sua$ ?controller=team&action=detail&id=$1&isEdit=true
+rewriteRule ^nhom/chi-tiet-nhom/([0-9]+)/them-nhan-vien$ ?controller=team&action=detail&id=$1&isAddEmployee=true
+rewriteRule ^nhom/chi-tiet-nhom/xoa-nhan-vien/([0-9]+)/([0-9]+)$ ?controller=team&action=deleteEmployee&id=$1&teamId=$2
+rewriteRule ^nhom/chinh-sua-nhom/([0-9]+)$ ?controller=team&action=edit&id=$1
 rewriteRule ^nhom/xoa-nhom/([0-9]+)$ ?controller=team&action=delete&id=$1
+
+#Reward
+rewriteRule ^khen-thuong$ ?controller=reward&action=index [QSA,L]
+rewriteRule ^khen-thuong/loai-khen-thuong$ ?controller=reward&action=type
+rewriteRule ^ky-luat$ ?controller=reward&action=discipline [QSA,L]
 
 #Acocunt
 rewriteRule ^tai-khoan/thong-tin$ ?controller=account&action=detail

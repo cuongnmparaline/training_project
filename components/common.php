@@ -1,7 +1,7 @@
 <?php
 
 require_once('models/AuthModel.php');
-require_once('models/employee/EmployeeModel.php');
+require_once('models/EmployeeModel.php');
 require_once('models/employee/PositionModel.php');
 require_once('models/DetailTeamModel.php');
 require_once('helpers/account.php');
@@ -88,6 +88,9 @@ if (!function_exists('generateCode')) {
             case 'team':
                 return "GRP" . time();
                 break;
+            case 'reward':
+                return "MKT" . time();
+                break;
             default:
                 return "Not found";
         }
@@ -98,8 +101,8 @@ if (!function_exists('getEmployeeNameById')) {
     function getEmployeeNameById($id)
     {
         if(!empty($id)){
-            $account = getEmployeeInfo($id);
-            return $account['ten_nv'];
+            $employee = getEmployeeInfo($id);
+            return $employee['ten_nv'];
         }
         return  "";
     }

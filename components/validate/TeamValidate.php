@@ -23,4 +23,14 @@ class TeamValidate extends BaseValidate {
         return $validateStatus;
     }
 
+    public function validateAddEmployee($data){
+        $validateStatus = false;
+        $this->checkEmpty($data['employee'], 'employee', EMPLOYEE_BLANK, 'errorCreate');
+
+        if(empty($_SESSION['errorCreate'])){
+            $validateStatus = true;
+        }
+        return $validateStatus;
+    }
+
 }

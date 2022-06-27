@@ -30,7 +30,7 @@ function setAccountStatus($status)
     }
 }
 
-function setGender($gender)
+function setAccountGender($gender)
 {
     switch ($gender) {
         case 1:

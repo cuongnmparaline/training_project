@@ -3,7 +3,7 @@
 require_once('controllers/BaseController.php');
 require_once('helpers/message.php');
 require_once('helpers/account.php');
-require_once('models/employee/EmployeeModel.php');
+require_once('models/EmployeeModel.php');
 require_once('models/employee/PositionModel.php');
 require_once('components/validate/SalaryValidate.php');
 

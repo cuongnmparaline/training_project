@@ -103,7 +103,7 @@ $page = getPage();
                     <li class="<?=($page['controller'] == 'team' && $page['action'] == 'index') ? 'active' : '' ?>"><a href="nhom"><i class="fa fa-circle-o"></i> Danh sách nhóm</a></li>
                 </ul>
             </li>
-            <li class="treeview">
+            <li class="<?=($page['controller'] == 'reward' || $page['controller'] == 'discipline') ? 'active' : '' ?> treeview">
                 <a href="#">
                     <i class="fa fa-star"></i> <span>Khen thưởng - Kỷ luật</span>
                     <span class="pull-right-container">
@@ -111,8 +111,8 @@ $page = getPage();
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class=""><a href="khen-thuong.php?p=bonus-discipline&a=bonus"><i class="fa fa-circle-o"></i>Khen thưởng</a></li>
-                    <li class=""><a href="ky-luat.php?p=bonus-discipline&a=discipline"><i class="fa fa-circle-o"></i> Kỷ luật</a></li>
+                    <li class="<?=($page['controller'] == 'reward') ? 'active' : '' ?>"><a href="khen-thuong"><i class="fa fa-circle-o"></i>Khen thưởng</a></li>
+                    <li class="<?=($page['controller'] == 'discipline') ? 'active' : '' ?>"><a href="ky-luat"><i class="fa fa-circle-o"></i> Kỷ luật</a></li>
                 </ul>
             </li>
             <li class="<?=($page['controller'] == 'account') ? 'active' : '' ?> treeview">

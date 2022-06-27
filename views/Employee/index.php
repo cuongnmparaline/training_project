@@ -115,7 +115,7 @@ require_once('views/layouts/sidebar.php');
                                     <tr>
                                         <td><?php echo $count; ?></td>
                                         <td><?php echo $employee['ma_nv']; ?></td>
-                                        <td><img src=" <?= !empty($employee['hinh_anh']) ? IMG_LOCATION . 'employee/' . $employee['hinh_anh'] : IMG_EMPLOYEE_DEFAULT ?>" width="80"></td>
+                                        <td><img src="<?= !empty($employee['hinh_anh']) ? IMG_LOCATION . 'employee/' . $employee['hinh_anh'] : IMG_EMPLOYEE_DEFAULT ?>" width="80"></td>
                                         <td><?php echo $employee['ten_nv']; ?></td>
                                         <td>
                                             <?=setGender($employee['gioi_tinh'])?>

@@ -22,14 +22,15 @@ class DetailTeamModel extends BaseModel
     }
 
     public function getAllByCode($teamCode){
-        $where = "WHERE del_flag =:del_flag";
+        $where = "WHERE ma_nhom = :teamCode AND del_flag =:del_flag";
         $sth = $this->db->prepare("SELECT *
         FROM $this->table
         {$where}");
-//        $sth->bindValue('teamCode', $teamCode);
+        $sth->bindValue('teamCode', $teamCode);
         $sth->bindValue(':del_flag', DEL_FALSE);
         $sth->execute();;
-        $check = $sth->rowCount();
-        return ($check > 0) ? $sth->fetch(PDO::FETCH_ASSOC) : false;
+        if($sth->execute()){
+            return $sth->fetchAll(PDO::FETCH_ASSOC);
+        }
     }
 }

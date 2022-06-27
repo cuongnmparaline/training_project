@@ -5,7 +5,7 @@ require_once('helpers/account.php');
 require_once('helpers/employee.php');
 require_once('models/employee/DepartmentModel.php');
 require_once('models/employee/EducationModel.php');
-require_once('models/employee/EmployeeModel.php');
+require_once('models/EmployeeModel.php');
 require_once('models/employee/PositionModel.php');
 require_once('models/employee/TechniqueModel.php');
 require_once('models/employee/DegreeModel.php');
