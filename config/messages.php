@@ -4,6 +4,7 @@
 
 
 #### Validate error
+define("EMAIL_EXISTED", "Email is existed");
 define("EMAIL_BLANK", "Email không được để trống");
 define("PASS_BLANK", "Mật khẩu không được để trống");
 define("NAME_BLANK", "Tên không được để trống");
@@ -24,7 +25,9 @@ define("STATUS_BLANK", "Trạng thái không được để trống");
 define("DEPARTMENT_BLANK", "Phòng ban không được để trống");
 define("POSITION_BLANK", "Chức vụ không được để trống");
 define("EDUCATION_BLANK", "Trình độ không được để trống");
-define("EMAIL_EXISTED", "Email is existed");
+define("PHONE_BLANK", "Số điện thoại không được để trống");
+define("ROLE_BLANK", "Trạng thái không được để trống");
+
 
 define("DAY_START_BLANK", "Ngày bắt đầu không được để trống");
 define("DAY_END_BLANK", "Ngày kết thúc không được để trống");
@@ -45,7 +48,8 @@ define("VERIFY_INCORRECT", "Password verify is not match");
 
 
 define("ST_WRONG", "Có gì đó sai sai!");
-define("CANT_FOUND_ACC", "Can not found account!");
+define("CANT_FOUND_ACC", "Không thể tìm thấy tài khoản!");
+define("CANT_FOUND_EMPLOYEE", "Không thể tìm thấy nhân viên!");
 define("CANT_FOUND_DEPARTMENT", "Không thể tìm thấy phòng ban!");
 define("CANT_FOUND_EDUCATION", "Không thể tìm thấy trình độ!");
 define("CANT_FOUND_POSITION", "Không thể tìm thấy chức vụ!");
@@ -87,6 +91,10 @@ define("TYPE_UPDATED", "Cập nhập loại nhân viên thành công!");
 define("EMPLOYEE_REMOVED", "Xóa nhân viên thành công!");
 define("EMPLOYEE_CREATED", "Tạo mới nhân viên thành công!");
 define("EMPLOYEE_UPDATED", "Chỉnh sửa nhân viên thành công!");
+
+define("ACCOUNT_REMOVED", "Xóa tài khoản thành công!");
+define("ACCOUNT_CREATED", "Tạo mới tài khoản thành công!");
+define("ACCOUNT_UPDATED", "Chỉnh sửa tài khoản thành công!");
 
 define("SALARY_REMOVED", "Xóa lương thành công!");
 define("SALARY_CREATED", "Tạo mới lương thành công!");

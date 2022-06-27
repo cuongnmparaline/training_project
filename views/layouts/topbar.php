@@ -25,13 +25,13 @@
                         <ul class="dropdown-menu">
                             <!-- User image -->
                             <li class="user-header">
-                                <img src="<?= IMG_LOCATION .'account/'.$accountInfo->hinh_anh?>" class="img-circle" alt="User Image">
+                                <img src="<?= IMG_LOCATION .'account/'.$accountInfo['hinh_anh']?>" class="img-circle" alt="User Image">
 
                                 <p>
-                                    <?= getFullName($accountInfo->ho, $accountInfo->ten) ?>
-                                    <?=setRole($accountInfo->quyen)?>
+                                    <?= getFullName($accountInfo['ho'], $accountInfo['ten']) ?>
+                                    <?=setRole($accountInfo['quyen'])?>
                                     <small>
-                                        <?= "Lượt truy cập: " . $accountInfo->truy_cap; ?>
+                                        <?= "Lượt truy cập: " . $accountInfo['truy_cap']; ?>
                                     </small>
                                 </p>
                             </li>
@@ -42,7 +42,7 @@
                                     <a href="thong-tin-tai-khoan.php?p=account&a=profile" class="btn btn-default btn-flat">Thông tin</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a href="dang-xuat.php" class="btn btn-default btn-flat">Đăng xuất</a>
+                                    <a href="logout" class="btn btn-default btn-flat">Đăng xuất</a>
                                 </div>
                             </li>
                         </ul>

@@ -11,6 +11,7 @@ rewriteRule ^home/ds-taikhoan$ ?controller=home&action=listAccount
 # Employee
 rewriteRule ^nhan-vien$ ?controller=employee&action=index
 rewriteRule ^nhan-vien/them-moi$ ?controller=employee&action=create
+rewriteRule ^nhan-vien/xem/([0-9]+)$ ?controller=employee&action=detail&id=$1
 rewriteRule ^nhan-vien/([0-9]+)$ ?controller=employee&action=edit&id=$1
 
 
@@ -62,11 +63,14 @@ rewriteRule ^tao-nhom$ ?controller=team&action=create
 rewriteRule ^nhom/chi-tiet-nhom/([0-9]+)$ ?controller=team&action=detail&id=$1
 rewriteRule ^nhom/xoa-nhom/([0-9]+)$ ?controller=team&action=delete&id=$1
 
-# Login
-rewriteRule ^login$ ?controller=account&action=login
+#Acocunt
+rewriteRule ^tai-khoan/thong-tin$ ?controller=account&action=detail
+rewriteRule ^tai-khoan/tao-tai-khoan$ ?controller=account&action=create
 
+# Login
+rewriteRule ^login$ ?controller=auth&action=login
 # Logout
-rewriteRule ^logout$ ?controller=account&action=logout
+rewriteRule ^logout$ ?controller=auth&action=logout
 
 ## Create admin
 #rewriteRule ^management/create$ ?controller=admin&action=create

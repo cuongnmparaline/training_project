@@ -1,8 +1,6 @@
 <?php
 require_once ('components/validate/BaseValidate.php');
-
 class AccountValidate extends BaseValidate {
-
     public function checkLogin($email, $password){
         if (empty($email)) {
             flash_error('errorLogin', 'email', EMAIL_BLANK);
@@ -31,13 +29,18 @@ class AccountValidate extends BaseValidate {
 
     public function validateCreate($data){
         $validateStatus = false;
-        $this->checkAvatar($data['avatar']);
-        $this->checkName($data['name']);
-        $this->checkEmail($data['email']);
+
+        if(!empty($data['avatar']['name']) && $data['avatar']['name'] != ''){
+            $this->checkAvatar($data['avatar']);
+        }
+        $this->checkEmpty($data['lastName'], 'lastName', NAME_BLANK, 'errorCreate');
+        $this->checkEmpty($data['firstName'], 'firstName', NAME_BLANK, 'errorCreate');
+        $this->checkEmpty($data['email'], 'email', EMAIL_BLANK, 'errorCreate');
+        $this->checkEmpty($data['role'], 'role', ROLE_BLANK, 'errorCreate');
+        $this->checkEmpty($data['status'], 'status', STATUS_BLANK, 'errorCreate');
         $this->checkPassword($data['password']);
         $this->checkPasswordVerify($data['password'], $data['password_verify']);
-        $role = isset($data['role_type']) ? $data['role_type'] : '';
-        $this->checkRole($role);
+
         if(empty($_SESSION['errorCreate'])){
             $validateStatus = true;
         }
@@ -46,22 +49,14 @@ class AccountValidate extends BaseValidate {
 
     public function validateEdit($data){
         $validateStatus = false;
-        $role = isset($data['role_type']) ? $data['role_type'] : '';
-        $this->checkName($data['name'], 'errorEdit');
-        $email = $data['admin']['email'];
-        if($email != $data['email']){
-            $this->checkEmail($data['email'], 'errorEdit');
-        }
-        $data['admin']['password'];
-        if (!empty($data['password'])) {
-            $this->checkPassword($data['password'], 'errorEdit');
-            $this->checkPasswordVerify($data['password'], $data['password_verify'], 'errorEdit');
-        }
 
-        if(!empty($data['avatar']['file']['name'])){
-            $this->checkAvatar($data['avatar'], 'errorEdit');
+        if(!empty($data['avatar']['name']) && $data['avatar']['name'] != ''){
+            $this->checkAvatar($data['avatar']);
         }
-        $this->checkRole($role, 'errorEdit');
+        $this->checkEmpty($data['lastName'], 'lastName', NAME_BLANK, 'errorEdit');
+        $this->checkEmpty($data['firstName'], 'firstName', NAME_BLANK, 'errorEdit');
+        $this->checkEmpty($data['role'], 'role', ROLE_BLANK, 'errorEdit');
+        $this->checkEmpty($data['status'], 'status', STATUS_BLANK, 'errorEdit');
 
         if(empty($_SESSION['errorEdit'])){
             $validateStatus = true;

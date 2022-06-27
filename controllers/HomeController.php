@@ -15,7 +15,7 @@ class HomeController extends BaseController
     {
         $this->folder = 'Home';
         parent::__construct();
-        $this->accountModel = new AccountModel();
+        $this->accountModel = new AuthModel();
         $this->departmentModel = new DepartmentModel();
         $this->employeeModel = new EmployeeModel();
         $this->positionModel = new PositionModel();

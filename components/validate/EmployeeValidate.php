@@ -33,22 +33,25 @@ class EmployeeValidate extends BaseValidate {
 
     public function validateEdit($data){
         $validateStatus = false;
-        $role = isset($data['role_type']) ? $data['role_type'] : '';
-        $this->checkName($data['name'], 'errorEdit');
-        $email = $data['admin']['email'];
-        if($email != $data['email']){
-            $this->checkEmail($data['email'], 'errorEdit');
-        }
-        $data['admin']['password'];
-        if (!empty($data['password'])) {
-            $this->checkPassword($data['password'], 'errorEdit');
-            $this->checkPasswordVerify($data['password'], $data['password_verify'], 'errorEdit');
+
+        if(!empty($data['avatar']['name']) && $data['avatar']['name'] != ''){
+            $this->checkAvatar($data['avatar']);
         }
 
-        if(!empty($data['avatar']['file']['name'])){
-            $this->checkAvatar($data['avatar'], 'errorEdit');
-        }
-        $this->checkRole($role, 'errorEdit');
+        $this->checkName($data['name']);
+        $this->checkEmpty($data['marriage'], 'marriage', MARRIAGE_BLANK, 'errorEdit');
+        $this->checkEmpty($data['identify'], 'identify', IDENTIFY_BLANK, 'errorEdit');
+        $this->checkEmpty($data['identify_time'], 'identify_time', IDENTIFY_TIME_BLANK, 'errorEdit');
+        $this->checkEmpty($data['identify_place'], 'identify_place', IDENTIFY_PLACE_BLANK, 'errorEdit');
+        $this->checkEmpty($data['nationality'], 'nationality', NATIONALITY_BLANK, 'errorEdit');
+        $this->checkEmpty($data['ethnic'], 'ethnic', ETHNIC_BLANK, 'errorEdit');
+        $this->checkEmpty($data['type'], 'type', TYPE_BLANK, 'errorEdit');
+        $this->checkEmpty($data['status'], 'status', STATUS_BLANK, 'errorEdit');
+        $this->checkEmpty($data['gender'], 'gender', GENDER_BLANK, 'errorEdit');
+        $this->checkEmpty($data['residence'], 'residence', RESIDENCE_BLANK, 'errorEdit');
+        $this->checkEmpty($data['department'], 'department', DEPARTMENT_BLANK, 'errorEdit');
+        $this->checkEmpty($data['education'], 'education', EDUCATION_BLANK, 'errorEdit');
+        $this->checkEmpty($data['position'], 'position', POSITION_BLANK, 'errorEdit');
 
         if(empty($_SESSION['errorEdit'])){
             $validateStatus = true;
@@ -57,7 +60,7 @@ class EmployeeValidate extends BaseValidate {
     }
 
     public function checkEmpty($data, $field, $message, $type){
-        if (empty($data)) {
+        if (empty($data) && $data !== '0') {
             flash_error($type, $field, $message);
         }
     }

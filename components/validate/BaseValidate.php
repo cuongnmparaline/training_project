@@ -7,7 +7,7 @@ abstract class BaseValidate{
 
     public function __construct()
     {
-        $this->accountModel = new AccountModel();
+        $this->accountModel = new AuthModel();
         $this->userModel = new UserModel();
     }
 

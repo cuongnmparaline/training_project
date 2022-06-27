@@ -118,16 +118,7 @@ require_once('views/layouts/sidebar.php');
                                         <td><img src=" <?= !empty($employee['hinh_anh']) ? IMG_LOCATION . 'employee/' . $employee['hinh_anh'] : IMG_EMPLOYEE_DEFAULT ?>" width="80"></td>
                                         <td><?php echo $employee['ten_nv']; ?></td>
                                         <td>
-                                            <?php
-                                            if($employee['gioi_tinh'] == 1)
-                                            {
-                                                echo "Nam";
-                                            }
-                                            else
-                                            {
-                                                echo "Nữ";
-                                            }
-                                            ?>
+                                            <?=setGender($employee['gioi_tinh'])?>
                                         </td>
                                         <td>
                                             <?php
@@ -141,16 +132,10 @@ require_once('views/layouts/sidebar.php');
                                             <?= setStatus($employee['trang_thai']) ?>
                                         </td>
                                         <td>
-                                            <form method='POST'>
-                                                <input type='hidden' value="<?=$employee['id']?>" name='idStaff'/>
-                                                <button type='submit' class='btn btn-primary btn-flat'  name='view'><i class='fa fa-eye'></i></button>
-                                            </form>
+                                            <a href="nhan-vien/xem/<?=$employee['id']?>"class='btn btn-primary btn-flat'><i class='fa fa-eye'></i></a>
                                         </td>
                                         <td>
-                                            <form method='POST'>
-                                                <input type='hidden' value="<?=$employee['id']?>" name='idStaff'/>
-                                                <button type='submit' class='btn bg-orange btn-flat'  name='edit'><i class='fa fa-edit'></i></button>
-                                            </form>
+                                            <a href="nhan-vien/<?=$employee['id']?>" class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
                                         </td>
                                         <td>
                                             <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="<?=$employee['id']?>"><i class='fa fa-trash'></i></button>

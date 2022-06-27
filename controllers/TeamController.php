@@ -50,8 +50,6 @@ class TeamController extends BaseController
         $team = $this->model->getById($_GET['id']);
         $teamCode = $team['ma_nhom'];
         $employees = $this->detailTeamModel->getAllByCode($teamCode);
-        var_dump($employees);
-        die;
         $this->render('detail');
     }
 

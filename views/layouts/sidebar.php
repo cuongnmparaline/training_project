@@ -115,7 +115,7 @@ $page = getPage();
                     <li class=""><a href="ky-luat.php?p=bonus-discipline&a=discipline"><i class="fa fa-circle-o"></i> Kỷ luật</a></li>
                 </ul>
             </li>
-            <li class="treeview">
+            <li class="<?=($page['controller'] == 'account') ? 'active' : '' ?> treeview">
                 <a href="#">
                     <i class="fa fa-user"></i> <span>Tài khoản</span>
                     <span class="pull-right-container">
@@ -123,8 +123,8 @@ $page = getPage();
             </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class=""><a href="thong-tin-tai-khoan.php?p=account&a=profile"><i class="fa fa-circle-o"></i> Thông tin tài khoản</a></li>
-                    <li class=""><a href="tao-tai-khoan.php?p=account&a=add-account"><i class="fa fa-circle-o"></i> Tạo tài khoản</a></li>
+                    <li class="<?=($page['controller'] == 'account' && $page['action'] == 'detail') ? 'active' : '' ?>"><a href="tai-khoan/thong-tin"><i class="fa fa-circle-o"></i> Thông tin tài khoản</a></li>
+                    <li class="<?=($page['controller'] == 'account' && $page['action'] == 'create') ? 'active' : '' ?>"><a href="tai-khoan/tao-tai-khoan"><i class="fa fa-circle-o"></i> Tạo tài khoản</a></li>
                     <li class=""><a href="ds-tai-khoan.php?p=account&a=list-account"><i class="fa fa-circle-o"></i> Danh sách tài khoản</a></li>
                     <li class=""><a href="doi-mat-khau.php?p=account&a=changepass"><i class="fa fa-circle-o"></i> Đổi mật khẩu</a></li>
                     <li><a href="dang-xuat.php"><i class="fa fa-circle-o"></i> Đăng xuất</a></li>

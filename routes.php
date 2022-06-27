@@ -5,9 +5,9 @@ ob_start();
 
 date_default_timezone_set("Asia/Ho_Chi_Minh");
 $controllers = array(
-    'account' => ['login', 'logout'],
+    'auth' => ['login', 'logout'],
     'home' => ['index', 'listEmployee', 'listAccount'],
-    'employee' => ['index', 'create', 'edit',
+    'employee' => ['index', 'create', 'edit', 'delete', 'detail',
         'department', 'editDepartment', 'deleteDepartment',
         'education', 'editEducation', 'deleteEducation',
         'position', 'editPosition', 'deletePosition',
@@ -18,6 +18,7 @@ $controllers = array(
     'salary' => ['index', 'calculate', 'calculateAllowance'],
     'bussiness' => ['index', 'create', 'delete'],
     'team' => ['index', 'create', 'delete', 'edit', 'detail'],
+    'account' => ['index', 'create', 'delete', 'edit', 'detail'],
     'pages' => ['home', 'error'],
 ); // Các controllers trong hệ thống và các action có thể gọi ra từ controller đó.
 
