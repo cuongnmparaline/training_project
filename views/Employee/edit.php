@@ -157,7 +157,7 @@ require_once('views/layouts/sidebar.php');
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Ảnh 3x4 (Nếu có): </label>
-                                        <input type="file" class="form-control" id="exampleInputEmail1" name="hinhAnh">
+                                        <input type="file" class="form-control" id="exampleInputEmail1" name="avatar">
                                     </div>
                                     <?=flash_error('errorEdit', 'avatar')?>
                                     <div class="form-group">

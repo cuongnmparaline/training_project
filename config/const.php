@@ -35,5 +35,6 @@ define("WORKING_TIME", 8);
 
 define("IMG_LOCATION", "assets/images/");
 define("IMG_EMPLOYEE_DEFAULT", "assets/images/employee/demo-3x4.jpg");
+define("IMG_ACCOUNT_DEFAULT", "assets/images/account/admin.png");
 
 

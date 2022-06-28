@@ -30,7 +30,6 @@ class AdminValidate extends BaseValidate {
         if($email != $data['email']){
              $this->checkEmail($data['email'], 'errorEdit');
         }
-        $data['admin']['password'];
         if (!empty($data['password'])) {
             $this->checkPassword($data['password'], 'errorEdit');
             $this->checkPasswordVerify($data['password'], $data['password_verify'], 'errorEdit');

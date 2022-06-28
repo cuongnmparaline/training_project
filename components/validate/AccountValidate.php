@@ -64,12 +64,26 @@ class AccountValidate extends BaseValidate {
         return $validateStatus;
     }
 
-    public function checkRole($role, $type = 'errorCreate'){
-        if (empty($role)) {
-            flash_error( $type, 'role', ROLE_BLANK);
+    public function validateChangePass($data){
+        if (empty($data['oldPass'])) {
+            flash_error('errorChangePass', 'oldPass', PASS_BLANK);
+        } elseif (!$this->isPassword($data['oldPass'])) {
+            flash_error('errorChangePass', 'oldPass', PASS_VALIDATE);
         }
 
-        return $role;
+        $account = $this->accountModel->checkLogin($_SESSION['account']['account_email'],md5($data['oldPass']));
+
+        if(empty($account) && empty($_SESSION['errorChangePass'])){
+            flash_error('errorChangePass', 'oldPass', PASSWORD_INCORRECT);
+        }
+
+        $this->checkPassword($data['password'], 'errorChangePass');
+        $this->checkPasswordVerify($data['password'], $data['passwordVerify'], 'errorChangePass');
+
+        if(empty($_SESSION['errorChangePass'])){
+            return true;
+        }
+        return false;
     }
 
 }

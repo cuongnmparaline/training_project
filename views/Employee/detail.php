@@ -33,7 +33,7 @@ require_once('views/layouts/sidebar.php');
                     <div class="box-body">
                         <div class="row">
                             <div class="col-lg-2">
-                                <img src="<?= IMG_LOCATION . '/employee/' . $employee['hinh_anh']; ?>" width="100%">
+                                <img src="<?= !empty($employee['hinh_anh']) ? IMG_LOCATION . 'employee/' . $employee['hinh_anh'] : IMG_EMPLOYEE_DEFAULT ?>" width="100%">
                             </div>
                             <div class="col-lg-5 col-sm-5 col-md-6 col-xs-12">
                                 <p class="box-title">Tên nhân viên: <b><?php echo $employee['ten_nv']; ?></b></p>
@@ -164,7 +164,7 @@ require_once('views/layouts/sidebar.php');
                                         ?></b>
                                 </p>
                                 <p class="box-title">Trạng thái:
-                                    <?= setStatus($employee['trang_thai']) ?>
+                                    <?= setEmployeeStatus($employee['trang_thai']) ?>
                                     </span>
                                 </p>
                             </div>

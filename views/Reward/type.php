@@ -3,7 +3,28 @@ require_once('views/layouts/header.php');
 require_once('views/layouts/topbar.php');
 require_once('views/layouts/sidebar.php');
 ?>
-
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="POST">
+                <div class="modal-header">
+                    <span style="font-size: 18px;">Thông báo</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id">
+                    Bạn có thực sự muốn xóa loại khen thưởng này?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                    <a href="" class="btn btn-primary deleteButton">Xóa</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -32,20 +53,23 @@ require_once('views/layouts/sidebar.php');
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
+                        <?php flash('success_message'); ?>
+                        <?php flash('error_message'); ?>
                         <form action="" method="POST">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Mã loại: </label>
-                                        <input type="text" class="form-control" name="rewardCode" value="<?=generateCode('reward')?>" readonly>
+                                        <input type="text" class="form-control" name="rewardTypeCode" value="<?=generateCode('rewardType')?>" readonly>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Tên loại: </label>
+                                        <label for="exampleInputEmail1">Tên loại<span style="color: red;">*</span>: </label>
                                         <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên loại" name="name">
                                     </div>
+                                    <?=flash_error('errorCreate', 'name')?>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Mô tả: </label>
-                                        <textarea id="editor1" rows="10" cols="80" name="moTa">
+                                        <textarea id="editor1" rows="10" cols="80" name="description"><?= isset($post['description']) ? $post['description'] : ''?>
                                     </textarea>
                                     </div>
                                     <div class="form-group">
@@ -96,13 +120,10 @@ require_once('views/layouts/sidebar.php');
                                     <td><?php echo getInsertedName($type['nguoi_sua']) ; ?></td>
                                     <td><?php echo $type['ngay_sua']; ?></td>
                                     <th>
-                                        <form method='POST'>
-                                            <input type='hidden' value="<?=$type['id']?>" name='idStaff'/>
-                                            <button type='submit' class='btn bg-orange btn-flat' name='edit'><i class='fa fa-edit'></i></button>
-                                        </form>
+                                        <a href="khen-thuong/sua-loai" class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
                                     </th>
                                     <th>
-                                        <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="<?=$employee['id']?>"><i class='fa fa-trash'></i></button>
+                                        <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="khen-thuong/xoa/<?=$type['id']?>"><i class='fa fa-trash'></i></button>
                                     </th>
                                 </tr>
                                 <?php

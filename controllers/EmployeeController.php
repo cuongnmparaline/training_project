@@ -154,15 +154,12 @@ class EmployeeController extends BaseController
         }
 
         $imageName = $employee['hinh_anh'];
-
-        if(!empty($data['avatar']['name']) && $data['avatar']['name'] != ''){
-            if(!empty($_FILES['avatar']['name'])){
-                $target_dir = IMG_LOCATION . 'employee/';
-                $path = $_FILES['avatar']['name'];
-                $ext = pathinfo($path, PATHINFO_EXTENSION);
-                $imageName = time() . "." . $ext;
-                $target_file = $target_dir . $imageName;
-            }
+        if(!empty($_FILES['avatar']['name'])){
+            $target_dir = IMG_LOCATION . 'employee/';
+            $path = $_FILES['avatar']['name'];
+            $ext = pathinfo($path, PATHINFO_EXTENSION);
+            $imageName = time() . "." . $ext;
+            $target_file = $target_dir . $imageName;
         }
 
         $dataEditEmployee = [
@@ -224,6 +221,17 @@ class EmployeeController extends BaseController
         ];
 
         return $this->render('detail', $dataView);
+    }
+
+    public function delete(){
+        if (!isset($_GET['id'])) {
+            flash('error_message', ST_WRONG, 'alert alert-danger');
+        }
+        $id = $_GET['id'];
+        if ($this->employeeModel->delete($id)) {
+            flash('success_message', EMPLOYEE_REMOVED);
+        }
+        return redirect_to('/nhan-vien');
     }
 
     public function department(){

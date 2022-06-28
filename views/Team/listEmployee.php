@@ -50,7 +50,7 @@
                             ?>
                         </td>
                         <td>
-                            <?= setStatus($employee['trang_thai'])?>
+                            <?= setEmployeeStatus($employee['trang_thai'])?>
                         </td>
                         <th>
                             <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="/nhom/chi-tiet-nhom/xoa-nhan-vien/<?=$employee['teamDetailId'].'/'.$team['id']?>"><i class='fa fa-trash'></i></button>

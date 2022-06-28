@@ -74,7 +74,7 @@ require_once('views/layouts/sidebar.php');
                                     <tr>
                                         <td><?php echo $count; ?></td>
                                         <td><?php echo $employee['ma_nv']; ?></td>
-                                        <td><img src="<?= IMG_LOCATION . '/employee/' . $employee['hinh_anh']; ?>" width="80"></td>
+                                        <td><img src="<?= !empty($employee['hinh_anh']) ? IMG_LOCATION . 'employee/' . $employee['hinh_anh'] : IMG_EMPLOYEE_DEFAULT ?>" width="80"></td>
                                         <td><?php echo $employee['ten_nv']; ?></td>
                                         <td>
                                             <?= setGender($employee['gioi_tinh']) ?>
@@ -88,7 +88,7 @@ require_once('views/layouts/sidebar.php');
                                         <td><?php echo $employee['noi_sinh']; ?></td>
                                         <td><?php echo $employee['so_cmnd']; ?></td>
                                         <td>
-                                            <?= setStatus($employee['trang_thai']) ?>
+                                            <?= setEmployeeStatus($employee['trang_thai']) ?>
                                         </td>
                                     </tr>
                                     <?php

@@ -2,7 +2,7 @@
 require_once('models/employee/PositionModel.php');
 require_once('models/employee/DepartmentModel.php');
 
-function setStatus($status)
+function setEmployeeStatus($status)
 {
     switch ($status) {
         case WORKING:

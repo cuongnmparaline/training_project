@@ -12,7 +12,7 @@ class AuthModel extends BaseModel
 
     public function checkLogin($email, $password){
         $where = "WHERE email = :email AND mat_khau = :mat_khau AND del_flag =:del_flag";
-        $sth = $this->db->prepare("SELECT id, ho, ten, email, quyen
+        $sth = $this->db->prepare("SELECT id, ho, ten, email, quyen, truy_cap
         FROM $this->table
         {$where}");
         $sth->bindValue('email', $email);

@@ -20,7 +20,7 @@ require_once('views/layouts/sidebar.php');
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
-                    <button type="submit" class="btn btn-primary" name="delete">Xóa</button>
+                    <a href="" class="btn btn-primary deleteButton">Xóa</a>
                 </div>
             </form>
         </div>
@@ -129,7 +129,7 @@ require_once('views/layouts/sidebar.php');
                                         <td><?php echo $employee['noi_sinh']; ?></td>
                                         <td><?php echo $employee['so_cmnd']; ?></td>
                                         <td>
-                                            <?= setStatus($employee['trang_thai']) ?>
+                                            <?= setEmployeeStatus($employee['trang_thai']) ?>
                                         </td>
                                         <td>
                                             <a href="nhan-vien/xem/<?=$employee['id']?>"class='btn btn-primary btn-flat'><i class='fa fa-eye'></i></a>
@@ -138,7 +138,7 @@ require_once('views/layouts/sidebar.php');
                                             <a href="nhan-vien/<?=$employee['id']?>" class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
                                         </td>
                                         <td>
-                                            <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="<?=$employee['id']?>"><i class='fa fa-trash'></i></button>
+                                            <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="nhan-vien/xoa/<?=$employee['id']?>"><i class='fa fa-trash'></i></button>
                                         </td>
                                     </tr>
                                     <?php

@@ -22,13 +22,9 @@ require_once('views/layouts/sidebar.php');
                 <?php
                 require_once('function.php');
                 ?>
-
             </div>
         </div>
     </section>
-    <?php
-    require_once('function.php');
-    ?>
 </div>
 
 <?php

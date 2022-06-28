@@ -3,9 +3,19 @@
 require_once('controllers/BaseController.php');
 require_once('helpers/message.php');
 require_once('helpers/account.php');
+require_once('helpers/employee.php');
 require_once('models/EmployeeModel.php');
-require_once('models/employee/PositionModel.php');
 require_once('components/validate/SalaryValidate.php');
+require_once('models/employee/DepartmentModel.php');
+require_once('models/employee/EducationModel.php');
+require_once('models/employee/PositionModel.php');
+require_once('models/employee/TechniqueModel.php');
+require_once('models/employee/DegreeModel.php');
+require_once('models/employee/TypeModel.php');
+require_once('models/employee/NationalityModel.php');
+require_once('models/employee/EthnicModel.php');
+require_once('models/employee/ReligionModel.php');
+require_once('models/employee/MarriageModel.php');
 
 class SalaryController extends BaseController
 {
@@ -16,6 +26,15 @@ class SalaryController extends BaseController
         $this->employeeModel = new EmployeeModel();
         $this->positionModel = new PositionModel();
         $this->salaryValidate = new SalaryValidate();
+        $this->departmentModel = new DepartmentModel();
+        $this->educationModel = new EducationModel();
+        $this->techniqueModel = new TechniqueModel();
+        $this->degreeModel = new DegreeModel();
+        $this->typeModel = new TypeModel();
+        $this->nationalityModel = new NationalityModel();
+        $this->ethnicModel = new EthnicModel();
+        $this->religionModel = new ReligionModel();
+        $this->marriageModel = new MarriageModel();
     }
 
     public function index()
@@ -117,6 +136,34 @@ class SalaryController extends BaseController
         $unemploymentInsurance = $salary * (1/100);
 
         return (int)($socialInsurance + $healthInsurance + $unemploymentInsurance);
+    }
+
+    public function detail(){
+        if (!isset($_GET['id'])) {
+            flash("error_message", CANT_FOUND_SALARY, 'alert alert-danger');
+            redirect_to('/nhan-vien');
+        }
+        $id = (int)$_GET['id'];
+        $employee = $this->employeeModel->getById($id);
+        if (empty($employee)) {
+            flash("error_message", CANT_FOUND_SALARY, 'alert alert-danger');
+            redirect_to('/luong/bang-luong');
+        }
+        $dataView = [
+            'departments' => $this->departmentModel->getAll(),
+            'educations' => $this->educationModel->getAll(),
+            'positions' => $this->positionModel->getAll(),
+            'techniques' => $this->techniqueModel->getAll(),
+            'degrees' => $this->degreeModel->getAll(),
+            'types' => $this->typeModel->getAll(),
+            'nationalities' => $this->nationalityModel->getAll(),
+            'ethnics' => $this->ethnicModel->getAll(),
+            'religions' => $this->religionModel->getAll(),
+            'marriages' => $this->marriageModel->getAll(),
+            'employee' => $employee,
+            'salaries' => $this->model->getAllByEmpId($id)
+        ];
+        return $this->render('detail', $dataView);
     }
 
 }

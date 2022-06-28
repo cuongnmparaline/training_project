@@ -122,7 +122,7 @@ require_once('views/layouts/sidebar.php');
                                                 <?php echo date_format(date_create($salary['ngay_cham']), "d-m-Y"); ?>
                                             </td>
                                             <th>
-                                                <a href="luong/<?=$salary['id']?>" class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
+                                                <a href="luong/<?=$salary['nhanvien_id']?>" class='btn btn-primary btn-flat'><i class='fa fa-edit'></i></a>
                                             </th>
                                             <th>
                                                 <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="/luong/xoa-luong/<?=$salary['id']?>"><i class='fa fa-trash'></i></button>

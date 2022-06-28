@@ -37,6 +37,11 @@ class AuthController extends BaseController
             'account_id' => $admin->id,
             'role_type' => $admin->quyen
         ];
+        $access = $admin->truy_cap + 1;
+        $dataEditAccount = [
+            'truy_cap' => $access
+        ];
+        $this->model->update($dataEditAccount, $admin->id);
         redirect_to('home');
     }
 

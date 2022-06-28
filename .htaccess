@@ -13,6 +13,7 @@ rewriteRule ^nhan-vien$ ?controller=employee&action=index
 rewriteRule ^nhan-vien/them-moi$ ?controller=employee&action=create
 rewriteRule ^nhan-vien/xem/([0-9]+)$ ?controller=employee&action=detail&id=$1
 rewriteRule ^nhan-vien/([0-9]+)$ ?controller=employee&action=edit&id=$1
+rewriteRule ^nhan-vien/xoa/([0-9]+)$ ?controller=employee&action=delete&id=$1
 
 
 #Department
@@ -48,12 +49,13 @@ rewriteRule ^nhan-vien/xoa-loai/([0-9]+)$ ?controller=employee&action=deleteType
 #Type
 rewriteRule ^luong/bang-luong$ ?controller=salary&action=index [QSA,L]
 rewriteRule ^luong/tinh-luong$ ?controller=salary&action=calculate
+rewriteRule ^luong/([0-9]+)$ ?controller=salary&action=detail&id=$1
 rewriteRule ^luong/tinh-phu-cap$ ?controller=salary&action=calculateAllowance
 rewriteRule ^bang-luong/([0-9]+)$ ?controller=salary&action=detail&id=$1
-#rewriteRule ^nhan-vien/xoa-loai/([0-9]+)$ ?controller=employee&action=deleteType&id=$1
 
 #Bussiness
 rewriteRule ^cong-tac$ ?controller=bussiness&action=index [QSA,L]
+rewriteRule ^cong-tac/([0-9]+)$ ?controller=bussiness&action=edit&id=$1
 rewriteRule ^tao-cong-tac$ ?controller=bussiness&action=create
 rewriteRule ^cong-tac/xoa-cong-tac/([0-9]+)$ ?controller=bussiness&action=delete&id=$1
 
@@ -69,12 +71,17 @@ rewriteRule ^nhom/xoa-nhom/([0-9]+)$ ?controller=team&action=delete&id=$1
 
 #Reward
 rewriteRule ^khen-thuong$ ?controller=reward&action=index [QSA,L]
+rewriteRule ^khen-thuong/them-khen-thuong$ ?controller=reward&action=create
 rewriteRule ^khen-thuong/loai-khen-thuong$ ?controller=reward&action=type
 rewriteRule ^ky-luat$ ?controller=reward&action=discipline [QSA,L]
 
 #Acocunt
+rewriteRule ^tai-khoan$ ?controller=account&action=index
 rewriteRule ^tai-khoan/thong-tin$ ?controller=account&action=detail
 rewriteRule ^tai-khoan/tao-tai-khoan$ ?controller=account&action=create
+rewriteRule ^tai-khoan/xoa/([0-9]+)$ ?controller=account&action=delete&id=$1
+rewriteRule ^tai-khoan/sua/([0-9]+)$ ?controller=account&action=edit&id=$1
+rewriteRule ^tai-khoan/doi-mat-khau$ ?controller=account&action=changePass
 
 # Login
 rewriteRule ^login$ ?controller=auth&action=login

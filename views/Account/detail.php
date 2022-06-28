@@ -24,7 +24,7 @@ require_once('views/layouts/sidebar.php');
                     <!-- Profile Image -->
                     <div class="box box-primary">
                         <div class="box-body box-profile">
-                            <img class="profile-user-img img-responsive img-circle" src="<?= IMG_LOCATION .'account/'.$account['hinh_anh']?>" alt="User profile picture">
+                            <img class="profile-user-img img-responsive img-circle" src="<?= !empty($account['hinh_anh']) ? IMG_LOCATION . 'account/' . $account['hinh_anh'] : IMG_ACCOUNT_DEFAULT ?>" alt="User profile picture">
 
                             <h3 class="profile-username text-center"><?=getFullName($account['ho'], $account['ten'])?></h3>
 

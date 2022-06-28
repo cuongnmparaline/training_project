@@ -106,7 +106,7 @@ abstract class BaseValidate{
     }
 
     public function checkEmpty($data, $field, $message, $type){
-        if (empty($data)) {
+        if (empty($data) && $data != '0') {
             flash_error($type, $field, $message);
         }
     }

@@ -32,7 +32,6 @@ $page = getPage();
         <!-- /.search form -->
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
-            <li class="header">CƠ SỞ DỮ LIỆU</li>
             <li class="<?=($page['controller'] == 'home') ? 'active' : '' ?> treeview">
                 <a href="#">
                     <i class="fa fa-dashboard"></i> <span>Tổng quan</span>
@@ -59,7 +58,7 @@ $page = getPage();
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'position') ? 'active' : '' ?>"><a href="nhan-vien/chuc-vu"><i class="fa fa-circle-o"></i> Chức vụ</a></li>
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'education') ? 'active' : '' ?>"><a href="nhan-vien/trinh-do"><i class="fa fa-circle-o"></i> Trình độ</a></li>
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'technique') ? 'active' : '' ?>"><a href="nhan-vien/chuyen-mon"><i class="fa fa-circle-o"></i> Chuyên môn</a></li>
-                    <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'degree') ? 'active' : '' ?>"><a href="nhan-vien/ba                                                                                                                                                                                                  ng-cap"><i class="fa fa-circle-o"></i> Bằng cấp</a></li>
+                    <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'degree') ? 'active' : '' ?>"><a href="nhan-vien/bang-cap"><i class="fa fa-circle-o"></i> Bằng cấp</a></li>
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'type') ? 'active' : '' ?>"><a href="nhan-vien/loai"><i class="fa fa-circle-o"></i> Loại nhân viên</a></li>
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'create') ? 'active' : '' ?>"><a href="nhan-vien/them-moi"><i class="fa fa-circle-o"></i> Thêm mới nhân viên</a></li>
                     <li class="<?=($page['controller'] == 'employee' && $page['action'] == 'index') ? 'active' : '' ?>"><a href="nhan-vien"><i class="fa fa-circle-o"></i> Danh sách nhân viên</a></li>
@@ -125,9 +124,9 @@ $page = getPage();
                 <ul class="treeview-menu">
                     <li class="<?=($page['controller'] == 'account' && $page['action'] == 'detail') ? 'active' : '' ?>"><a href="tai-khoan/thong-tin"><i class="fa fa-circle-o"></i> Thông tin tài khoản</a></li>
                     <li class="<?=($page['controller'] == 'account' && $page['action'] == 'create') ? 'active' : '' ?>"><a href="tai-khoan/tao-tai-khoan"><i class="fa fa-circle-o"></i> Tạo tài khoản</a></li>
-                    <li class=""><a href="ds-tai-khoan.php?p=account&a=list-account"><i class="fa fa-circle-o"></i> Danh sách tài khoản</a></li>
-                    <li class=""><a href="doi-mat-khau.php?p=account&a=changepass"><i class="fa fa-circle-o"></i> Đổi mật khẩu</a></li>
-                    <li><a href="dang-xuat.php"><i class="fa fa-circle-o"></i> Đăng xuất</a></li>
+                    <li class="<?=($page['controller'] == 'account' && $page['action'] == 'index') ? 'active' : '' ?>"><a href="tai-khoan"><i class="fa fa-circle-o"></i> Danh sách tài khoản</a></li>
+                    <li class="<?=($page['controller'] == 'account' && $page['action'] == 'changePass') ? 'active' : '' ?>"><a href="tai-khoan/doi-mat-khau"><i class="fa fa-circle-o"></i> Đổi mật khẩu</a></li>
+                    <li><a href="logout"><i class="fa fa-circle-o"></i> Đăng xuất</a></li>
                 </ul>
             </li>
         </ul>

@@ -16,17 +16,15 @@ function setRole($role)
 
 function setAccountStatus($status)
 {
-    if (!empty($status)) {
-        switch ($status) {
-            case 1:
-                return "<span class='label label-success'>Đang hoạt động</span>";
-                break;
-            case 0:
-                return "<span class='label label-danger'>Ngưng hoạt động</span>";
-                break;
-            default:
-                return "Not found";
-        }
+    switch ($status) {
+        case 1:
+            return "<span class='label label-success'>Đang hoạt động</span>";
+            break;
+        case 0:
+            return "<span class='label label-danger'>Ngưng hoạt động</span>";
+            break;
+        default:
+            return "Not found";
     }
 }
 

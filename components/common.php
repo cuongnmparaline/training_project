@@ -1,6 +1,7 @@
 <?php
 
 require_once('models/AuthModel.php');
+require_once('models/AccountModel.php');
 require_once('models/EmployeeModel.php');
 require_once('models/employee/PositionModel.php');
 require_once('models/DetailTeamModel.php');
@@ -9,7 +10,7 @@ require_once('helpers/account.php');
 if (!function_exists('getAccountInfo')) {
     function getAccountInfo($id)
     {
-        $accountModel = new AuthModel();
+        $accountModel = new AccountModel();
         return $accountModel->getById($id);
     }
 }
@@ -87,6 +88,9 @@ if (!function_exists('generateCode')) {
                 break;
             case 'team':
                 return "GRP" . time();
+                break;
+            case 'rewardType':
+                return "LKT" . time();
                 break;
             case 'reward':
                 return "MKT" . time();

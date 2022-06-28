@@ -23,6 +23,17 @@ class SalaryModel extends BaseModel
         }
     }
 
+    public function getAllByEmpId($employeeId){
+        $where = "WHERE luong.nhanvien_id = nhanvien.id AND chuc_vu.id = nhanvien.chuc_vu_id AND luong.del_flag =:del_flag AND nhanvien.del_flag =:del_flag AND chuc_vu.del_flag =:del_flag AND luong.nhanvien_id =:id ORDER BY luong.id DESC";
+        $sth = $this->db->prepare("SELECT *
+        FROM $this->table, nhanvien, chuc_vu {$where}");
+        $sth->bindValue(':del_flag', DEL_FALSE);
+        $sth->bindValue(':id', $employeeId);
+        if($sth->execute()){
+            return $sth->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }
+
     public function getAll(){
         $where = "WHERE luong.nhanvien_id = nhanvien.id AND chuc_vu.id = nhanvien.chuc_vu_id AND luong.del_flag =:del_flag AND nhanvien.del_flag =:del_flag AND chuc_vu.del_flag =:del_flag ORDER BY luong.id DESC";
         $sth = $this->db->prepare("SELECT *

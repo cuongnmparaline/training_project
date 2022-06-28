@@ -36,20 +36,23 @@ define("LOCATION_BLANK", "Địa điểm không được để trống");
 define("WORKING_DAY_VALIDATE", "Ngày công phải là số và nhỏ hơn 31");
 define("ADVANCE_VALIDATE", "Khoản tạm ứng phải nhỏ hơn 2/3 lương tháng");
 
-define("PASS_VALIDATE", "Password include letter, numberic, symbol, from 6 to 32 letter, upcase in the first letter");
+define("PASS_VALIDATE", "Mật khẩu bao gồm chữ, số và ký tự, từ 6 đến 32 ký tự và viết hoa chữ cái đầu");
 define("EMAIL_VALIDATE", "Email bao gồm chữ, số và ký tự, độ dài từ 6 đến 32 ký tự");
 define("NAME_VALIDATE", "Name must be 0 to 128 characters");
 define("SALARY_VALIDATE", "Lương phải là số");
 define("POSITION_EMPLOYEE_VALIDATE", "Nhân viên này đang có lịch công tác vào những ngày này");
 
 
-define("ACCOUNT_INCORRECT", "Incorrect email or password");
-define("VERIFY_INCORRECT", "Password verify is not match");
+define("ACCOUNT_INCORRECT", "Tên tài khoản và mật khẩu không đúng!");
+define("PASSWORD_INCORRECT", "Mật khẩu cũ bạn nhập không đúng!");
+define("VERIFY_INCORRECT", "Mật khẩu nhập lại không khớp!");
 
 
 define("ST_WRONG", "Có gì đó sai sai!");
 define("CANT_FOUND_ACC", "Không thể tìm thấy tài khoản!");
 define("CANT_FOUND_EMPLOYEE", "Không thể tìm thấy nhân viên!");
+define("CANT_FOUND_BUSSINESS", "Không thể tìm thấy công tác!");
+define("CANT_FOUND_SALARY", "Không thể tìm thấy bản ghi lương này!");
 define("CANT_FOUND_DEPARTMENT", "Không thể tìm thấy phòng ban!");
 define("CANT_FOUND_EDUCATION", "Không thể tìm thấy trình độ!");
 define("CANT_FOUND_POSITION", "Không thể tìm thấy chức vụ!");
@@ -111,6 +114,9 @@ define("TEAM_UPDATED", "Chỉnh sửa nhóm thành công!");
 define("EMPLOYEE_ADDED", "Thêm nhân viên mới vào nhóm thành công!");
 define("EMPLOYEE_MOVED", "Nhân viên đã bị xóa khỏi nhóm thành công!");
 
+define("REWARD_TYPE_REMOVED", "Xóa loại khen thưởng thành công!");
+define("REWARD_TYPE_CREATED", "Tạo mới loại khen thưởng thành công!");
+define("REWARD_TYPE_UPDATED", "Chỉnh sửa loại khen thưởng thành công!");
 
 define("ROLE_ALERT", "Only Super AdminModel could access AdminModel Management! You are in UserModel Management");
 
