@@ -136,4 +136,14 @@ if (!function_exists('getNumberEmployeeByTeamId')) {
     }
 }
 
+if (!function_exists('isAdmin')) {
+    function isAdmin()
+    {
+        if($_SESSION['account']['role_type'] == ADMIN){
+            return true;
+        }
+        return false;
+    }
+}
+
 

@@ -27,6 +27,10 @@ define("POSITION_BLANK", "Chức vụ không được để trống");
 define("EDUCATION_BLANK", "Trình độ không được để trống");
 define("PHONE_BLANK", "Số điện thoại không được để trống");
 define("ROLE_BLANK", "Trạng thái không được để trống");
+define("DECISION_NUMBER_BLANK", "SỐ quyết định không được để trống");
+define("DECISION_DAY_BLANK", "Ngày quyết định được để trống");
+define("REWARD_NAME_BLANK", "Tên khen thưởng không được để trống");
+define("REWARD_TYPE_BLANK", "Kiểu khen thưởng không được để trống");
 
 
 define("DAY_START_BLANK", "Ngày bắt đầu không được để trống");
@@ -118,7 +122,11 @@ define("REWARD_TYPE_REMOVED", "Xóa loại khen thưởng thành công!");
 define("REWARD_TYPE_CREATED", "Tạo mới loại khen thưởng thành công!");
 define("REWARD_TYPE_UPDATED", "Chỉnh sửa loại khen thưởng thành công!");
 
-define("ROLE_ALERT", "Only Super AdminModel could access AdminModel Management! You are in UserModel Management");
+define("REWARD_REMOVED", "Xóa khen thưởng thành công!");
+define("REWARD_CREATED", "Tạo mới khen thưởng thành công!");
+define("REWARD_UPDATED", "Chỉnh sửa khen thưởng thành công!");
+
+define("ROLE_ALERT", "Chỉ có quản trị viên mới có thể thực hiện thức năng này");
 
 define("FORMAT_FILE_ERROR", "This file format is not supported");
 define("SIZE_FILE_ERROR", "YOUR FILE CAN NOT BE OVER 5MB");

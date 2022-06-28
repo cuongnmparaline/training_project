@@ -32,6 +32,8 @@ require_once('views/layouts/sidebar.php');
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
+                        <?php flash('success_message'); ?>
+                        <?php flash('error_message'); ?>
                         <form action="" method="POST">
                             <div class="row">
                                 <div class="col-md-12">
@@ -41,20 +43,23 @@ require_once('views/layouts/sidebar.php');
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Số quyết định <span style="color: red;">*</span>: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập số quyết định" name="decisionNumber" value="">
+                                        <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Nhập số quyết định" name="decisionNumber" value="">
                                     </div>
+                                    <?=flash_error('errorCreate', 'decisionNumber')?>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Ngày quyết định: </label>
+                                        <label for="exampleInputEmail1">Ngày quyết định <span style="color: red;">*</span>: </label>
                                         <input type="date" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên loại" value="<?php echo date('Y-m-d'); ?>" name="decisionDay">
                                     </div>
+                                    <?=flash_error('errorCreate', 'decisionDay')?>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Tên khen thưởng <span style="color: red;">*</span>: </label>
                                         <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên khen thưởng" name="name">
                                     </div>
+                                    <?=flash_error('errorCreate', 'name')?>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Chọn nhân viên: </label>
+                                        <label for="exampleInputEmail1">Chọn nhân viên <span style="color: red;">*</span>: </label>
                                         <select class="form-control" name="employee">
-                                            <option value="chon">--- Chọn nhân viên ---</option>
+                                            <option value="">--- Chọn nhân viên ---</option>
                                             <?php
                                             foreach($employees as $employee)
                                             { ?>
@@ -64,19 +69,21 @@ require_once('views/layouts/sidebar.php');
                                             ?>
                                         </select>
                                     </div>
+                                    <?=flash_error('errorCreate', 'employee')?>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Loại khen thưởng: </label>
+                                        <label for="exampleInputEmail1">Loại khen thưởng<span style="color: red;">*</span>: </label>
                                         <select class="form-control" name="rewardType">
                                             <option value="">--- Chọn khen thưởng ---</option>
                                             <?php
                                             foreach($rewards as $reward)
                                             { ?>
-                                                <option <?= (isset($post['employee']) && $post['employee'] == $reward['id']) ? "selected='selected'" : ''?> value="<?= $reward['id'] ?>"><?=$reward['ma_kt'] . ' - ' . $reward['ten_khen_thuong'] ?></option>
+                                                <option <?= (isset($post['employee']) && $post['employee'] == $reward['id']) ? "selected='selected'" : ''?> value="<?= $reward['loai_kt_id'] ?>"><?=$reward['ma_kt'] . ' - ' . $reward['ten_khen_thuong'] ?></option>
                                                 <?php
                                             }
                                             ?>
                                         </select>
                                     </div>
+                                    <?=flash_error('errorCreate', 'rewardType')?>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Hình thức: </label>
                                         <select class="form-control" name="form">
@@ -87,8 +94,9 @@ require_once('views/layouts/sidebar.php');
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Số tiền thưởng <span style="color: red;">*</span>: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập số tiền thưởng" name="rewardNumber" value="">
+                                        <input type="number" class="form-control" id="exampleInputEmail1" placeholder="Nhập số tiền thưởng" name="rewardNumber" value="">
                                     </div>
+                                    <?=flash_error('errorCreate', 'rewardNumber')?>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Mô tả: </label>
                                         <textarea class="form-control" id="editor1" name="description"></textarea>
@@ -108,6 +116,75 @@ require_once('views/layouts/sidebar.php');
                             </div>
                             <!-- /.row -->
                         </form>
+                    </div>
+                    <div class="box">
+                        <div class="box-header">
+                            <h3 class="box-title">Danh sách khen thưởng</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="table-responsive">
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Mã khen thưởng</th>
+                                        <th>Tên khen thưởng</th>
+                                        <th>Tên nhân viên</th>
+                                        <th>Số quyết định</th>
+                                        <th>Ngày quyết định</th>
+                                        <th>Tên loại</th>
+                                        <th>Hình thức</th>
+                                        <th>Số tiền</th>
+                                        <th>Ngày khen thưởng</th>
+                                        <th>Sửa</th>
+                                        <th>Xóa</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                    $count = 1;
+                                    foreach ($rewards as $reward)
+                                    {
+                                        ?>
+                                        <tr>
+                                            <td><?php echo $count; ?></td>
+                                            <td><?php echo $reward['ma_kt']; ?></td>
+                                            <td><?php echo $reward['ten_khen_thuong']; ?></td>
+                                            <td><?php echo getEmployeeInfo($reward['nhanvien_id'])['ten_nv'] ?></td>
+                                            <td><?php echo $reward['so_qd']; ?></td>
+                                            <td><?php echo date_format(date_create($reward['ngay_qd']), "d-m-Y"); ?></td>
+                                            <td><?php echo $reward['ten_loai']; ?></td>
+                                            <td>
+                                                <?php
+                                                if($reward['hinh_thuc'] == 1)
+                                                {
+                                                    echo "Chuyển khoản qua thẻ";
+                                                }
+                                                else
+                                                {
+                                                    echo "Gửi tiền mặt";
+                                                }
+                                                ?>
+                                            </td>
+                                            <td><?php echo "<span style='color: blue; font-weight: bold;'>". number_format($reward['so_tien'])."vnđ </span>"; ?></td>
+                                            <td><?php echo date_format(date_create($reward['ngay_qd']), "d-m-Y"); ?></td>
+                                            <th>
+                                                <a hre class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
+                                            </th>
+                                            <th>
+                                                <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever='".$kt['ma_kt']."'><i class='fa fa-trash'></i></button>
+                                            </th>
+                                        </tr>
+                                        <?php
+                                        $count++;
+                                    }
+                                    ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
                     </div>
                     <!-- /.box-body -->
                 </div>

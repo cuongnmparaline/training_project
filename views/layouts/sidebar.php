@@ -42,7 +42,14 @@ $page = getPage();
                 <ul class="<?=($page['controller'] == 'home') ? 'active' : '' ?> treeview-menu">
                     <li class="<?=($page['controller'] == 'home' && $page['action'] == 'index') ? 'active' : '' ?>"><a href="home"><i class="fa fa-circle-o"></i> Thống kê</a></li>
                     <li class="<?=($page['controller'] == 'home' && $page['action'] == 'listEmployee') ? 'active' : '' ?>"><a a href="home/ds-nhanvien"><i class="fa fa-circle-o"></i> Danh sách nhân viên</a></li>
-                    <li class="<?=($page['controller'] == 'home' && $page['action'] == 'listAccount') ? 'active' : '' ?>"><a href="home/ds-taikhoan"><i class="fa fa-circle-o"></i> Danh sách tài khoản</a></li>
+                    <?php
+                    if(isAdmin()){
+                        ?>
+                        <li class="<?=($page['controller'] == 'home' && $page['action'] == 'listAccount') ? 'active' : '' ?>"><a href="home/ds-taikhoan"><i class="fa fa-circle-o"></i> Danh sách tài khoản</a></li>
+                        <?php
+                    }
+                    ?>
+
                 </ul>
             </li>
             <li class="<?=($page['controller'] == 'employee') ? 'active' : '' ?> treeview">
@@ -123,8 +130,14 @@ $page = getPage();
                 </a>
                 <ul class="treeview-menu">
                     <li class="<?=($page['controller'] == 'account' && $page['action'] == 'detail') ? 'active' : '' ?>"><a href="tai-khoan/thong-tin"><i class="fa fa-circle-o"></i> Thông tin tài khoản</a></li>
-                    <li class="<?=($page['controller'] == 'account' && $page['action'] == 'create') ? 'active' : '' ?>"><a href="tai-khoan/tao-tai-khoan"><i class="fa fa-circle-o"></i> Tạo tài khoản</a></li>
-                    <li class="<?=($page['controller'] == 'account' && $page['action'] == 'index') ? 'active' : '' ?>"><a href="tai-khoan"><i class="fa fa-circle-o"></i> Danh sách tài khoản</a></li>
+                    <?php
+                        if(isAdmin()){
+                            ?>
+                            <li class="<?=($page['controller'] == 'account' && $page['action'] == 'create') ? 'active' : '' ?>"><a href="tai-khoan/tao-tai-khoan"><i class="fa fa-circle-o"></i> Tạo tài khoản</a></li>
+                            <li class="<?=($page['controller'] == 'account' && $page['action'] == 'index') ? 'active' : '' ?>"><a href="tai-khoan"><i class="fa fa-circle-o"></i> Danh sách tài khoản</a></li>
+                    <?php
+                        }
+                    ?>
                     <li class="<?=($page['controller'] == 'account' && $page['action'] == 'changePass') ? 'active' : '' ?>"><a href="tai-khoan/doi-mat-khau"><i class="fa fa-circle-o"></i> Đổi mật khẩu</a></li>
                     <li><a href="logout"><i class="fa fa-circle-o"></i> Đăng xuất</a></li>
                 </ul>

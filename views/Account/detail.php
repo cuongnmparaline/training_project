@@ -107,19 +107,25 @@ require_once('views/layouts/sidebar.php');
                                             <input type="text" class="form-control" id="inputEmail" placeholder="Nhập số điện thoại" name="phone" value="<?php echo $account['so_dt']; ?>">
                                         </div>
                                     </div>
-                                        <div class="form-group">
-                                            <label for="inputExperience" class="col-sm-2 control-label">Quyền hạn</label>
-                                            <div class="col-sm-10">
-                                                <label>
-                                                    <input type="radio" name="role" class="minimal" value="1" <?= $account['quyen'] == 1 ? 'checked' : '' ?>>
-                                                    Quản trị viên
-                                                </label>
-                                                <label>
-                                                    <input type="radio" name="role" class="minimal" value="0"<?= $account['quyen'] == 0 ? 'checked' : '' ?>>
-                                                    Nhân viên
-                                                </label>
-                                            </div>
-                                        </div>
+                                        <?php
+                                            if(isAdmin()){
+                                                ?>
+                                                <div class="form-group">
+                                                    <label for="inputExperience" class="col-sm-2 control-label">Quyền hạn</label>
+                                                    <div class="col-sm-10">
+                                                        <label>
+                                                            <input type="radio" name="role" class="minimal" value="1" <?= $account['quyen'] == 1 ? 'checked' : '' ?>>
+                                                            Quản trị viên
+                                                        </label>
+                                                        <label>
+                                                            <input type="radio" name="role" class="minimal" value="0"<?= $account['quyen'] == 0 ? 'checked' : '' ?>>
+                                                            Nhân viên
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <?php
+                                            }
+                                        ?>
                                         <div class="form-group">
                                             <label for="inputExperience" class="col-sm-2 control-label">Trạng thái</label>
                                             <div class="col-sm-10">

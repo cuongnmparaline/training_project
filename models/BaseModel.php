@@ -120,6 +120,7 @@ abstract class BaseModel implements ModelInterface {
         if($sth->execute()){
             return true;
         }
+
         return false;
     }
 

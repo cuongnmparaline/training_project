@@ -6,11 +6,12 @@ class RewardValidate extends BaseValidate {
     public function validateCreate($data){
         $validateStatus = false;
 
+        $this->checkEmpty($data['decisionNumber'], 'decisionNumber', DECISION_NUMBER_BLANK, 'errorCreate');
+        $this->checkEmpty($data['decisionDay'], 'decisionDay', DECISION_DAY_BLANK, 'errorCreate');
+        $this->checkEmpty($data['name'], 'name', REWARD_NAME_BLANK, 'errorCreate');
         $this->checkEmpty($data['employee'], 'employee', EMPLOYEE_BLANK, 'errorCreate');
-        $this->checkEmpty($data['workingDay'], 'workingDay', WORKING_DAY_BLANK, 'errorCreate');
-        if(isset($data['workingDay']) && $data['workingDay'] > 31 || (isset($data['workingDay']) && !$this->isNumber($data['workingDay']))) {
-            flash_error('errorCreate', 'workingDay', WORKING_DAY_VALIDATE);
-        }
+        $this->checkEmpty($data['rewardType'], 'rewardType', REWARD_NAME_BLANK, 'errorCreate');
+        $this->checkEmpty($data['rewardNumber'], 'rewardNumber', REWARD_TYPE_BLANK, 'errorCreate');
 
         if(empty($_SESSION['errorCreate'])){
             $validateStatus = true;
