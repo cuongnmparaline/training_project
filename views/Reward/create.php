@@ -3,7 +3,28 @@ require_once('views/layouts/header.php');
 require_once('views/layouts/topbar.php');
 require_once('views/layouts/sidebar.php');
 ?>
-
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="POST">
+                <div class="modal-header">
+                    <span style="font-size: 18px;">Thông báo</span>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id">
+                    Bạn có thực sự muốn xóa khen thưởng này?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
+                    <a href="" class="btn btn-primary deleteButton">Xóa</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -154,7 +175,7 @@ require_once('views/layouts/sidebar.php');
                                             <td><?php echo getEmployeeInfo($reward['nhanvien_id'])['ten_nv'] ?></td>
                                             <td><?php echo $reward['so_qd']; ?></td>
                                             <td><?php echo date_format(date_create($reward['ngay_qd']), "d-m-Y"); ?></td>
-                                            <td><?php echo $reward['ten_loai']; ?></td>
+                                            <td><?php echo getRewardTypeInfo($reward['loai_kt_id'])['ten_loai']; ?></td>
                                             <td>
                                                 <?php
                                                 if($reward['hinh_thuc'] == 1)
@@ -170,10 +191,10 @@ require_once('views/layouts/sidebar.php');
                                             <td><?php echo "<span style='color: blue; font-weight: bold;'>". number_format($reward['so_tien'])."vnđ </span>"; ?></td>
                                             <td><?php echo date_format(date_create($reward['ngay_qd']), "d-m-Y"); ?></td>
                                             <th>
-                                                <a hre class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
+                                                <a href="khen-thuong/<?=$reward['id']?>" class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
                                             </th>
                                             <th>
-                                                <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever='".$kt['ma_kt']."'><i class='fa fa-trash'></i></button>
+                                                <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="khen-thuong/xoa/<?=$reward['id']?>"><i class='fa fa-trash'></i></button>
                                             </th>
                                         </tr>
                                         <?php

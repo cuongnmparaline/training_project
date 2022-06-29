@@ -71,8 +71,13 @@ rewriteRule ^nhom/xoa-nhom/([0-9]+)$ ?controller=team&action=delete&id=$1
 
 #Reward
 rewriteRule ^khen-thuong$ ?controller=reward&action=index [QSA,L]
-rewriteRule ^khen-thuong/them-khen-thuong$ ?controller=reward&action=create
+rewriteRule ^khen-thuong/([0-9]+)$ ?controller=reward&action=edit&id=$1
+rewriteRule ^khen-thuong/xoa/([0-9]+)$ ?controller=reward&action=delete&id=$1
+
 rewriteRule ^khen-thuong/loai-khen-thuong$ ?controller=reward&action=type
+rewriteRule ^khen-thuong/them-khen-thuong$ ?controller=reward&action=create
+rewriteRule ^khen-thuong/sua-loai/([0-9]+)$ ?controller=reward&action=editType&id=$1
+rewriteRule ^khen-thuong/xoa-loai/([0-9]+)$ ?controller=reward&action=deleteType&id=$1
 rewriteRule ^ky-luat$ ?controller=reward&action=discipline [QSA,L]
 
 #Acocunt

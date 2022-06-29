@@ -64,6 +64,8 @@ define("CANT_FOUND_TECHNIQUE", "Không thể tìm thấy chuyên môn!");
 define("CANT_FOUND_DEGREE", "Không thể tìm thấy bằng cấp!");
 define("CANT_FOUND_TYPE", "Không thể tìm thấy loại nhân viên!");
 define("CANT_FOUND_TEAM", "Không thể tìm thấy nhóm");
+define("CANT_FOUND_REWARD_TYPE", "Không thể tìm thấy loại khen thưởng");
+define("CANT_FOUND_REWARD", "Không thể tìm thấy khen thưởng");
 
 
 # Department Success notification

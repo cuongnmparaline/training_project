@@ -3,6 +3,7 @@
 require_once('models/AuthModel.php');
 require_once('models/AccountModel.php');
 require_once('models/EmployeeModel.php');
+require_once('models/RewardTypeModel.php');
 require_once('models/employee/PositionModel.php');
 require_once('models/DetailTeamModel.php');
 require_once('helpers/account.php');
@@ -20,6 +21,14 @@ if (!function_exists('getEmployeeInfo')) {
     {
         $employeeModel = new EmployeeModel();
         return $employeeModel->getById($id);
+    }
+}
+
+if (!function_exists('getRewardTypeInfo')) {
+    function getRewardTypeInfo($id)
+    {
+        $rewardTypeModel = new RewardTypeModel();
+        return $rewardTypeModel->getById($id);
     }
 }
 

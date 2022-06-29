@@ -4,8 +4,6 @@ class AccountValidate extends BaseValidate {
     public function checkLogin($email, $password){
         if (empty($email)) {
             flash_error('errorLogin', 'email', EMAIL_BLANK);
-        }elseif (!$this->isEmail($email)) {
-            flash_error('errorLogin', 'email', EMAIL_VALIDATE);
         }
         // Check password
         if (empty($password)) {

@@ -48,7 +48,7 @@ require_once('views/layouts/sidebar.php');
                         <h3 class="box-title">Tạo loại khen thưởng</h3>
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
+                            <a href="" class="btn btn-primary deleteButton">Xóa</a>
                         </div>
                     </div>
                     <!-- /.box-header -->
@@ -120,10 +120,10 @@ require_once('views/layouts/sidebar.php');
                                     <td><?php echo getInsertedName($type['nguoi_sua']) ; ?></td>
                                     <td><?php echo $type['ngay_sua']; ?></td>
                                     <th>
-                                        <a href="khen-thuong/sua-loai" class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
+                                        <a href="khen-thuong/sua-loai/<?=$type['id']?>" class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
                                     </th>
                                     <th>
-                                        <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="khen-thuong/xoa/<?=$type['id']?>"><i class='fa fa-trash'></i></button>
+                                        <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="khen-thuong/xoa-loai/<?=$type['id']?>"><i class='fa fa-trash'></i></button>
                                     </th>
                                 </tr>
                                 <?php
