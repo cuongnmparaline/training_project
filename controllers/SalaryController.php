@@ -16,6 +16,7 @@ require_once('models/employee/NationalityModel.php');
 require_once('models/employee/EthnicModel.php');
 require_once('models/employee/ReligionModel.php');
 require_once('models/employee/MarriageModel.php');
+require_once('components/PHPExcel/Classes/PHPExcel.php');
 
 class SalaryController extends BaseController
 {
@@ -164,6 +165,40 @@ class SalaryController extends BaseController
             'salaries' => $this->model->getAllByEmpId($id)
         ];
         return $this->render('detail', $dataView);
+    }
+
+    public function export()
+    {
+        $result = $this->model->getAll();
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
+        $rowCount = 2;
+
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', 'STT')
+            ->setCellValue('B1', 'Mã lương')
+            ->setCellValue('C1', 'Tên nhân viên')
+            ->setCellValue('D1', 'Lương tháng')
+            ->setCellValue('E1', 'Ngày công')
+            ->setCellValue('F1', 'Thực lãnh')
+            ->setCellValue('G1', 'Ngày chấm');
+        foreach($result as $row){
+            $objPHPExcel->getActiveSheet()->SetCellValue('A'.$rowCount, $rowCount-1);
+            $objPHPExcel->getActiveSheet()->SetCellValue('B'.$rowCount, $row['ma_luong']);
+            $objPHPExcel->getActiveSheet()->SetCellValue('C'.$rowCount, getEmployeeInfo($row['nhanvien_id'])['ten_nv']);
+            $objPHPExcel->getActiveSheet()->SetCellValue('D'.$rowCount, $row['luong_thang']);
+            $objPHPExcel->getActiveSheet()->SetCellValue('E'.$rowCount, $row['ngay_cong']);
+            $objPHPExcel->getActiveSheet()->SetCellValue('F'.$rowCount, $row['thuc_lanh']);
+            $objPHPExcel->getActiveSheet()->SetCellValue('G'.$rowCount, $row['ngay_cham']);
+            $rowCount++;
+        }
+
+        $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel);
+        $objWriter->save('salary_export.xlsx');
+
+        flash('success_message', SALARY_EXPORTED);
+        return redirect_to('/luong/bang-luong');
+
     }
 
 }

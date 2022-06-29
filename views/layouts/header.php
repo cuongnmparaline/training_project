@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
+<!--    <meta charset="utf-8">-->
     <base href="<?=BASE_URL?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" href="assets/dist/images/logo.jpg" type="image/x-icon"/>

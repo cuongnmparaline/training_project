@@ -19,10 +19,9 @@ $page = getPage();
                 </a>
             </div>
         </div>
-        <!-- search form -->
         <form action="#" method="get" class="sidebar-form">
             <div class="input-group">
-                <input type="text" name="q" class="form-control" placeholder="Tìm kiếm...">
+                <input type="text" class="form-control" placeholder="Tìm kiếm...">
                 <span class="input-group-btn">
                 <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i>
                 </button>

@@ -69,6 +69,8 @@ define("CANT_FOUND_DISCIPLINE_TYPE", "Không thể tìm thấy loại kỷ luậ
 define("CANT_FOUND_REWARD", "Không thể tìm thấy khen thưởng");
 define("CANT_FOUND_DISCIPLINE", "Không thể tìm thấy khen thưởng");
 
+define("EMPLOYEE_EXPORTED", "Xuất danh sách thông tin nhân viên thành công");
+define("SALARY_EXPORTED", "Xuất bảng lương thành công");
 
 # Department Success notification
 define("DEPARTMENT_REMOVED", "Xóa bỏ phòng ban thành công!");
