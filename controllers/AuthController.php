@@ -19,17 +19,21 @@ class AuthController extends BaseController
         if ($this->isLoggedIn()) {
             redirect_to('home');
         }
+//        Luồng rẽ nhánh: nếu người dùng đăng nhập rồi, redirect luôn về trang home
         if(empty($_POST)){
             return $this->render('login');
+//            1. Hiển thị form đăng nhập
         }
-
+//        2. Click nút đăng nhập
         $email = isset($_POST['email']) ? $_POST['email'] : '';
         $password = isset($_POST['password']) ? ($_POST['password']) : '';
         $admin = $this->accountValidate->checkLogin($email, $password);
-
+//        3. Xác thực
         if (empty($admin)) {
             return $this->render('login');
+//            Luồng rẽ nhánh: Quay về hiện thị form đăng nhập
         }
+
         $_SESSION['account'] = [
             'is_login' => true,
             'account_email' => $admin->email,
@@ -43,6 +47,7 @@ class AuthController extends BaseController
         ];
         $this->model->update($dataEditAccount, $admin->id);
         redirect_to('home');
+//        4. Rẽ nhánh đến trang phù hợp
     }
 
     public function logout()

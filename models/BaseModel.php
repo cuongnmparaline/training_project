@@ -106,9 +106,7 @@ abstract class BaseModel implements ModelInterface {
             'nguoi_tao' => isset($_SESSION['account']['account_id']) ? $_SESSION['account']['account_id'] : 9999,
             'ngay_tao' => date(DATE_FORMAT)
         );
-        if(!in_array('nguoi_tao', $data) && !in_array('ngay_tao', $data)){
-            $data = array_merge($data, $ins);
-        }
+        $data = array_merge($data, $ins);
         $key = array_keys($data);
         $fields = implode(', ', $key);
         $values = implode(', :', $key);

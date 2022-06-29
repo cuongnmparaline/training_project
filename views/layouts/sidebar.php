@@ -41,6 +41,15 @@ $page = getPage();
                 </a>
                 <ul class="<?=($page['controller'] == 'home') ? 'active' : '' ?> treeview-menu">
                     <li class="<?=($page['controller'] == 'home' && $page['action'] == 'index') ? 'active' : '' ?>"><a href="home"><i class="fa fa-circle-o"></i> Thống kê</a></li>
+                    <li class="<?=($page['controller'] == 'home' && $page['action'] == 'listEmployee') ? 'active' : '' ?>"><a a href="home/ds-nhanvien"><i class="fa fa-circle-o"></i> Danh sách nhân viên</a></li>
+                    <?php
+                    if(isAdmin()){
+                        ?>
+                        <li class="<?=($page['controller'] == 'home' && $page['action'] == 'listAccount') ? 'active' : '' ?>"><a href="home/ds-taikhoan"><i class="fa fa-circle-o"></i> Danh sách tài khoản</a></li>
+                        <?php
+                    }
+                    ?>
+
                 </ul>
             </li>
             <li class="<?=($page['controller'] == 'employee') ? 'active' : '' ?> treeview">

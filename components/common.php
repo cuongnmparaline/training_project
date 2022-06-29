@@ -104,6 +104,12 @@ if (!function_exists('generateCode')) {
             case 'reward':
                 return "MKT" . time();
                 break;
+            case 'disciplineType':
+                return "LKL" . time();
+                break;
+            case 'discipline':
+                return "MKL" . time();
+                break;
             default:
                 return "Not found";
         }

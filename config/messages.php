@@ -65,6 +65,7 @@ define("CANT_FOUND_DEGREE", "Không thể tìm thấy bằng cấp!");
 define("CANT_FOUND_TYPE", "Không thể tìm thấy loại nhân viên!");
 define("CANT_FOUND_TEAM", "Không thể tìm thấy nhóm");
 define("CANT_FOUND_REWARD_TYPE", "Không thể tìm thấy loại khen thưởng");
+define("CANT_FOUND_DISCIPLINE_TYPE", "Không thể tìm thấy loại kỷ luật");
 define("CANT_FOUND_REWARD", "Không thể tìm thấy khen thưởng");
 
 
@@ -127,6 +128,14 @@ define("REWARD_TYPE_UPDATED", "Chỉnh sửa loại khen thưởng thành công!
 define("REWARD_REMOVED", "Xóa khen thưởng thành công!");
 define("REWARD_CREATED", "Tạo mới khen thưởng thành công!");
 define("REWARD_UPDATED", "Chỉnh sửa khen thưởng thành công!");
+
+define("DISCIPLINE_TYPE_REMOVED", "Xóa loại kỷ luật thành công!");
+define("DISCIPLINE_TYPE_CREATED", "Tạo mới loại kỷ luật thành công!");
+define("DISCIPLINE_TYPE_UPDATED", "Chỉnh sửa loại kỷ luật thành công!");
+
+define("DISCIPLINE_REMOVED", "Xóa kỷ luật thành công!");
+define("DISCIPLINE_CREATED", "Tạo mới kỷ luật thành công!");
+define("DISCIPLINE_UPDATED", "Chỉnh sửa kỷ luật thành công!");
 
 define("ROLE_ALERT", "Chỉ có quản trị viên mới có thể thực hiện thức năng này");
 
