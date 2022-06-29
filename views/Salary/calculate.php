@@ -11,8 +11,8 @@ require_once('views/layouts/sidebar.php');
                 Tính lương
             </h1>
             <ol class="breadcrumb">
-                <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-                <li><a href="tinh-luong.php?p=salary&a=salary">Tính lương</a></li>
+                <li><a href=""><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+                <li><a href="luong/tinh-luong">Tính lương</a></li>
                 <li class="active">Tính lương nhân viên</li>
             </ol>
         </section>

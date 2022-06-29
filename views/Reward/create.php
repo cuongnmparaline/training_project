@@ -96,9 +96,9 @@ require_once('views/layouts/sidebar.php');
                                         <select class="form-control" name="rewardType">
                                             <option value="">--- Chọn khen thưởng ---</option>
                                             <?php
-                                            foreach($rewards as $reward)
+                                            foreach($rewardTypes as $rewardType)
                                             { ?>
-                                                <option <?= (isset($post['employee']) && $post['employee'] == $reward['id']) ? "selected='selected'" : ''?> value="<?= $reward['loai_kt_id'] ?>"><?=$reward['ma_kt'] . ' - ' . $reward['ten_khen_thuong'] ?></option>
+                                                <option <?= (isset($post['employee']) && $post['employee'] == $rewardType['id']) ? "selected='selected'" : ''?> value="<?= $rewardType['id'] ?>"><?=$rewardType['ma_loai'] . ' - ' . $rewardType['ten_loai'] ?></option>
                                                 <?php
                                             }
                                             ?>

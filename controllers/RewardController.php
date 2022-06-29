@@ -41,7 +41,7 @@ class RewardController extends BaseController
             'ma_loai' => $_POST['rewardTypeCode'],
             'ten_loai' => $_POST['name'],
             'ghi_chu' => $_POST['description'],
-            'flag' => 1,
+            'flag' => IS_REWARD,
         ];
 
         if ($this->rewardTypeModel->create($dataInsertTypeReward)) {
@@ -55,6 +55,7 @@ class RewardController extends BaseController
         $dataView = [
             'employees' => $this->employeeModel->getAll(),
             'rewards' => $this->model->getAllReward(),
+            'rewardTypes' => $this->rewardTypeModel->getAllRewardType()
         ];
 
         if (empty($_POST)) {
@@ -78,7 +79,7 @@ class RewardController extends BaseController
             'hinh_thuc' => $_POST['form'],
             'so_tien' => $_POST['rewardNumber'],
             'ghi_chu' => $_POST['description'],
-            'flag' => 1,
+            'flag' => IS_REWARD,
         ];
         if ($this->model->create($dataInsertReward)) {
             flash("success_message", REWARD_CREATED);
@@ -113,7 +114,7 @@ class RewardController extends BaseController
         $validatePostData = $this->getParams();
         $validateStatus = $this->rewardValidate->validateCreate($validatePostData);
         if (!$validateStatus) {
-            return $this->render('editType', $dataView);
+            return $this->render('edit', $dataView);
         }
 
         $dataUpdateReward = [

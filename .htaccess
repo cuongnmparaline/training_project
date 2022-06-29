@@ -14,6 +14,7 @@ rewriteRule ^nhan-vien/them-moi$ ?controller=employee&action=create
 rewriteRule ^nhan-vien/xem/([0-9]+)$ ?controller=employee&action=detail&id=$1
 rewriteRule ^nhan-vien/([0-9]+)$ ?controller=employee&action=edit&id=$1
 rewriteRule ^nhan-vien/xoa/([0-9]+)$ ?controller=employee&action=delete&id=$1
+rewriteRule ^nhan-vien/xuat-bao-cao ?controller=employee&action=export
 
 
 #Department

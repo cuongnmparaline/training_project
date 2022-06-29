@@ -11,8 +11,8 @@ require_once('views/layouts/sidebar.php');
             Thêm mới nhân viên
         </h1>
         <ol class="breadcrumb">
-            <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-            <li><a href="them-nhan-vien.php?p=staff&a=add-staff">Nhân viên</a></li>
+            <li><a href="home"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+            <li><a href="nhan-vien/them-moi">Nhân viên</a></li>
             <li class="active">Thêm mới nhân viên</li>
         </ol>
     </section>

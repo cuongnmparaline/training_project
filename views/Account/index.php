@@ -35,8 +35,8 @@ require_once('views/layouts/sidebar.php');
                 Tài khoản
             </h1>
             <ol class="breadcrumb">
-                <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-                <li><a href="ds-tai-khoan.php?p=account&a=list-account">Tài khoản</a></li>
+                <li><a href=""><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+                <li><a href="tai-khoan">Tài khoản</a></li>
                 <li class="active">Danh sách tài khoản</li>
             </ol>
         </section>

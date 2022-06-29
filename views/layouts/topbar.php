@@ -3,7 +3,7 @@
 
     <header class="main-header">
         <!-- Logo -->
-        <a href="index.php?p=index&a=statistic" class="logo">
+        <a href="#" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
             <span class="logo-mini"><b>P</b>ARALINE</span>
             <!-- logo for regular state and mobile devices -->
@@ -39,7 +39,7 @@
                             <!-- Menu Footer-->
                             <li class="user-footer">
                                 <div class="pull-left">
-                                    <a href="thong-tin-tai-khoan.php?p=account&a=profile" class="btn btn-default btn-flat">Thông tin</a>
+                                    <a href="tai-khoan/thong-tin" class="btn btn-default btn-flat">Thông tin</a>
                                 </div>
                                 <div class="pull-right">
                                     <a href="logout" class="btn btn-default btn-flat">Đăng xuất</a>

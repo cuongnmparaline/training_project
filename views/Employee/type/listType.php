@@ -36,7 +36,7 @@ require_once('views/layouts/sidebar.php');
             </h1>
             <ol class="breadcrumb">
                 <li><a href="home"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-                <li><a href="nhan-vien/phong-ban">Loại nhân viên</a></li>
+                <li><a href="nhan-vien/loai">Loại nhân viên</a></li>
                 <li class="active">Tạo loại nhân viên</li>
             </ol>
         </section>

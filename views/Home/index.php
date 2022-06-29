@@ -13,7 +13,7 @@ require_once('views/layouts/sidebar.php');
                 <small>Bài tập lớn | Quản lý nhân sự tại công ty TNHH Paraline</small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+                <li><a href="home"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
                 <li class="active">Thống kê</li>
             </ol>
         </section>
@@ -33,7 +33,7 @@ require_once('views/layouts/sidebar.php');
                         <div class="icon">
                             <i class="fa fa-user"></i>
                         </div>
-                        <a href="danh-sach-nhan-vien.php?p=staff&a=list-staff" class="small-box-footer">Danh sách nhân
+                        <a href="nhan-vien" class="small-box-footer">Danh sách nhân
                             viên <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
@@ -65,7 +65,7 @@ require_once('views/layouts/sidebar.php');
                         <div class="icon">
                             <i class="ion ion-person-add"></i>
                         </div>
-                        <a href="ds-tai-khoan.php?p=account&a=list-account" class="small-box-footer">Danh sách tài khoản
+                        <a href="tai-khoan" class="small-box-footer">Danh sách tài khoản
                             <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
@@ -95,7 +95,7 @@ require_once('views/layouts/sidebar.php');
                         <div class="icon">
                             <i class="fa fa-file"></i>
                         </div>
-                        <a href="export-nhan-vien.php" class="small-box-footer">Danh sách nhân viên <i
+                        <a href="nhan-vien/xuat-bao-cao" class="small-box-footer">Danh sách nhân viên <i
                                     class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>

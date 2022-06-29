@@ -35,8 +35,8 @@ require_once('views/layouts/sidebar.php');
             Nhân viên
         </h1>
         <ol class="breadcrumb">
-            <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-            <li><a href="danh-sach-nhan-vien.php?p=staff&a=list-staff">Nhân viên</a></li>
+            <li><a href="home"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+            <li><a href="nhan-vien">Nhân viên</a></li>
             <li class="active">Danh sách nhân viên</li>
         </ol>
     </section>
@@ -54,7 +54,7 @@ require_once('views/layouts/sidebar.php');
                     <div class="icon">
                         <i class="fa fa-money"></i>
                     </div>
-                    <a href="them-nhan-vien.php?p=staff&a=add-staff" class="small-box-footer">
+                    <a href="nhan-vien/them-moi" class="small-box-footer">
                         Nhấn vào thêm nhân viên mới <i class="fa fa-arrow-circle-right"></i>
                     </a>
                 </div>
@@ -70,7 +70,7 @@ require_once('views/layouts/sidebar.php');
                     <div class="icon">
                         <i class="fa fa-file"></i>
                     </div>
-                    <a href="export-nhan-vien.php" class="small-box-footer">
+                    <a href="nhan-vien/xuat-bao-cao" class="small-box-footer">
                         Nhấn vào xuất file excel <i class="fa fa-arrow-circle-right"></i>
                     </a>
                 </div>

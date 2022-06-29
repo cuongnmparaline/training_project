@@ -17,6 +17,7 @@ require_once('models/employee/MarriageModel.php');
 require_once('components/validate/EmployeeValidate.php');
 require_once('components/validate/employee/BaseEmployeeValidate.php');
 require_once('components/validate/employee/PositionValidate.php');
+require_once('components/PHPExcel/Classes/PHPExcel.php');
 
 class EmployeeController extends BaseController
 {
@@ -652,5 +653,45 @@ class EmployeeController extends BaseController
             flash('success_message', TYPE_REMOVED);
         }
         return redirect_to('/nhan-vien/loai');
+    }
+
+    public function export(){
+        $data = [
+            ['Nguyễn Khánh Linh', 'Nữ', '500k'],
+            ['Ngọc Trinh', 'Nữ', '700k'],
+            ['Tùng Sơn', 'Không xác định', 'Miễn phí'],
+            ['Kenny Sang', 'Không xác định', 'Miễn phí']
+        ];
+//Khởi tạo đối tượng
+        $excel = new PHPExcel();
+//Chọn trang cần ghi (là số từ 0->n)
+        $excel->setActiveSheetIndex(0);
+//Tạo tiêu đề cho trang. (có thể không cần)
+        $excel->getActiveSheet()->setTitle('demo ghi dữ liệu');
+
+//Xét chiều rộng cho từng, nếu muốn set height thì dùng setRowHeight()
+        $excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+        $excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+        $excel->getActiveSheet()->getColumnDimension('C')->setWidth(30);
+
+//Xét in đậm cho khoảng cột
+        $excel->getActiveSheet()->getStyle('A1:C1')->getFont()->setBold(true);
+        $excel->getActiveSheet()->setCellValue('A1', 'Tên');
+        $excel->getActiveSheet()->setCellValue('B1', 'Giới Tính');
+        $excel->getActiveSheet()->setCellValue('C1', 'Đơn giá(/shoot)');
+// thực hiện thêm dữ liệu vào từng ô bằng vòng lặp
+// dòng bắt đầu = 2
+        $numRow = 2;
+        foreach ($data as $row) {
+            $excel->getActiveSheet()->setCellValue('A' . $numRow, $row[0]);
+            $excel->getActiveSheet()->setCellValue('B' . $numRow, $row[1]);
+            $excel->getActiveSheet()->setCellValue('C' . $numRow, $row[2]);
+            $numRow++;
+        }
+// Khởi tạo đối tượng PHPExcel_IOFactory để thực hiện ghi file
+// ở đây mình lưu file dưới dạng excel2007
+        header('Content-type: application/vnd.ms-excel');
+        header('Content-Disposition: attachment; filename="data.xls"');
+        PHPExcel_IOFactory::createWriter($excel, 'Excel2007')->save('php://output');
     }
 }

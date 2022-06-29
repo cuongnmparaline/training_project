@@ -7,7 +7,7 @@ date_default_timezone_set("Asia/Ho_Chi_Minh");
 $controllers = array(
     'auth' => ['login', 'logout'],
     'home' => ['index', 'listEmployee', 'listAccount'],
-    'employee' => ['index', 'create', 'edit', 'delete', 'detail',
+    'employee' => ['index', 'create', 'edit', 'delete', 'detail', 'export',
         'department', 'editDepartment', 'deleteDepartment',
         'education', 'editEducation', 'deleteEducation',
         'position', 'editPosition', 'deletePosition',
@@ -15,7 +15,7 @@ $controllers = array(
         'degree', 'editDegree', 'deleteDegree',
         'type', 'editType', 'deleteType',
     ],
-    'salary' => ['index', 'calculate', 'calculateAllowance', 'detail', 'delete'],
+    'salary' => ['index', 'calculate', 'calculateAllowance', 'detail', 'delete', 'export'],
     'bussiness' => ['index', 'create', 'edit', 'delete'],
     'account' => ['index', 'create', 'delete', 'edit', 'detail', 'changePass'],
     'reward' => ['index', 'type', 'create', 'editType', 'edit', 'deleteType', 'delete'],

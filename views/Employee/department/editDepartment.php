@@ -11,7 +11,7 @@ require_once('views/layouts/sidebar.php');
             Phòng ban
         </h1>
         <ol class="breadcrumb">
-            <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+            <li><a href="home"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
             <li><a href="phong-ban.php?p=staff&a=room">Phòng ban</a></li>
             <li class="active">Chỉnh sửa phòng ban</li>
         </ol>

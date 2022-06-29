@@ -35,8 +35,8 @@ require_once('views/layouts/sidebar.php');
                 Tính lương nhân viên
             </h1>
             <ol class="breadcrumb">
-                <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-                <li><a href="bang-luong.php?p=salary&a=salary">Bảng lương</a></li>
+                <li><a href=""><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+                <li><a href="luong/bang-luong">Bảng lương</a></li>
                 <li class="active">Tính lương nhân viên</li>
             </ol>
         </section>
@@ -54,7 +54,7 @@ require_once('views/layouts/sidebar.php');
                         <div class="icon">
                             <i class="fa fa-money"></i>
                         </div>
-                        <a href="tinh-luong.php?p=salary&a=salary" class="small-box-footer">
+                        <a href="luong/tinh-luong" class="small-box-footer">
                             Nhấn vào để tính lương <i class="fa fa-arrow-circle-right"></i>
                         </a>
                     </div>

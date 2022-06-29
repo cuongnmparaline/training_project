@@ -15,7 +15,7 @@ require_once('views/layouts/sidebar.php');
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="id">
-                    Bạn có thực sự muốn xóa khen thưởng này?
+                    Bạn có thực sự muốn xóa kỷ luật này?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy bỏ</button>
@@ -29,12 +29,12 @@ require_once('views/layouts/sidebar.php');
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Khen thưởng
+            Kỷ luật
         </h1>
         <ol class="breadcrumb">
             <li><a href="home"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-            <li><a href="khen-thuong">Khen thưởng</a></li>
-            <li class="active">Khen thưởng nhân viên</li>
+            <li><a href="ky-luat">Kỷ luật</a></li>
+            <li class="active">Kỷ luật nhân viên</li>
         </ol>
     </section>
     <section class="content">
@@ -45,7 +45,7 @@ require_once('views/layouts/sidebar.php');
                 ?>
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Tạo khen thưởng</h3>
+                        <h3 class="box-title">Tạo kỷ luật</h3>
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
@@ -59,8 +59,8 @@ require_once('views/layouts/sidebar.php');
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Mã khen thưởng: </label>
-                                        <input type="text" class="form-control" name="rewardCode" value="<?=generateCode('reward') ?>" readonly>
+                                        <label for="exampleInputEmail1">Mã kỷ luật: </label>
+                                        <input type="text" class="form-control" name="disciplineCode" value="<?=generateCode('discipline') ?>" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Số quyết định <span style="color: red;">*</span>: </label>
@@ -73,8 +73,8 @@ require_once('views/layouts/sidebar.php');
                                     </div>
                                     <?=flash_error('errorCreate', 'decisionDay')?>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Tên khen thưởng <span style="color: red;">*</span>: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên khen thưởng" name="name">
+                                        <label for="exampleInputEmail1">Tên kỷ luật <span style="color: red;">*</span>: </label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên kỷ luật" name="name">
                                     </div>
                                     <?=flash_error('errorCreate', 'name')?>
                                     <div class="form-group">
@@ -92,13 +92,13 @@ require_once('views/layouts/sidebar.php');
                                     </div>
                                     <?=flash_error('errorCreate', 'employee')?>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Loại khen thưởng<span style="color: red;">*</span>: </label>
+                                        <label for="exampleInputEmail1">Loại kỷ luật<span style="color: red;">*</span>: </label>
                                         <select class="form-control" name="rewardType">
-                                            <option value="">--- Chọn khen thưởng ---</option>
+                                            <option value="">--- Chọn loại kỷ luật ---</option>
                                             <?php
-                                            foreach($rewards as $reward)
+                                            foreach($disciplineTypes as $disciplineType)
                                             { ?>
-                                                <option <?= (isset($post['employee']) && $post['employee'] == $reward['id']) ? "selected='selected'" : ''?> value="<?= $reward['loai_kt_id'] ?>"><?=$reward['ma_kt'] . ' - ' . $reward['ten_khen_thuong'] ?></option>
+                                                <option <?= (isset($post['employee']) && $post['employee'] == $disciplineType['id']) ? "selected='selected'" : ''?> value="<?= $disciplineType['id'] ?>"><?=$disciplineType['ma_loai'] . ' - ' . $disciplineType['ten_loai'] ?></option>
                                                 <?php
                                             }
                                             ?>
@@ -109,8 +109,8 @@ require_once('views/layouts/sidebar.php');
                                         <label for="exampleInputEmail1">Hình thức: </label>
                                         <select class="form-control" name="form">
                                             <option value="chon">--- Chọn hình thức ---</option>
-                                            <option value="1">Chuyển khoản qua thẻ</option>
-                                            <option value="0">Gửi tiền mặt</option>
+                                            <option value="1">Trừ tiền qua thẻ</option>
+                                            <option value="0">Nộp tiền mặt</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
@@ -131,7 +131,7 @@ require_once('views/layouts/sidebar.php');
                                         <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo date('d-m-Y H:i:s'); ?>" name="ngayTao" readonly>
                                     </div>
                                     <!-- /.form-group -->
-                                    <button type='submit' class='btn btn-primary' name='taoKhenThuong'><i class='fa fa-plus'></i> Tạo khen thưởng</button>
+                                    <button type='submit' class='btn btn-primary' name='taoKhenThuong'><i class='fa fa-plus'></i> Tạo kỷ luật</button>
                                 </div>
                                 <!-- /.col -->
                             </div>
@@ -140,7 +140,7 @@ require_once('views/layouts/sidebar.php');
                     </div>
                     <div class="box">
                         <div class="box-header">
-                            <h3 class="box-title">Danh sách khen thưởng</h3>
+                            <h3 class="box-title">Danh sách kỷ luật</h3>
                         </div>
                         <!-- /.box-header -->
                         <div class="box-body">
@@ -149,15 +149,15 @@ require_once('views/layouts/sidebar.php');
                                     <thead>
                                     <tr>
                                         <th>STT</th>
-                                        <th>Mã khen thưởng</th>
-                                        <th>Tên khen thưởng</th>
+                                        <th>Mã kỷ luật</th>
+                                        <th>Tên kỷ luật</th>
                                         <th>Tên nhân viên</th>
                                         <th>Số quyết định</th>
                                         <th>Ngày quyết định</th>
                                         <th>Tên loại</th>
                                         <th>Hình thức</th>
                                         <th>Số tiền</th>
-                                        <th>Ngày khen thưởng</th>
+                                        <th>Ngày kỷ luật</th>
                                         <th>Sửa</th>
                                         <th>Xóa</th>
                                     </tr>
@@ -165,36 +165,36 @@ require_once('views/layouts/sidebar.php');
                                     <tbody>
                                     <?php
                                     $count = 1;
-                                    foreach ($rewards as $reward)
+                                    foreach ($disciplines as $discipline)
                                     {
                                         ?>
                                         <tr>
                                             <td><?php echo $count; ?></td>
-                                            <td><?php echo $reward['ma_kt']; ?></td>
-                                            <td><?php echo $reward['ten_khen_thuong']; ?></td>
-                                            <td><?php echo getEmployeeInfo($reward['nhanvien_id'])['ten_nv'] ?></td>
-                                            <td><?php echo $reward['so_qd']; ?></td>
-                                            <td><?php echo date_format(date_create($reward['ngay_qd']), "d-m-Y"); ?></td>
-                                            <td><?php echo getRewardTypeInfo($reward['loai_kt_id'])['ten_loai']; ?></td>
+                                            <td><?php echo $discipline['ma_kt']; ?></td>
+                                            <td><?php echo $discipline['ten_khen_thuong']; ?></td>
+                                            <td><?php echo getEmployeeInfo($discipline['nhanvien_id'])['ten_nv'] ?></td>
+                                            <td><?php echo $discipline['so_qd']; ?></td>
+                                            <td><?php echo date_format(date_create($discipline['ngay_qd']), "d-m-Y"); ?></td>
+                                            <td><?php echo getRewardTypeInfo($discipline['loai_kt_id'])['ten_loai']; ?></td>
                                             <td>
                                                 <?php
-                                                if($reward['hinh_thuc'] == 1)
+                                                if($discipline['hinh_thuc'] == 1)
                                                 {
-                                                    echo "Chuyển khoản qua thẻ";
+                                                    echo "Trừ tiền qua thẻ";
                                                 }
                                                 else
                                                 {
-                                                    echo "Gửi tiền mặt";
+                                                    echo "Nộp tiền mặt";
                                                 }
                                                 ?>
                                             </td>
-                                            <td><?php echo "<span style='color: blue; font-weight: bold;'>". number_format($reward['so_tien'])."vnđ </span>"; ?></td>
-                                            <td><?php echo date_format(date_create($reward['ngay_qd']), "d-m-Y"); ?></td>
+                                            <td><?php echo "<span style='color: blue; font-weight: bold;'>". number_format($discipline['so_tien'])."vnđ </span>"; ?></td>
+                                            <td><?php echo date_format(date_create($discipline['ngay_qd']), "d-m-Y"); ?></td>
                                             <th>
-                                                <a href="khen-thuong/<?=$reward['id']?>" class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
+                                                <a href="ky-luat/<?=$discipline['id']?>" class='btn bg-orange btn-flat'><i class='fa fa-edit'></i></a>
                                             </th>
                                             <th>
-                                                <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="khen-thuong/xoa/<?=$reward['id']?>"><i class='fa fa-trash'></i></button>
+                                                <button type='button' class='btn bg-maroon btn-flat' data-toggle='modal' data-target='#exampleModal' data-whatever="ky-luat/xoa/<?=$discipline['id']?>"><i class='fa fa-trash'></i></button>
                                             </th>
                                         </tr>
                                         <?php

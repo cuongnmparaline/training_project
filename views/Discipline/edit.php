@@ -8,12 +8,12 @@ require_once('views/layouts/sidebar.php');
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Khen thưởng
+            Kỷ luật
         </h1>
         <ol class="breadcrumb">
             <li><a href="home"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-            <li><a href="khen-thuong">Khen thưởng</a></li>
-            <li class="active">Khen thưởng nhân viên</li>
+            <li><a href="khen-thuong">Kỷ luật</a></li>
+            <li class="active">Kỷ luật nhân viên</li>
         </ol>
     </section>
     <section class="content">
@@ -21,7 +21,7 @@ require_once('views/layouts/sidebar.php');
             <div class="col-xs-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title">Chỉnh sửa khen thưởng</h3>
+                        <h3 class="box-title">Chỉnh sửa kỷ luật</h3>
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                             <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>
@@ -33,20 +33,20 @@ require_once('views/layouts/sidebar.php');
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Mã khen thưởng: </label>
-                                        <input type="text" class="form-control" name="rewardCode" value="<?php echo $reward['ma_kt']; ?>" readonly>
+                                        <label for="exampleInputEmail1">Mã kỷ luật: </label>
+                                        <input type="text" class="form-control" name="rewardCode" value="<?php echo $discipline['ma_kt']; ?>" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Số quyết định <span style="color: red;">*</span>: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập số quyết định" name="decisionNumber" value="<?php echo $reward['so_qd']; ?>">
+                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập số quyết định" name="decisionNumber" value="<?php echo $discipline['so_qd']; ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Ngày quyết định: </label>
-                                        <input type="date" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên loại" value="<?php echo date_format(date_create($reward['ngay_qd']), 'Y-m-d'); ?>" name="decisionDay">
+                                        <input type="date" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên loại" value="<?php echo date_format(date_create($discipline['ngay_qd']), 'Y-m-d'); ?>" name="decisionDay">
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Tên khen thưởng <span style="color: red;">*</span>: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên khen thưởng" name="name" value="<?php echo $reward['ten_khen_thuong']; ?>">
+                                        <label for="exampleInputEmail1">Tên kỷ luật <span style="color: red;">*</span>: </label>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập tên kỷ luật" name="name" value="<?php echo $discipline['ten_khen_thuong']; ?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Chọn nhân viên: </label>
@@ -55,20 +55,20 @@ require_once('views/layouts/sidebar.php');
                                             <?php
                                             foreach($employees as $employee)
                                             { ?>
-                                                <option <?= (isset($reward['nhanvien_id']) && $reward['nhanvien_id'] == $employee['id']) ? "selected='selected'" : ''?> value="<?= $employee['id'] ?>"><?=$employee['ma_nv'] . ' - ' . $employee['ten_nv'] ?></option>
+                                                <option <?= (isset($discipline['nhanvien_id']) && $discipline['nhanvien_id'] == $employee['id']) ? "selected='selected'" : ''?> value="<?= $employee['id'] ?>"><?=$employee['ma_nv'] . ' - ' . $employee['ten_nv'] ?></option>
                                                 <?php
                                             }
                                             ?>
                                         </select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Loại khen thưởng: </label>
+                                        <label for="exampleInputEmail1">Loại kỷ luật: </label>
                                         <select class="form-control" name="rewardType">
-                                            <option value="">--- Chọn loại khen thưởng ---</option>
+                                            <option value="">--- Chọn loại kỷ luật ---</option>
                                             <?php
-                                            foreach($rewardTypes as $rewardType)
+                                            foreach($disciplineTypes as $disciplineType)
                                             { ?>
-                                                <option <?= (isset($reward['loai_kt_id']) && $reward['loai_kt_id'] == $rewardType['id']) ? "selected='selected'" : ''?> value="<?= $rewardType['id'] ?>"><?=$rewardType['ma_loai'] . ' - ' . $rewardType['ten_loai'] ?></option>
+                                                <option <?= (isset($discipline['loai_kt_id']) && $discipline['loai_kt_id'] == $disciplineType['id']) ? "selected='selected'" : ''?> value="<?= $disciplineType['id'] ?>"><?=$disciplineType['ma_loai'] . ' - ' . $disciplineType['ten_loai'] ?></option>
                                                 <?php
                                             }
                                             ?>
@@ -78,17 +78,17 @@ require_once('views/layouts/sidebar.php');
                                         <label for="exampleInputEmail1">Hình thức: </label>
                                         <select class="form-control" name="form">
                                             <option value="chon">--- Chọn hình thức ---</option>
-                                            <option <?= isset($reward['hinh_thuc']) && $reward['hinh_thuc'] == 1 ? "selected='selected'" : ''?> value="1">Chuyển khoản qua thẻ</option>
-                                            <option <?= isset($reward['hinh_thuc']) && $reward['hinh_thuc'] == 0 ? "selected='selected'" : ''?> value="0">Gửi tiền mặt</option>
+                                            <option <?= isset($discipline['hinh_thuc']) && $discipline['hinh_thuc'] == 1 ? "selected='selected'" : ''?> value="1">Chuyển khoản qua thẻ</option>
+                                            <option <?= isset($discipline['hinh_thuc']) && $discipline['hinh_thuc'] == 0 ? "selected='selected'" : ''?> value="0">Gửi tiền mặt</option>
                                         </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Số tiền thưởng <span style="color: red;">*</span>: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập số tiền thưởng" name="rewardNumber" value="<?=$reward['so_tien']?>">
+                                        <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Nhập số tiền thưởng" name="rewardNumber" value="<?=$discipline['so_tien']?>">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Mô tả: </label>
-                                        <textarea class="form-control" id="editor1" name="description"><?=$reward['ghi_chu']?></textarea>
+                                        <textarea class="form-control" id="editor1" name="description"><?=$discipline['ghi_chu']?></textarea>
 
                                     </div>
                                     <div class="form-group">

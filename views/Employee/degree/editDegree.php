@@ -11,8 +11,8 @@ require_once('views/layouts/sidebar.php');
             Bằng cấp
         </h1>
         <ol class="breadcrumb">
-            <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-            <li><a href="bang-cap.php?p=staff&a=certificate">Bằng cấp</a></li>
+            <li><a href="home"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+            <li><a href="nhan-vien/bang-cap">Bằng cấp</a></li>
             <li class="active">Chỉnh sửa bằng cấp</li>
         </ol>
     </section>

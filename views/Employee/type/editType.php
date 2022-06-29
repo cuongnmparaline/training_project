@@ -11,8 +11,8 @@ require_once('views/layouts/sidebar.php');
             loại nhân viên
         </h1>
         <ol class="breadcrumb">
-            <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-            <li><a href="phong-ban.php?p=staff&a=room">Loại nhân viên</a></li>
+            <li><a href="home"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+            <li><a href="nhan-vien/loai">Loại nhân viên</a></li>
             <li class="active">Chỉnh sửa loại nhân viên</li>
         </ol>
     </section>

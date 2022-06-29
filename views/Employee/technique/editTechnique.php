@@ -11,8 +11,8 @@ require_once('views/layouts/sidebar.php');
             Chuyên môn
         </h1>
         <ol class="breadcrumb">
-            <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-            <li><a href="chuyen-mon.php?p=staff&a=specialize">Chuyên môn</a></li>
+            <li><a href="home"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+            <li><a href="nhan-vien/chuyen-mon">Chuyên môn</a></li>
             <li class="active">Chỉnh sửa chuyên môn</li>
         </ol>
     </section>

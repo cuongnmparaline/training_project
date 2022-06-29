@@ -11,8 +11,8 @@ require_once('views/layouts/sidebar.php');
             Công tác
         </h1>
         <ol class="breadcrumb">
-            <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-            <li><a href="cong-tac.php?p=collaborate&a=add-collaborate">Công tác</a></li>
+            <li><a href=""><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+            <li><a href="cong-tac">Công tác</a></li>
             <li class="active">Thêm công tác</li>
         </ol>
     </section>

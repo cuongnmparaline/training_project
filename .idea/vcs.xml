@@ -2,5 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/components/PHPExcel" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/components/phpExport/PHPExcel" vcs="Git" />
   </component>
 </project>

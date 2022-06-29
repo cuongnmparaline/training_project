@@ -11,8 +11,8 @@ require_once('views/layouts/sidebar.php');
             Chức vụ
         </h1>
         <ol class="breadcrumb">
-            <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-            <li><a href="chuc-vu.php?p=staff&a=position">Chức vụ</a></li>
+            <li><a href="home"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+            <li><a href="nhan-vien/chuc-vu">Chức vụ</a></li>
             <li class="active">Chỉnh sửa chức vụ</li>
         </ol>
     </section>

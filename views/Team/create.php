@@ -35,8 +35,8 @@ require_once('views/layouts/sidebar.php');
                 Nhóm nhân viên
             </h1>
             <ol class="breadcrumb">
-                <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-                <li><a href="danh-sach-nhan-vien.php?p=staff&a=list-staff">Nhân viên</a></li>
+                <li><a href=""><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+                <li><a href="nhan-vien">Nhân viên</a></li>
                 <li class="active">Tạo nhóm nhân viên</li>
             </ol>
         </section>

@@ -34,8 +34,8 @@ require_once('views/layouts/sidebar.php');
             Công tác
         </h1>
         <ol class="breadcrumb">
-            <li><a href="index.php?p=index&a=statistic"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
-            <li><a href="danh-sach-cong-tac.php?p=collaborate&a=list-collaborate">Công tác</a></li>
+            <li><a href="home"><i class="fa fa-dashboard"></i> Tổng quan</a></li>
+            <li><a href="cong-tac">Công tác</a></li>
             <li class="active">Danh sách công tác</li>
         </ol>
     </section>

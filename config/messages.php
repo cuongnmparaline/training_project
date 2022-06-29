@@ -67,6 +67,7 @@ define("CANT_FOUND_TEAM", "Không thể tìm thấy nhóm");
 define("CANT_FOUND_REWARD_TYPE", "Không thể tìm thấy loại khen thưởng");
 define("CANT_FOUND_DISCIPLINE_TYPE", "Không thể tìm thấy loại kỷ luật");
 define("CANT_FOUND_REWARD", "Không thể tìm thấy khen thưởng");
+define("CANT_FOUND_DISCIPLINE", "Không thể tìm thấy khen thưởng");
 
 
 # Department Success notification
