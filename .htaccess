@@ -51,6 +51,7 @@ rewriteRule ^nhan-vien/xoa-loai/([0-9]+)$ ?controller=employee&action=deleteType
 rewriteRule ^luong/bang-luong$ ?controller=salary&action=index [QSA,L]
 rewriteRule ^luong/tinh-luong$ ?controller=salary&action=calculate
 rewriteRule ^luong/([0-9]+)$ ?controller=salary&action=detail&id=$1
+rewriteRule ^luong/xoa-luong/([0-9]+)$ ?controller=salary&action=delete&id=$1
 rewriteRule ^luong/tinh-phu-cap$ ?controller=salary&action=calculateAllowance
 rewriteRule ^bang-luong/([0-9]+)$ ?controller=salary&action=detail&id=$1
 

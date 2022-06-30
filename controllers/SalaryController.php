@@ -166,4 +166,15 @@ class SalaryController extends BaseController
         return $this->render('detail', $dataView);
     }
 
+    public function delete(){
+        if (!isset($_GET['id'])) {
+            flash('error_message', ST_WRONG, 'alert alert-danger');
+        }
+        $id = $_GET['id'];
+        if ($this->model->delete($id)) {
+            flash('success_message', SALARY_REMOVED);
+        }
+        return redirect_to('/luong/bang-luong');
+    }
+
 }
