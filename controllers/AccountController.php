@@ -15,7 +15,9 @@ class AccountController extends BaseController
     }
 
     public function index(){
-        $this->checkRole();
+        if(!$this->checkRole()){
+            return redirect_to('tai-khoan/thong-tin');
+        }
         $accounts = $this->model->getAll();
         $this->render('index', ['accounts' => $accounts]);
     }
@@ -71,7 +73,9 @@ class AccountController extends BaseController
     }
 
     public function create(){
-        $this->checkRole();
+        if(!$this->checkRole()){
+            return redirect_to('tai-khoan/thong-tin');
+        }
         $dataView = [];
 
         if (empty($_POST)) {
@@ -112,7 +116,9 @@ class AccountController extends BaseController
     }
 
     public function edit(){
-        $this->checkRole();
+        if(!$this->checkRole()){
+            return redirect_to('tai-khoan/thong-tin');
+        }
         if (!isset($_GET['id'])) {
             flash("error_message", CANT_FOUND_ACC, 'alert alert-danger');
             return redirect_to('/tai-khoan');
@@ -168,7 +174,9 @@ class AccountController extends BaseController
     }
 
     public function delete(){
-        $this->checkRole();
+        if(!$this->checkRole()){
+            return redirect_to('tai-khoan/thong-tin');
+        }
         if (!isset($_GET['id'])) {
             flash('error_message', ST_WRONG);
         }
@@ -220,7 +228,7 @@ class AccountController extends BaseController
     public function checkRole(){
         if($_SESSION['account']['role_type'] != ADMIN){
             flash("error_message", ROLE_ALERT, 'alert alert-danger');
-            return redirect_to('/tai-khoan/thong-tin');
+            return false;
         }
         return true;
     }
