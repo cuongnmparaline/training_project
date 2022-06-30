@@ -91,7 +91,7 @@ rewriteRule ^ky-luat/sua-loai/([0-9]+)$ ?controller=discipline&action=editType&i
 rewriteRule ^ky-luat/xoa-loai/([0-9]+)$ ?controller=discipline&action=deleteType&id=$1
 
 #Acocunt
-rewriteRule ^tai-khoan$ ?controller=account&action=index
+rewriteRule ^tai-khoan$ ?controller=account&action=index [QSA,L]
 rewriteRule ^tai-khoan/thong-tin$ ?controller=account&action=detail
 rewriteRule ^tai-khoan/tao-tai-khoan$ ?controller=account&action=create
 rewriteRule ^tai-khoan/xoa/([0-9]+)$ ?controller=account&action=delete&id=$1

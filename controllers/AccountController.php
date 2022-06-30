@@ -208,11 +208,11 @@ class AccountController extends BaseController
         }
 
         $dataEditAccount = [
-            'mat_khau' => $_POST['password']
+            'mat_khau' => md5($_POST['password'])
         ];
 
         if ($this->model->update($dataEditAccount, $id)) {
-            flash("success_message", ACCOUNT_UPDATED);
+            flash("success_message", PASSWORD_UPDATED);
             redirect_to('/tai-khoan/thong-tin');
         }
     }

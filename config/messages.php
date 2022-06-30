@@ -109,6 +109,7 @@ define("EMPLOYEE_UPDATED", "Chỉnh sửa nhân viên thành công!");
 define("ACCOUNT_REMOVED", "Xóa tài khoản thành công!");
 define("ACCOUNT_CREATED", "Tạo mới tài khoản thành công!");
 define("ACCOUNT_UPDATED", "Chỉnh sửa tài khoản thành công!");
+define("PASSWORD_UPDATED", "Cập nhập mật khẩu thành công!");
 
 define("SALARY_REMOVED", "Xóa lương thành công!");
 define("SALARY_CREATED", "Tạo mới lương thành công!");
