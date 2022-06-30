@@ -49,7 +49,7 @@ require_once('views/layouts/sidebar.php');
                         <div class="icon">
                             <i class="fa fa-bank"></i>
                         </div>
-                        <a href="phong-ban.php?p=staff&a=room" class="small-box-footer">Danh sách phòng ban <i
+                        <a href="nhan-vien/phong-ban" class="small-box-footer">Danh sách phòng ban <i
                                     class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
@@ -80,8 +80,8 @@ require_once('views/layouts/sidebar.php');
                         <div class="icon">
                             <i class="ion ion-pie-graph"></i>
                         </div>
-                        <a href="#" class="small-box-footer" onclick="return false;">Danh sách nghỉ việc <i
-                                    class="fa fa-arrow-circle-right"></i></a>
+                        <a href="tai-khoan" class="small-box-footer">Danh sách tài khoản
+                            <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <!-- ./col -->
@@ -110,7 +110,7 @@ require_once('views/layouts/sidebar.php');
                         <div class="icon">
                             <i class="fa fa-file"></i>
                         </div>
-                        <a href="export-bang-luong.php" class="small-box-footer">Lương nhân viên <i
+                        <a href="luong/xuat-bao-cao" class="small-box-footer">Lương nhân viên <i
                                     class="fa fa-arrow-circle-right"></i></a>
                     </div>
                 </div>

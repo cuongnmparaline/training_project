@@ -36,35 +36,39 @@ require_once('views/layouts/sidebar.php');
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Mã công tác: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" name="maCongTac" value="<?php echo $bussiness['ma_cong_tac']; ?>" readonly>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" name="bussinessCode" value="<?php echo $bussiness['ma_cong_tac']; ?>" readonly>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Nhân viên: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" name="maNhanVien" value="<?php echo $bussiness['employee']['ma_nv']; ?> - <?php echo $bussiness['employee']['ten_nv']; ?>" readonly>
+                                        <input type="text" class="form-control" id="exampleInputEmail1" value="<?php echo $bussiness['employee']['ma_nv']; ?> - <?php echo $bussiness['employee']['ten_nv']; ?>" readonly>
+                                        <input type="hidden" class="form-control" id="exampleInputEmail1" name="employee" value="<?= $bussiness['nhanvien_id'] ?>"   >
                                     </div>
+                                    <?=flash_error('errorCreate', 'employee')?>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Ngày bắt đầu<span style="color: red;">*</span>: </label>
-                                        <input type="date" class="form-control" id="exampleInputEmail1" name="ngayBatDau" value="<?php echo date_format(date_create($bussiness['ngay_bat_dau']), 'Y-m-d'); ?>">
+                                        <input type="date" class="form-control" id="exampleInputEmail1" name="dayStart" value="<?php echo date_format(date_create($bussiness['ngay_bat_dau']), 'Y-m-d'); ?>">
                                         <small style="color: red;"><?php if(isset($error['loiNgay'])){ echo 'Ngày bắt đầu <b> không được sau </b> ngày kết thúc';} ?></small>
                                     </div>
+                                    <?=flash_error('errorCreate', 'dayStart')?>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Ngày kết thúc<span style="color: red;">*</span>: </label>
-                                        <input type="date" class="form-control" id="exampleInputEmail1" name="ngayKetThuc" value="<?php echo date_format(date_create($bussiness['ngay_ket_thuc']), 'Y-m-d'); ?>">
+                                        <input type="date" class="form-control" id="exampleInputEmail1" name="dayEnd" value="<?php echo date_format(date_create($bussiness['ngay_ket_thuc']), 'Y-m-d'); ?>">
                                         <small style="color: red;"><?php if(isset($error['ngayKetThuc'])){ echo 'Vui lòng chọn ngày kết thúc';} ?></small>
                                     </div>
+                                    <?=flash_error('errorCreate', 'dayEnd')?>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Địa điểm công tác<span style="color: red;">*</span>: </label>
-                                        <input type="text" class="form-control" id="exampleInputEmail1" name="diaDiem" placeholder="Vui lòng nhập địa điểm" value="<?php echo $bussiness['dia_diem']; ?>">
+                                        <input type="text" class="form-control" id="exampleInputEmail1" name="location" placeholder="Vui lòng nhập địa điểm" value="<?php echo $bussiness['dia_diem']; ?>">
                                         <small style="color: red;"><?php if(isset($error['diaDiem'])){ echo 'Vui lòng nhập địa điểm công tác';} ?></small>
                                     </div>
+                                    <?=flash_error('errorCreate', 'location')?>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Mục đích công tác: </label>
-                                        <textarea id="editor1" rows="10" cols="80" name="mucDich"><?php echo $bussiness['muc_dich']; ?>
-                      </textarea>
+                                        <textarea id="editor1" rows="10" cols="80" name="purpose"><?= $bussiness['muc_dich']; ?></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Ghi chú: </label>
-                                        <textarea id="editor" class="form-control" name="ghiChu"></textarea><?php echo $bussiness['ghi_chu']; ?>
+                                        <textarea id="editor" class="form-control" name="description"><?php echo $bussiness['ghi_chu']; ?></textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Người tạo: </label>

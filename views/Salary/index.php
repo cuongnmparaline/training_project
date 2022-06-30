@@ -70,7 +70,7 @@ require_once('views/layouts/sidebar.php');
                         <div class="icon">
                             <i class="fa fa-file"></i>
                         </div>
-                        <a href="export-bang-luong.php" class="small-box-footer">
+                        <a href="luong/xuat-bao-cao" class="small-box-footer">
                             Nhấn vào xuất file excel <i class="fa fa-arrow-circle-right"></i>
                         </a>
                     </div>
